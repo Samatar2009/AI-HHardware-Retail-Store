@@ -1,3 +1,3 @@
-export default function AppCustomerReturnsNewPage() {
-  return <div>AppCustomerReturnsNew — placeholder, implemented in a later phase</div>
+export default function CustomerReturnsNewPage() {
+  return <div>CustomerReturnsNew — placeholder, implemented in a later phase</div>
 }

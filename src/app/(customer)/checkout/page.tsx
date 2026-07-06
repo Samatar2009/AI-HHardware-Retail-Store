@@ -1,3 +1,3 @@
-export default function AppCustomerCheckoutPage() {
-  return <div>AppCustomerCheckout — placeholder, implemented in a later phase</div>
+export default function CustomerCheckoutPage() {
+  return <div>CustomerCheckout — placeholder, implemented in a later phase</div>
 }

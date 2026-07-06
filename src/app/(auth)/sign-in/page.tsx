@@ -1,3 +1,3 @@
-export default function AppAuthSign-inPage() {
-  return <div>AppAuthSign-in — placeholder, implemented in a later phase</div>
+export default function AuthSignInPage() {
+  return <div>AuthSignIn — placeholder, implemented in a later phase</div>
 }

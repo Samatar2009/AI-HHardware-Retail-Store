@@ -1,4 +1,4 @@
-export default function AppCustomerLayout({
+export default function CustomerLayout({
   children,
 }: {
   children: React.ReactNode

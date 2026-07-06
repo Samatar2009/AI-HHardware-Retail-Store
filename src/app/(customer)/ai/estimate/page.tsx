@@ -1,3 +1,3 @@
-export default function AppCustomerAiEstimatePage() {
-  return <div>AppCustomerAiEstimate — placeholder, implemented in a later phase</div>
+export default function CustomerAiEstimatePage() {
+  return <div>CustomerAiEstimate — placeholder, implemented in a later phase</div>
 }

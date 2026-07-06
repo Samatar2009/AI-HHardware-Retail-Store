@@ -1,3 +1,3 @@
-export default function AppAuthComplete-profilePage() {
-  return <div>AppAuthComplete-profile — placeholder, implemented in a later phase</div>
+export default function AuthCompleteProfilePage() {
+  return <div>AuthCompleteProfile — placeholder, implemented in a later phase</div>
 }

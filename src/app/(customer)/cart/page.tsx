@@ -1,3 +1,3 @@
-export default function AppCustomerCartPage() {
-  return <div>AppCustomerCart — placeholder, implemented in a later phase</div>
+export default function CustomerCartPage() {
+  return <div>CustomerCart — placeholder, implemented in a later phase</div>
 }

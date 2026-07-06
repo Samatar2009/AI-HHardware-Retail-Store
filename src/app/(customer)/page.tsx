@@ -1,3 +1,3 @@
-export default function AppCustomerPage() {
-  return <div>AppCustomer — placeholder, implemented in a later phase</div>
+export default function CustomerPage() {
+  return <div>Customer — placeholder, implemented in a later phase</div>
 }

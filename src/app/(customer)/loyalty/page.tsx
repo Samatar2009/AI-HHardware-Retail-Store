@@ -1,3 +1,3 @@
-export default function AppCustomerLoyaltyPage() {
-  return <div>AppCustomerLoyalty — placeholder, implemented in a later phase</div>
+export default function CustomerLoyaltyPage() {
+  return <div>CustomerLoyalty — placeholder, implemented in a later phase</div>
 }

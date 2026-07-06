@@ -1,3 +1,3 @@
-export default function AppCustomerCategoriesSlugPage() {
-  return <div>AppCustomerCategoriesSlug — placeholder, implemented in a later phase</div>
+export default function CustomerCategoriesSlugPage() {
+  return <div>CustomerCategoriesSlug — placeholder, implemented in a later phase</div>
 }

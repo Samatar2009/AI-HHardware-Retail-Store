@@ -1,3 +1,3 @@
-export default function AppCustomerReturnsIdPage() {
-  return <div>AppCustomerReturnsId — placeholder, implemented in a later phase</div>
+export default function CustomerReturnsIdPage() {
+  return <div>CustomerReturnsId — placeholder, implemented in a later phase</div>
 }

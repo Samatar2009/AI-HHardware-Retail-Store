@@ -1,3 +1,3 @@
-export default function AppAuthVerifyPage() {
-  return <div>AppAuthVerify — placeholder, implemented in a later phase</div>
+export default function AuthVerifyPage() {
+  return <div>AuthVerify — placeholder, implemented in a later phase</div>
 }

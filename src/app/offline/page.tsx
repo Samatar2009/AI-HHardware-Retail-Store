@@ -1,3 +1,3 @@
-export default function AppOfflinePage() {
-  return <div>AppOffline — placeholder, implemented in a later phase</div>
+export default function OfflinePage() {
+  return <div>Offline — placeholder, implemented in a later phase</div>
 }
