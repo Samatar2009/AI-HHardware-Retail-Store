@@ -1,0 +1,5 @@
+-- Phase 1, Step 1.1 — Required PostgreSQL extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
