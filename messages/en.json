@@ -1,0 +1,93 @@
+{
+  "common": {
+    "appName": "Borama Hardware",
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "back": "Back",
+    "search": "Search",
+    "seeAll": "See all",
+    "close": "Close",
+    "language": "Language",
+    "currency": "Currency"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "phoneNumber": "Phone number",
+    "sendCode": "Send code",
+    "enterCode": "Enter the 6-digit code",
+    "verify": "Verify",
+    "codeSent": "Code sent to {phone}",
+    "invalidCode": "Invalid or expired code",
+    "completeProfile": "Complete your profile",
+    "fullName": "Full name"
+  },
+  "products": {
+    "title": "Products",
+    "addToCart": "Add to cart",
+    "outOfStock": "Out of stock",
+    "inStock": "In stock",
+    "price": "Price",
+    "description": "Description",
+    "category": "Category",
+    "sku": "SKU"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "removeItem": "Remove",
+    "quantity": "Quantity",
+    "applyCode": "Apply discount code"
+  },
+  "orders": {
+    "title": "Orders",
+    "orderNumber": "Order #{number}",
+    "status": "Status",
+    "pickupCode": "Pickup code",
+    "trackOrder": "Track order"
+  },
+  "pos": {
+    "openSession": "Open session",
+    "closeSession": "Close session",
+    "newSale": "New sale",
+    "parkCart": "Park cart",
+    "void": "Void",
+    "payment": "Payment",
+    "cash": "Cash",
+    "change": "Change"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "staff": "Staff",
+    "settings": "Settings",
+    "analytics": "Analytics"
+  },
+  "inventory": {
+    "stockLevels": "Stock levels",
+    "lowStock": "Low stock",
+    "receiveStock": "Receive stock",
+    "stocktake": "Stocktake",
+    "forecasts": "Forecasts"
+  },
+  "loyalty": {
+    "title": "Loyalty",
+    "points": "Points",
+    "tier": "Tier",
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold"
+  },
+  "ai": {
+    "askAssistant": "Ask the assistant",
+    "estimateProject": "Estimate my project",
+    "thinking": "Thinking…"
+  }
+}

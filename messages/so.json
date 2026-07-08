@@ -1,0 +1,93 @@
+{
+  "common": {
+    "appName": "Qalabka Borama",
+    "loading": "Waa la soo rarayaa…",
+    "error": "Wax baa qaldamay",
+    "retry": "Isku day mar kale",
+    "cancel": "Jooji",
+    "save": "Kaydi",
+    "confirm": "Xaqiiji",
+    "back": "Dib u noqo",
+    "search": "Raadi",
+    "seeAll": "Dhammaan arag",
+    "close": "Xir",
+    "language": "Luqadda",
+    "currency": "Lacagta"
+  },
+  "auth": {
+    "signIn": "Gal",
+    "signOut": "Ka bax",
+    "phoneNumber": "Lambarka taleefanka",
+    "sendCode": "Dir koodhka",
+    "enterCode": "Geli koodhka 6-ka ah",
+    "verify": "Xaqiiji",
+    "codeSent": "Koodhka waxaa loo diray {phone}",
+    "invalidCode": "Koodhku waa khalad ama wuu dhacay",
+    "completeProfile": "Dhamaystir profile-kaaga",
+    "fullName": "Magaca oo dhan"
+  },
+  "products": {
+    "title": "Alaabta",
+    "addToCart": "Ku dar gaadhiga",
+    "outOfStock": "Ma jiro stock",
+    "inStock": "Wuu diyaar yahay",
+    "price": "Qiimaha",
+    "description": "Sharaxaad",
+    "category": "Qaybta",
+    "sku": "SKU"
+  },
+  "cart": {
+    "title": "Gaadhiga",
+    "empty": "Gaadhigaagu waa madhan yahay",
+    "subtotal": "Wadarta hoose",
+    "checkout": "Bixinta",
+    "removeItem": "Ka saar",
+    "quantity": "Tirada",
+    "applyCode": "Isticmaal koodhka qiimo-dhimista"
+  },
+  "orders": {
+    "title": "Dalabyada",
+    "orderNumber": "Dalabka #{number}",
+    "status": "Xaaladda",
+    "pickupCode": "Koodhka qaadista",
+    "trackOrder": "La soco dalabka"
+  },
+  "pos": {
+    "openSession": "Fur shift-ka",
+    "closeSession": "Xir shift-ka",
+    "newSale": "Iib cusub",
+    "parkCart": "Dhig gaadhiga",
+    "void": "Baabi'i",
+    "payment": "Lacag bixinta",
+    "cash": "Cash",
+    "change": "Baaqiga"
+  },
+  "admin": {
+    "dashboard": "Guudmarka",
+    "products": "Alaabta",
+    "orders": "Dalabyada",
+    "staff": "Shaqaalaha",
+    "settings": "Dejinta",
+    "analytics": "Falanqaynta"
+  },
+  "inventory": {
+    "stockLevels": "Heerarka Stock-ga",
+    "lowStock": "Stock yar",
+    "receiveStock": "Hel Stock",
+    "stocktake": "Tirinta Stock-ga",
+    "forecasts": "Saadaasha"
+  },
+  "loyalty": {
+    "title": "Daacadnimada",
+    "points": "Dhibcaha",
+    "tier": "Heerka",
+    "bronze": "Naxaas",
+    "silver": "Lacag",
+    "gold": "Dahab"
+  },
+  "ai": {
+    "askAssistant": "Weydii Kaaliyaha",
+    "estimateProject": "Qiyaas mashruucayga",
+    "thinking": "Waa fikirayaa…"
+  }
+}
