@@ -2,10 +2,9 @@ import { forwardRef, useId } from 'react'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { E164_SOMALILAND_PATTERN } from '@/lib/validators'
 
 const COUNTRY_PREFIX = '+252'
-// Somaliland mobile numbers: +252 followed by 9 digits.
-const E164_PATTERN = /^\+252\d{9}$/
 
 export interface PhoneInputProps {
   value: string
@@ -23,7 +22,7 @@ const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
     const generatedId = useId()
     const inputId = id ?? generatedId
     const localDigits = value.startsWith(COUNTRY_PREFIX) ? value.slice(COUNTRY_PREFIX.length) : value
-    const isValid = E164_PATTERN.test(value)
+    const isValid = E164_SOMALILAND_PATTERN.test(value)
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
       const digits = e.target.value.replace(/\D/g, '').slice(0, 9)
@@ -82,4 +81,4 @@ const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
 )
 PhoneInput.displayName = 'PhoneInput'
 
-export { PhoneInput, E164_PATTERN }
+export { PhoneInput }

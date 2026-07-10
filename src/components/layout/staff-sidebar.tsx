@@ -6,6 +6,7 @@ import { CreditCard, LogOut, Package, RotateCcw } from 'lucide-react'
 
 import { cn, getInitials } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth.store'
+import { useAuth } from '@/hooks/use-auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
@@ -18,7 +19,7 @@ const ITEMS = [
 function StaffSidebar() {
   const pathname = usePathname()
   const profile = useAuthStore((s) => s.profile)
-  const clearUser = useAuthStore((s) => s.clearUser)
+  const { signOut } = useAuth()
 
   return (
     <aside className="fixed left-0 top-0 z-30 flex h-full w-64 flex-col bg-stone-900">
@@ -60,7 +61,7 @@ function StaffSidebar() {
         )}
         <button
           type="button"
-          onClick={() => clearUser()}
+          onClick={() => signOut()}
           className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-stone-400 transition-colors duration-100 hover:text-white"
         >
           <LogOut className="size-5" aria-hidden="true" />

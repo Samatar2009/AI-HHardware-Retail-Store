@@ -3,7 +3,7 @@ import { Redis } from '@upstash/redis'
 
 import { env } from './env'
 
-const redis = new Redis({
+export const redis = new Redis({
   url: env.UPSTASH_REDIS_REST_URL,
   token: env.UPSTASH_REDIS_REST_TOKEN,
 })
@@ -28,5 +28,19 @@ export const rateLimiters = {
     redis,
     limiter: Ratelimit.slidingWindow(5, '5 m'),
     prefix: 'ratelimit:auth',
+  }),
+  // App Flow doc Section 2: max 3 OTP requests per hour per phone number
+  // (distinct attack vector from the per-IP `auth` limiter above).
+  otpPerPhone: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(3, '1 h'),
+    prefix: 'ratelimit:otp-per-phone',
+  }),
+  // Phase 4 Step 4.1 (PATCH /api/auth/profile) needs a distinct rate from
+  // the four limiters above.
+  profileUpdate: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(10, '1 m'),
+    prefix: 'ratelimit:profile-update',
   }),
 }

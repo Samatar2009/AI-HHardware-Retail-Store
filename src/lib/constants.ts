@@ -14,6 +14,15 @@ export const ORDER_STATUSES: OrderStatus[] = [
 
 export const USER_ROLES: UserRole[] = ['customer', 'cashier', 'inventory_manager', 'admin']
 
+// Where each role lands after sign-in (Build Plan Phase 4 checkpoint +
+// App Flow doc Section 2.3 — cashiers open a POS session before the till).
+export const ROLE_HOME_PATH: Record<UserRole, string> = {
+  customer: '/',
+  cashier: '/pos/open-session',
+  inventory_manager: '/inventory/dashboard',
+  admin: '/admin/dashboard',
+}
+
 // 1 loyalty point per 1,000 SLSH spent
 export const POINTS_PER_SLSH = 0.001
 

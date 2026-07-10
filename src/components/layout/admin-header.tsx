@@ -4,6 +4,7 @@ import { Bell, LogOut } from 'lucide-react'
 
 import { getInitials } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth.store'
+import { useAuth } from '@/hooks/use-auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
@@ -14,7 +15,7 @@ interface AdminHeaderProps {
 
 function AdminHeader({ title, notificationCount = 0 }: AdminHeaderProps) {
   const profile = useAuthStore((s) => s.profile)
-  const clearUser = useAuthStore((s) => s.clearUser)
+  const { signOut } = useAuth()
 
   return (
     <header className="fixed left-64 right-0 top-0 z-20 flex h-16 items-center gap-4 border-b border-stone-200 bg-white px-8">
@@ -45,7 +46,7 @@ function AdminHeader({ title, notificationCount = 0 }: AdminHeaderProps) {
 
         <button
           type="button"
-          onClick={() => clearUser()}
+          onClick={() => signOut()}
           aria-label="Sign out"
           className="rounded-md p-2 text-stone-500 transition-colors duration-100 hover:bg-stone-100"
         >
