@@ -2,25 +2,184 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+/* Design tokens from Guidelines doc Sections 2-4. Light mode only —
+   the design system explicitly does not define a dark mode. */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Brand colours (Guidelines Section 2.1) — components should reference
+       Tailwind's orange-* classes directly; these vars exist for the rare
+       case a raw value is needed outside a className (e.g. canvas, SVG). */
+    --color-primary: 249 115 22; /* #F97316 — orange-500 */
+    --color-primary-dark: 234 88 12; /* #EA580C — orange-600 */
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
+  * {
+    @apply border-stone-200;
+  }
+
+  /* Customer Store (the default portal at "/") uses a white page background
+     per Guidelines Section 2.4. Admin/Inventory, POS, and Staff portals set
+     their own background on their portal layout wrapper. */
+  body {
+    @apply bg-white text-stone-900;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Radix overlay/content enter-exit animations (Guidelines Section 9.3).
+   Hand-written keyframes rather than a Tailwind animation plugin, per
+   Section 9's "No external animation library" rule. */
+@layer utilities {
+  @keyframes overlay-show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes overlay-hide {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes content-show {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes content-hide {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+  @keyframes popover-show {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes popover-hide {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+  @keyframes drawer-right-show {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes drawer-right-hide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes drawer-bottom-show {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes drawer-bottom-hide {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  .animate-overlay-show[data-state='open'] {
+    animation: overlay-show 200ms ease-out;
+  }
+  .animate-overlay-show[data-state='closed'] {
+    animation: overlay-hide 200ms ease-in;
+  }
+  .animate-content-show[data-state='open'] {
+    animation: content-show 300ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .animate-content-show[data-state='closed'] {
+    animation: content-hide 200ms cubic-bezier(0.4, 0, 1, 1);
+  }
+  .animate-popover-show[data-state='open'] {
+    animation: popover-show 200ms ease-out;
+  }
+  .animate-popover-show[data-state='closed'] {
+    animation: popover-hide 150ms ease-in;
+  }
+  .animate-drawer-right[data-state='open'] {
+    animation: drawer-right-show 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .animate-drawer-right[data-state='closed'] {
+    animation: drawer-right-hide 200ms ease-in;
+  }
+  .animate-drawer-bottom[data-state='open'] {
+    animation: drawer-bottom-show 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .animate-drawer-bottom[data-state='closed'] {
+    animation: drawer-bottom-hide 200ms ease-in;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-overlay-show,
+  .animate-content-show,
+  .animate-popover-show,
+  .animate-drawer-right,
+  .animate-drawer-bottom {
+    animation: none !important;
+  }
+}
+
+/* prefers-reduced-motion overrides for custom keyframe animations
+   (Guidelines Section 9.4) — Tailwind's motion-reduce: variant handles
+   transition/animation utilities on individual elements; these cover the
+   custom-class animations that fall outside that system. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: #e7e5e4; /* stone-200 */
+  }
+  .confetti-canvas {
+    display: none;
+  }
+  .checkmark-path {
+    stroke-dashoffset: 0;
+    transition: none;
   }
 }

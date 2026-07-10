@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 
 import { Providers } from '@/components/providers'
 
@@ -35,10 +36,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-stone-50 font-sans text-stone-900 antialiased">
-        <NextIntlClientProvider>
+    <html lang={locale} className={inter.variable}>
+      <body className="min-h-screen font-sans antialiased">
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>
       </body>
