@@ -11,10 +11,13 @@ interface CartState {
   items: CartItem[]
   appliedCode: string | null
   loyaltyRedemption: number | null
+  locationId: string | null
   addItem: (item: CartItem) => void
   removeItem: (productId: string, variantId: string | null) => void
   updateQty: (productId: string, variantId: string | null, quantity: number) => void
   applyCode: (code: string | null) => void
+  setLoyaltyRedemption: (points: number | null) => void
+  setLocationId: (locationId: string | null) => void
   clearCart: () => void
 }
 
@@ -27,6 +30,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       appliedCode: null,
       loyaltyRedemption: null,
+      locationId: null,
       addItem: (item) =>
         set((state) => {
           const existing = state.items.find((line) => isSameLine(line, item.productId, item.variantId))
@@ -52,6 +56,8 @@ export const useCartStore = create<CartState>()(
           ),
         })),
       applyCode: (code) => set({ appliedCode: code }),
+      setLoyaltyRedemption: (points) => set({ loyaltyRedemption: points }),
+      setLocationId: (locationId) => set({ locationId }),
       clearCart: () => set({ items: [], appliedCode: null, loyaltyRedemption: null }),
     }),
     {

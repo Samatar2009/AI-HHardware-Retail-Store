@@ -24,4 +24,5 @@ export interface CartItem {
   quantity: number
   unitPriceSlsh: number
   imageUrl: string | null
+  variantAttributes?: Record<string, string>
 }

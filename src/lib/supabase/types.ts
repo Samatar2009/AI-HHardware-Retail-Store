@@ -1894,6 +1894,23 @@ export type Database = {
           is_valid: boolean
         }[]
       }
+      create_order: {
+        Args: {
+          p_customer_id: string
+          p_discount_code?: string
+          p_items: Json
+          p_location_id: string
+          p_notes?: string
+          p_payment_method: string
+          p_redeem_loyalty?: boolean
+        }
+        Returns: {
+          order_id: string
+          order_number: string
+          pickup_code: string
+          total_slsh: number
+        }[]
+      }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       expire_parked_transactions: { Args: never; Returns: undefined }
       generate_order_number: { Args: never; Returns: string }

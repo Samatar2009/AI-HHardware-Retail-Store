@@ -43,4 +43,16 @@ export const rateLimiters = {
     limiter: Ratelimit.slidingWindow(10, '1 m'),
     prefix: 'ratelimit:profile-update',
   }),
+  // Phase 6 Step 6.2 (POST /api/orders): 10/min.
+  orderCreate: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(10, '1 m'),
+    prefix: 'ratelimit:order-create',
+  }),
+  // Phase 6 Step 6.5 (POST /api/returns): 5/min.
+  returnCreate: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, '1 m'),
+    prefix: 'ratelimit:return-create',
+  }),
 }

@@ -123,6 +123,20 @@
       transform: translateY(100%);
     }
   }
+  @keyframes checkmark-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-checkmark-pop {
+    animation: checkmark-pop 600ms cubic-bezier(0, 0, 0.2, 1);
+  }
 
   .animate-overlay-show[data-state='open'] {
     animation: overlay-show 200ms ease-out;
@@ -161,7 +175,8 @@
   .animate-content-show,
   .animate-popover-show,
   .animate-drawer-right,
-  .animate-drawer-bottom {
+  .animate-drawer-bottom,
+  .animate-checkmark-pop {
     animation: none !important;
   }
 }

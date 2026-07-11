@@ -121,6 +121,7 @@ function ProductDetailView({ product }: { product: ProductDetailData }) {
       quantity,
       unitPriceSlsh: selectedVariant.price_slsh,
       imageUrl: displayImageUrl ?? null,
+      variantAttributes: selectedVariant.attributes,
     })
     showSuccessToast(tCart('title'), `${name} ${tCart('quantity').toLowerCase()}: ${quantity}`)
   }
