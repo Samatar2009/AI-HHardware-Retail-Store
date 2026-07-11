@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
   const { data: order, error: orderError } = await supabase
     .from('orders')
-    .select('id, customer_id, location_id, status')
+    .select('id, customer_id, location_id, status, updated_at')
     .eq('id', orderId)
     .single()
 
@@ -64,10 +64,48 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   }
 
+  // App Flow doc 3.8: returns are only accepted for completed orders, within
+  // 7 days of completion.
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+  const withinReturnWindow = order.updated_at && Date.now() - new Date(order.updated_at).getTime() < SEVEN_DAYS_MS
+  if (order.status !== 'completed' || !withinReturnWindow) {
+    return NextResponse.json({ error: 'This order is not eligible for a return' }, { status: 400 })
+  }
+
   const { data: orderItems } = await supabase.from('order_items').select('id, quantity').eq('order_id', orderId)
-  const orderItemIds = new Set((orderItems ?? []).map((i) => i.id))
-  if (!items.every((i) => orderItemIds.has(i.orderItemId))) {
-    return NextResponse.json({ error: 'One or more items do not belong to this order' }, { status: 400 })
+  const purchasedQtyById = new Map((orderItems ?? []).map((i) => [i.id, i.quantity]))
+
+  // Sum quantity already requested against each order_item across every
+  // non-rejected return already filed for this order, so a customer can't
+  // submit the same item across multiple requests to be refunded more than
+  // once for what they actually bought.
+  const { data: existingReturns } = await supabase.from('returns').select('id').eq('order_id', orderId).neq('status', 'rejected')
+  const existingReturnIds = (existingReturns ?? []).map((r) => r.id)
+
+  const alreadyRequestedQtyById = new Map<string, number>()
+  if (existingReturnIds.length > 0) {
+    const { data: existingItems } = await supabase
+      .from('return_items')
+      .select('order_item_id, quantity')
+      .in('return_id', existingReturnIds)
+    for (const item of existingItems ?? []) {
+      if (!item.order_item_id) continue
+      alreadyRequestedQtyById.set(item.order_item_id, (alreadyRequestedQtyById.get(item.order_item_id) ?? 0) + item.quantity)
+    }
+  }
+
+  for (const item of items) {
+    const purchasedQty = purchasedQtyById.get(item.orderItemId)
+    if (purchasedQty === undefined) {
+      return NextResponse.json({ error: 'One or more items do not belong to this order' }, { status: 400 })
+    }
+    const alreadyRequested = alreadyRequestedQtyById.get(item.orderItemId) ?? 0
+    if (alreadyRequested + item.quantity > purchasedQty) {
+      return NextResponse.json(
+        { error: 'Requested return quantity exceeds what was purchased (or was already requested)' },
+        { status: 400 }
+      )
+    }
   }
 
   const { data: returnRow, error: returnError } = await supabase
