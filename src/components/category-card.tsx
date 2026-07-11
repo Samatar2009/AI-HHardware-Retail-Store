@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { useLocale } from 'next-intl'
 import { LayoutGrid } from 'lucide-react'

@@ -1899,6 +1899,18 @@ export type Database = {
       generate_order_number: { Args: never; Returns: string }
       generate_pickup_code: { Args: never; Returns: string }
       generate_pos_transaction_number: { Args: never; Returns: string }
+      get_category_tree: {
+        Args: never
+        Returns: {
+          icon_url: string
+          id: string
+          is_active: boolean
+          name_en: string
+          name_so: string
+          parent_id: string
+          sort_order: number
+        }[]
+      }
       is_admin: { Args: never; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
       match_products_semantic: {

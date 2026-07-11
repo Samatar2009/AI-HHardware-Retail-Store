@@ -1,13 +1,13 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { ChevronLeft, ChevronRight, Inbox } from 'lucide-react'
+import { Inbox } from 'lucide-react'
 
-import { cn } from '@/lib/utils'
 import { SearchInput } from '@/components/forms/search-input'
 import { Table, TableBody, TableCell, TableHeader, TableRow, SortableTableHead } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
+import { Pagination } from '@/components/pagination'
 
 export interface DataTableColumn<T> {
   key: string
@@ -113,41 +113,7 @@ function DataTable<T>({
             </TableBody>
           </Table>
 
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-1">
-              <button
-                type="button"
-                aria-label="Previous page"
-                disabled={page === 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="rounded-md p-2 text-stone-500 hover:bg-stone-100 disabled:pointer-events-none disabled:opacity-40"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setPage(p)}
-                  className={cn(
-                    'size-8 rounded-md text-sm font-medium',
-                    p === page ? 'bg-orange-500 text-white' : 'text-stone-600 hover:bg-stone-100'
-                  )}
-                >
-                  {p}
-                </button>
-              ))}
-              <button
-                type="button"
-                aria-label="Next page"
-                disabled={page === totalPages}
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="rounded-md p-2 text-stone-500 hover:bg-stone-100 disabled:pointer-events-none disabled:opacity-40"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
-          )}
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )}
     </div>

@@ -1,3 +1,5 @@
+'use client'
+
 import { formatSLSH, slshToUsd } from '@/lib/utils'
 import { useCurrencyStore } from '@/stores/currency.store'
 
