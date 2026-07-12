@@ -6,6 +6,9 @@ import { createClient } from '@/lib/supabase/server'
 const bodySchema = z.object({
   code: z.string().min(1).max(50),
   orderTotalSlsh: z.number().int().positive(),
+  // Staff-only: POS reuses this route to validate a code against the
+  // customer linked to the sale, not the cashier's own account.
+  customerId: z.string().uuid().optional(),
 })
 
 export async function POST(request: Request) {
@@ -23,9 +26,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 
+  let customerId = user.id
+  if (parsed.data.customerId && parsed.data.customerId !== user.id) {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', user.id).single()
+    const role = profile?.role
+    if (role !== 'cashier' && role !== 'inventory_manager' && role !== 'admin') {
+      return NextResponse.json({ error: 'Not authorized to validate a code for another customer' }, { status: 403 })
+    }
+    customerId = parsed.data.customerId
+  }
+
   const { data, error } = await supabase.rpc('check_discount_code_validity', {
     p_code: parsed.data.code,
-    p_customer_id: user.id,
+    p_customer_id: customerId,
     p_order_total: parsed.data.orderTotalSlsh,
   })
 

@@ -7,27 +7,48 @@ import { Lock, MapPin, User } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { usePosStore } from '@/stores/pos.store'
 import { Badge } from '@/components/ui/badge'
+import { getPendingTransactions, syncOfflineQueue } from '@/lib/offline-queue'
+import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 
 function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(true)
+  const [queuedCount, setQueuedCount] = useState(0)
 
   useEffect(() => {
     setIsOnline(navigator.onLine)
-    const goOnline = () => setIsOnline(true)
-    const goOffline = () => setIsOnline(false)
+    void refreshQueuedCount()
+
+    async function refreshQueuedCount() {
+      const pending = await getPendingTransactions().catch(() => [])
+      setQueuedCount(pending.length)
+    }
+
+    async function goOnline() {
+      setIsOnline(true)
+      const { synced, failed } = await syncOfflineQueue().catch(() => ({ synced: 0, failed: 0 }))
+      if (synced > 0) showSuccessToast(`Synced ${synced} offline transaction(s)`)
+      if (failed > 0) showErrorToast(`${failed} offline transaction(s) failed to sync — review them`)
+      void refreshQueuedCount()
+    }
+    function goOffline() {
+      setIsOnline(false)
+    }
+
     window.addEventListener('online', goOnline)
     window.addEventListener('offline', goOffline)
+    const interval = window.setInterval(refreshQueuedCount, 5000)
     return () => {
       window.removeEventListener('online', goOnline)
       window.removeEventListener('offline', goOffline)
+      window.clearInterval(interval)
     }
   }, [])
 
-  return isOnline
+  return { isOnline, queuedCount }
 }
 
 function PosLayout({ children }: { children: React.ReactNode }) {
-  const isOnline = useOnlineStatus()
+  const { isOnline, queuedCount } = useOnlineStatus()
   const profile = useAuthStore((s) => s.profile)
   const activeSession = usePosStore((s) => s.activeSession)
   const router = useRouter()
@@ -36,8 +57,9 @@ function PosLayout({ children }: { children: React.ReactNode }) {
     <div className="h-screen bg-black">
       <div className="flex h-[52px] items-center gap-4 border-b border-stone-700 bg-black px-4">
         <Badge variant={isOnline ? 'posOnline' : 'posOffline'} dot>
-          {isOnline ? 'ONLINE' : 'OFFLINE'}
+          {isOnline ? 'ONLINE' : `OFFLINE MODE — ${queuedCount} transaction(s) queued`}
         </Badge>
+        {isOnline && queuedCount > 0 && <span className="text-xs text-stone-400">Syncing {queuedCount} queued...</span>}
 
         {profile && (
           <span className="inline-flex items-center gap-1.5 text-sm text-stone-300">

@@ -221,21 +221,24 @@ export type Database = {
           customer_id: string
           discount_code_id: string
           id: string
-          order_id: string
+          order_id: string | null
+          pos_transaction_id: string | null
           used_at: string
         }
         Insert: {
           customer_id: string
           discount_code_id: string
           id?: string
-          order_id: string
+          order_id?: string | null
+          pos_transaction_id?: string | null
           used_at?: string
         }
         Update: {
           customer_id?: string
           discount_code_id?: string
           id?: string
-          order_id?: string
+          order_id?: string | null
+          pos_transaction_id?: string | null
           used_at?: string
         }
         Relationships: [
@@ -258,6 +261,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_code_uses_pos_transaction_id_fkey"
+            columns: ["pos_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "pos_transactions"
             referencedColumns: ["id"]
           },
         ]
