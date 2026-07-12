@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server'
 
 import { createClient } from '@/lib/supabase/server'
 
-export const revalidate = 300
+// Phase 5 originally cached this for 5 minutes (revalidate=300), but Phase 7's
+// checkpoint requires an admin rate change to be immediately reflected in
+// customer-facing prices, so this route is fully dynamic instead.
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   const supabase = await createClient()

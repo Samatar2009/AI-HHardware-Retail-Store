@@ -6,9 +6,15 @@ import { Image as ImageIcon, Upload, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
 
+export interface UploadResult {
+  imageUrl: string
+  thumbnailUrl: string
+}
+
 export interface ImageUploadProps {
   value?: string | null
-  onUploaded: (url: string) => void
+  onUploaded?: (url: string) => void
+  onUploadedDetailed?: (result: UploadResult) => void
   onRemove?: () => void
   label?: string
   error?: string
@@ -18,6 +24,7 @@ export interface ImageUploadProps {
 function ImageUpload({
   value,
   onUploaded,
+  onUploadedDetailed,
   onRemove,
   label,
   error,
@@ -36,8 +43,9 @@ function ImageUpload({
       formData.append('file', file)
       const res = await fetch(uploadUrl, { method: 'POST', body: formData })
       if (!res.ok) throw new Error('Upload failed')
-      const data = (await res.json()) as { url: string }
-      onUploaded(data.url)
+      const data = (await res.json()) as UploadResult
+      onUploaded?.(data.imageUrl)
+      onUploadedDetailed?.(data)
     } catch {
       setLocalError('Upload failed. Please try again.')
     } finally {
