@@ -55,4 +55,11 @@ export const rateLimiters = {
     limiter: Ratelimit.slidingWindow(5, '1 m'),
     prefix: 'ratelimit:return-create',
   }),
+  // Phase 11 Step 11.2 (POST /api/ai/estimate): 3/min — uses the pro model,
+  // so a tighter limit than aiChat's 5/min.
+  aiEstimate: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(3, '1 m'),
+    prefix: 'ratelimit:ai-estimate',
+  }),
 }

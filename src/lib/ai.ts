@@ -5,10 +5,14 @@ import { env } from './env'
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
 
 // gemini-1.5-pro / gemini-1.5-flash / text-embedding-004 (Tech Stack doc's
-// original pins) have all been retired by Google. Using the current stable
-// successors — same "pro" vs "flash" tiers, same intent.
-export const geminiPro = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' })
-export const geminiFlash = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+// original pins) were retired by Google; their pinned successors
+// gemini-2.5-pro / gemini-2.5-flash have now *also* been retired ("no
+// longer available to new users") — the second such retirement in this
+// project. Pinning to a dated model name keeps rotting, so this uses
+// Google's "-latest" aliases instead, which are meant to track whatever
+// model is currently recommended without needing a code change each time.
+export const geminiPro = genAI.getGenerativeModel({ model: 'gemini-pro-latest' })
+export const geminiFlash = genAI.getGenerativeModel({ model: 'gemini-flash-latest' })
 
 const embeddingModel = genAI.getGenerativeModel({ model: 'gemini-embedding-001' })
 

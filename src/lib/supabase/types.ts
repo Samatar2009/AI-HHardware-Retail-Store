@@ -1940,6 +1940,14 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
+      match_product_by_name: {
+        Args: { search_text: string; similarity_threshold?: number }
+        Returns: {
+          name_en: string
+          product_id: string
+          similarity: number
+        }[]
+      }
       match_products_semantic: {
         Args: {
           match_limit?: number
