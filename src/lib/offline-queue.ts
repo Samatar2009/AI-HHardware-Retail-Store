@@ -34,7 +34,30 @@ function getDb() {
 
 export async function queueOfflineTransaction(transactionData: Record<string, unknown>): Promise<number> {
   const db = await getDb()
-  return db.add('pos-offline-queue', { transactionData, queuedAt: new Date().toISOString(), status: 'pending' })
+  const id = await db.add('pos-offline-queue', {
+    transactionData,
+    queuedAt: new Date().toISOString(),
+    status: 'pending',
+  })
+  await registerBackgroundSync()
+  return id
+}
+
+// Progressive enhancement: asks the service worker (worker/index.js) to flush
+// the queue via Background Sync so it can still run after the POS tab closes.
+// Unsupported in Safari/iOS and Firefox — the 'online' event listener in
+// pos-layout.tsx is the universal fallback, so failures here are silent.
+async function registerBackgroundSync(): Promise<void> {
+  if (!('serviceWorker' in navigator) || !('SyncManager' in window)) return
+  try {
+    const registration = await navigator.serviceWorker.ready
+    const syncRegistration = registration as ServiceWorkerRegistration & {
+      sync: { register(tag: string): Promise<void> }
+    }
+    await syncRegistration.sync.register('pos-sync')
+  } catch {
+    // Registration failed or unsupported — no-op, 'online' event covers it.
+  }
 }
 
 export async function getPendingTransactions(): Promise<QueuedPosTransaction[]> {

@@ -2,6 +2,7 @@ import { CustomerHeader } from '@/components/layout/customer-header'
 import { CustomerFooter } from '@/components/layout/customer-footer'
 import { CustomerNav } from '@/components/layout/customer-nav'
 import { ChatWidget } from '@/components/ai/chat-widget'
+import { PwaInstallPrompt } from '@/components/pwa-install-prompt'
 
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
       <CustomerFooter />
       <CustomerNav />
       <ChatWidget />
+      <PwaInstallPrompt />
     </div>
   )
 }

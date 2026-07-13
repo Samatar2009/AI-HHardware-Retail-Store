@@ -42,6 +42,9 @@ public/sw.js.map
 public/workbox-*.js
 public/workbox-*.js.map
 public/fallback-*.js
+public/fallback-*.js.map
+public/worker-*.js
+public/worker-*.js.map
 
 # local Claude Code session state (machine-specific, not project source)
 .claude/
