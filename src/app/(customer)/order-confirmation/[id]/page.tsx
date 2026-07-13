@@ -9,6 +9,7 @@ import { formatSLSH } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { useOrderRealtime } from '@/hooks/use-order-realtime'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import type { Row } from '@/types/database'
 
 type Order = Row<'orders'>
@@ -17,6 +18,7 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
   const router = useRouter()
   const [order, setOrder] = useState<Order | null>(null)
   const [isSendingPayment, setIsSendingPayment] = useState(false)
+  const [transactionReference, setTransactionReference] = useState('')
 
   const { data } = useQuery({
     queryKey: ['order', params.id],
@@ -47,7 +49,11 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
   async function handlePaymentSent() {
     setIsSendingPayment(true)
     try {
-      await fetch(`/api/orders/${params.id}/payment-sent`, { method: 'POST' })
+      await fetch(`/api/orders/${params.id}/payment-sent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transactionReference: transactionReference || undefined }),
+      })
     } finally {
       setIsSendingPayment(false)
     }
@@ -102,9 +108,17 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
               Waiting for payment confirmation...
             </div>
           ) : (
-            <Button variant="primary" size="lg" onClick={handlePaymentSent} loading={isSendingPayment}>
-              I Have Sent Payment
-            </Button>
+            <div className="flex flex-col gap-3">
+              <Input
+                label="Transaction Reference (optional)"
+                placeholder="From your mobile money confirmation SMS"
+                value={transactionReference}
+                onChange={(e) => setTransactionReference(e.target.value)}
+              />
+              <Button variant="primary" size="lg" onClick={handlePaymentSent} loading={isSendingPayment}>
+                I Have Sent Payment
+              </Button>
+            </div>
           )}
         </div>
       )}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CreditCard, LogOut, Package, RotateCcw } from 'lucide-react'
+import { CreditCard, LayoutDashboard, LogOut, Package, RotateCcw } from 'lucide-react'
 
 import { cn, getInitials } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth.store'
@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 
 const ITEMS = [
+  { href: '/staff', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/staff/payments', label: 'Payments', icon: CreditCard },
   { href: '/staff/pickup', label: 'Pickup', icon: Package },
   { href: '/staff/returns', label: 'Returns', icon: RotateCcw },
@@ -29,7 +30,7 @@ function StaffSidebar() {
 
       <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
         {ITEMS.map((item) => {
-          const isActive = pathname.startsWith(item.href)
+          const isActive = 'exact' in item && item.exact ? pathname === item.href : pathname.startsWith(item.href)
           return (
             <Link
               key={item.href}
