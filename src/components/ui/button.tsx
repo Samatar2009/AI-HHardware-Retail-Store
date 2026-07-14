@@ -42,8 +42,14 @@ export interface ButtonProps
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading = false, disabled, children, ...props }, ref) => {
+  (
+    { className, variant, size, asChild = false, loading = false, disabled, children, ...props },
+    ref
+  ) => {
     const Comp = asChild ? Slot : 'button'
+    // Radix's Slot requires exactly one child (it clones Button's props onto
+    // it), so asChild usage can't also splice in a sibling loading spinner —
+    // only the plain <button> case renders the two as siblings.
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
@@ -51,8 +57,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...props}
       >
-        {loading && <Loader2 className="animate-spin" aria-hidden="true" />}
-        {children}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {loading && <Loader2 className="animate-spin" aria-hidden="true" />}
+            {children}
+          </>
+        )}
       </Comp>
     )
   }
