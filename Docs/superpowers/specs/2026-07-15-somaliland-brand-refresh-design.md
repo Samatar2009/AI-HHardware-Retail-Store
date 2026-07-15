@@ -84,8 +84,8 @@ The `banners` table requires `image_url` (`NOT NULL`) and `BannerCarousel` (`src
 3. Upload the three WebP files to the `banners` Storage bucket using the service-role client (same auth pattern as other admin-only server-side operations in this codebase).
 4. Insert 3 rows into `banners`: `title_en`/`title_so` (used for the `alt` text and admin list — not rendered as overlay text, since the text is baked into the image itself), `image_url` pointing at the uploaded asset, `scope_type='all'`, `active_from`/`active_until` spanning a wide window (e.g. now through +2 years, since these aren't time-limited promotions), `sort_order` 1/2/3, `is_active=true`. CTA fields, explicitly:
    - Banner 1 (Welcome): `cta_text_en`/`cta_text_so` and `cta_url` left `null` — it's a brand-welcome banner, not a directed action.
-   - Banner 2 (AI Estimator): `cta_url='/ai/estimate'`, `cta_text_en='Get an estimate'`. **`cta_text_so` needs user-supplied Somali text** — do not invent it; ask before implementing, same rule as the headline copy.
-   - Banner 3 (Loyalty): `cta_url='/loyalty'`, `cta_text_en='View my points'`. **`cta_text_so` needs user-supplied Somali text** — same rule.
+   - Banner 2 (AI Estimator): `cta_url='/ai/estimate'`, `cta_text_en='Get an estimate'`, `cta_text_so='Hel Qiimeyn'` *(user-supplied verbatim)*.
+   - Banner 3 (Loyalty): `cta_url='/loyalty'`, `cta_text_en='View my points'`, `cta_text_so='Eeg Dhibcahayga Abaalmarinta'` *(user-supplied verbatim)*.
 
 This is a one-time seed operation, not a migration — it can be a throwaway Node script run once against the dev Supabase project, not part of the application's runtime code.
 
