@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, PackageX, SlidersHorizontal } from 'lucide-react'
+import { ChevronRight, PackageX, SearchX, SlidersHorizontal } from 'lucide-react'
 
 import { ProductGrid } from '@/components/product-grid'
 import { Pagination } from '@/components/pagination'
@@ -50,7 +50,7 @@ export default function CategoryPage() {
   const [sort, setSort] = useState<SortOption>('relevance')
   const [page, setPage] = useState(1)
 
-  const { data: categoriesData } = useQuery({
+  const { data: categoriesData, isSuccess: categoriesLoaded } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await fetch('/api/categories')
@@ -59,6 +59,7 @@ export default function CategoryPage() {
   })
   const category = categoriesData ? findCategory(categoriesData.categories, categoryId) : null
   const categoryName = category ? (locale === 'so' ? category.name_so : category.name_en) : null
+  const categoryNotFound = categoriesLoaded && !category
 
   const { data: productsData, isLoading } = useQuery({
     queryKey: ['products', { categoryId, sort, page }],
@@ -67,11 +68,26 @@ export default function CategoryPage() {
       const res = await fetch(`/api/products?${params.toString()}`)
       return res.json()
     },
+    enabled: !categoryNotFound,
   })
 
   const products = productsData?.data ?? []
   const totalCount = productsData?.totalCount ?? 0
   const totalPages = productsData?.totalPages ?? 1
+
+  if (categoryNotFound) {
+    return (
+      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+        <EmptyState
+          icon={SearchX}
+          title="Category not found"
+          description="This category may have been removed or the link is incorrect."
+          ctaLabel="Browse all products"
+          onCtaClick={() => router.push('/products')}
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-6 sm:px-6 lg:px-8">
