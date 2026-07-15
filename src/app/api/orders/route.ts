@@ -29,7 +29,10 @@ export async function POST(request: Request) {
   const ip = getClientIp(request)
   const { success } = await rateLimiters.orderCreate.limit(ip)
   if (!success) {
-    return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again shortly.' },
+      { status: 429 }
+    )
   }
 
   const supabase = await createClient()
@@ -43,14 +46,15 @@ export async function POST(request: Request) {
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid order data' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid order data', details: parsed.error.flatten() },
+      { status: 400 }
+    )
   }
-  const { locationId, items, paymentMethod, mobileMoneyPhone, discountCode, redeemLoyalty, notes } = parsed.data
+  const { locationId, items, paymentMethod, mobileMoneyPhone, discountCode, redeemLoyalty, notes } =
+    parsed.data
 
-  const combinedNotes = [
-    notes,
-    mobileMoneyPhone ? `Sent from: ${mobileMoneyPhone}` : null,
-  ]
+  const combinedNotes = [notes, mobileMoneyPhone ? `Sent from: ${mobileMoneyPhone}` : null]
     .filter(Boolean)
     .join(' | ')
 
@@ -59,7 +63,11 @@ export async function POST(request: Request) {
   const { data, error } = await admin.rpc('create_order', {
     p_customer_id: user.id,
     p_location_id: locationId,
-    p_items: items.map((i) => ({ product_id: i.productId, variant_id: i.variantId, quantity: i.quantity })),
+    p_items: items.map((i) => ({
+      product_id: i.productId,
+      variant_id: i.variantId,
+      quantity: i.quantity,
+    })),
     p_payment_method: paymentMethod,
     p_discount_code: discountCode ?? undefined,
     p_redeem_loyalty: redeemLoyalty ?? false,

@@ -13,6 +13,7 @@ import { PhoneInput } from '@/components/forms/phone-input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { showErrorToast } from '@/components/ui/toast'
+import { E164_SOMALILAND_PATTERN } from '@/lib/validators'
 
 interface MobileMoneySetting {
   provider: string
@@ -21,7 +22,10 @@ interface MobileMoneySetting {
   location_id: string
 }
 
-const PAYMENT_OPTIONS: { value: 'zaad' | 'edahab' | 'evc_plus' | 'sahal' | 'cash_on_pickup'; label: string }[] = [
+const PAYMENT_OPTIONS: {
+  value: 'zaad' | 'edahab' | 'evc_plus' | 'sahal' | 'cash_on_pickup'
+  label: string
+}[] = [
   { value: 'zaad', label: 'Zaad' },
   { value: 'edahab', label: 'eDahab' },
   { value: 'evc_plus', label: 'EVC Plus' },
@@ -40,7 +44,8 @@ export default function CheckoutPage() {
   const loyaltyRedemption = useCartStore((s) => s.loyaltyRedemption)
   const clearCart = useCartStore((s) => s.clearCart)
 
-  const [paymentMethod, setPaymentMethod] = useState<(typeof PAYMENT_OPTIONS)[number]['value']>('cash_on_pickup')
+  const [paymentMethod, setPaymentMethod] =
+    useState<(typeof PAYMENT_OPTIONS)[number]['value']>('cash_on_pickup')
   const [mobileMoneyPhone, setMobileMoneyPhone] = useState(profile?.phone ?? '+252')
   const [notes, setNotes] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -74,8 +79,18 @@ export default function CheckoutPage() {
 
   const subtotal = items.reduce((sum, item) => sum + item.unitPriceSlsh * item.quantity, 0)
 
+  // Mobile money payment methods require a real Somaliland number to send
+  // from — mobileMoneyPhone defaults to profile.phone, which can itself be
+  // a non-Somaliland number (e.g. a dev-only test account), so this can't
+  // be assumed valid just because a value is present. Catching it here
+  // (like sign-in's phone check) avoids silently sending an unvalidatable
+  // order to the API and surfacing only a generic "Invalid order data".
+  const isMobileMoneyPhoneRequired = paymentMethod !== 'cash_on_pickup'
+  const isMobileMoneyPhoneValid =
+    !isMobileMoneyPhoneRequired || E164_SOMALILAND_PATTERN.test(mobileMoneyPhone)
+
   async function handlePlaceOrder() {
-    if (!locationId) return
+    if (!locationId || !isMobileMoneyPhoneValid) return
     setIsSubmitting(true)
     setSubmitError(null)
 
@@ -85,7 +100,11 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           locationId,
-          items: items.map((i) => ({ productId: i.productId, variantId: i.variantId, quantity: i.quantity })),
+          items: items.map((i) => ({
+            productId: i.productId,
+            variantId: i.variantId,
+            quantity: i.quantity,
+          })),
           paymentMethod,
           mobileMoneyPhone: paymentMethod !== 'cash_on_pickup' ? mobileMoneyPhone : undefined,
           discountCode: appliedCode ?? undefined,
@@ -96,8 +115,15 @@ export default function CheckoutPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setSubmitError(data.error ?? 'Could not place your order. Please try again.')
-        showErrorToast('Order failed', data.error ?? 'Could not place your order. Please try again.')
+        // The client-side checks above should catch a bad mobileMoneyPhone
+        // before this point, but surface the API's field-specific detail
+        // (if present) rather than the generic message as a fallback.
+        const fieldError = data.details?.fieldErrors?.mobileMoneyPhone?.[0]
+        const message = fieldError
+          ? 'Enter a valid Somaliland phone number to send payment from.'
+          : (data.error ?? 'Could not place your order. Please try again.')
+        setSubmitError(message)
+        showErrorToast('Order failed', message)
         return
       }
 
@@ -124,7 +150,11 @@ export default function CheckoutPage() {
         <section className="rounded-md border border-stone-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-stone-900">Pickup Location</p>
-            <button type="button" onClick={() => router.push('/cart')} className="text-xs font-medium text-orange-600">
+            <button
+              type="button"
+              onClick={() => router.push('/cart')}
+              className="text-xs font-medium text-orange-600"
+            >
               Change
             </button>
           </div>
@@ -173,6 +203,9 @@ export default function CheckoutPage() {
                 value={mobileMoneyPhone}
                 onChange={setMobileMoneyPhone}
                 label="Which number did you send from?"
+                error={
+                  !isMobileMoneyPhoneValid ? 'Enter a valid Somaliland phone number' : undefined
+                }
               />
             </div>
           )}
@@ -192,7 +225,10 @@ export default function CheckoutPage() {
           <p className="mb-3 text-sm font-semibold text-stone-900">Order Summary</p>
           <div className="flex flex-col gap-1 text-sm">
             {items.map((item) => (
-              <div key={`${item.productId}:${item.variantId ?? ''}`} className="flex justify-between text-stone-600">
+              <div
+                key={`${item.productId}:${item.variantId ?? ''}`}
+                className="flex justify-between text-stone-600"
+              >
                 <span>
                   {item.nameEn} × {item.quantity}
                 </span>
@@ -203,7 +239,11 @@ export default function CheckoutPage() {
               <span>Subtotal</span>
               <div className="text-right">
                 <p>{formatSLSH(subtotal)}</p>
-                {exchangeRate > 0 && <p className="text-xs font-normal text-stone-500">{slshToUsd(subtotal, exchangeRate)}</p>}
+                {exchangeRate > 0 && (
+                  <p className="text-xs font-normal text-stone-500">
+                    {slshToUsd(subtotal, exchangeRate)}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -211,7 +251,13 @@ export default function CheckoutPage() {
 
         {submitError && <p className="text-sm text-red-600">{submitError}</p>}
 
-        <Button variant="primary" size="lg" loading={isSubmitting} disabled={isSubmitting} onClick={handlePlaceOrder}>
+        <Button
+          variant="primary"
+          size="lg"
+          loading={isSubmitting}
+          disabled={isSubmitting || !isMobileMoneyPhoneValid}
+          onClick={handlePlaceOrder}
+        >
           Place Order
         </Button>
       </div>
