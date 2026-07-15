@@ -52,6 +52,7 @@ public/worker-*.js.map
 
 # local Claude Code session state (machine-specific, not project source)
 .claude/
+.superpowers/
 
 # requirements docs contain live secrets in plaintext — never commit these
 Borama_Hardware_Implementation_Requirements.docx
