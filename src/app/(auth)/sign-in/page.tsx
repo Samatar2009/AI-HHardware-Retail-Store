@@ -5,9 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import { PhoneInput } from '@/components/forms/phone-input'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { E164_SOMALILAND_PATTERN } from '@/lib/validators'
+import { isValidAuthPhone } from '@/lib/validators'
 import { safeNext } from '@/lib/safe-next'
+
+const IS_DEV = process.env.NODE_ENV === 'development'
 
 export default function SignInPage() {
   const t = useTranslations('auth')
@@ -15,10 +18,16 @@ export default function SignInPage() {
   const searchParams = useSearchParams()
   const next = safeNext(searchParams.get('next'))
   const [phone, setPhone] = useState('+252')
+  const [devPhone, setDevPhone] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const isValidPhone = E164_SOMALILAND_PATTERN.test(phone)
+  // Dev-only override: PhoneInput always forces a +252 prefix, so local
+  // testing with a real non-Somaliland number (Twilio can't text a fake
+  // one) needs a raw entry point. Bypassed entirely in production builds —
+  // see isValidAuthPhone in src/lib/validators.ts.
+  const effectivePhone = IS_DEV && devPhone ? devPhone : phone
+  const isValidPhone = isValidAuthPhone(effectivePhone)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -31,7 +40,7 @@ export default function SignInPage() {
       const res = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone: effectivePhone }),
       })
       const data = await res.json()
 
@@ -41,7 +50,7 @@ export default function SignInPage() {
       }
 
       const verifyUrl = new URL('/verify', window.location.origin)
-      verifyUrl.searchParams.set('phone', phone)
+      verifyUrl.searchParams.set('phone', effectivePhone)
       if (next) verifyUrl.searchParams.set('next', next)
       router.push(verifyUrl.pathname + verifyUrl.search)
     } catch {
@@ -65,6 +74,16 @@ export default function SignInPage() {
           </div>
 
           <PhoneInput value={phone} onChange={setPhone} label={t('phoneNumber')} error={error ?? undefined} required />
+
+          {IS_DEV && (
+            <Input
+              label="Dev only: test with any E.164 number"
+              placeholder="+16135014762"
+              value={devPhone}
+              onChange={(e) => setDevPhone(e.target.value.trim())}
+              helperText="Overrides the Somaliland field above. Never available in production."
+            />
+          )}
 
           <Button type="submit" variant="primary" size="lg" disabled={!isValidPhone} loading={isSubmitting}>
             {t('sendCode')}
