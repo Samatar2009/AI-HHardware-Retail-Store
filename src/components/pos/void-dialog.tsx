@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { showErrorToast, showSuccessToast } from '@/components/ui/toast'
@@ -15,7 +22,13 @@ interface VoidDialogProps {
   onVoided: () => void
 }
 
-function VoidDialog({ open, onOpenChange, transactionId, transactionNumber, onVoided }: VoidDialogProps) {
+function VoidDialog({
+  open,
+  onOpenChange,
+  transactionId,
+  transactionNumber,
+  onVoided,
+}: VoidDialogProps) {
   const [reason, setReason] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -46,17 +59,32 @@ function VoidDialog({ open, onOpenChange, transactionId, transactionNumber, onVo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Void Transaction {transactionNumber ? `#${transactionNumber}` : ''}</DialogTitle>
+          <DialogTitle>
+            Void Transaction {transactionNumber ? `#${transactionNumber}` : ''}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <p className="mb-3 text-sm text-stone-500">Voiding requires manager (admin or inventory manager) sign-in and reverses inventory and any loyalty points earned.</p>
-          <Textarea label="Void Reason" required value={reason} onChange={(e) => setReason(e.target.value)} />
+          <p className="mb-3 text-sm text-stone-500">
+            Voiding requires manager (admin or inventory manager) sign-in and reverses inventory and
+            any loyalty points earned.
+          </p>
+          <Textarea
+            label="Void Reason"
+            required
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
         </DialogBody>
         <DialogFooter>
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={() => void handleVoid()} loading={isSubmitting} disabled={reason.trim().length < 3}>
+          <Button
+            variant="destructive"
+            onClick={() => void handleVoid()}
+            loading={isSubmitting}
+            disabled={reason.trim().length < 3}
+          >
             Void Sale
           </Button>
         </DialogFooter>

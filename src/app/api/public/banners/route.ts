@@ -24,7 +24,9 @@ export async function GET(request: Request) {
     .gte('active_until', now)
     .order('sort_order', { ascending: true })
 
-  query = locationId ? query.or(`scope_type.eq.all,scope_location_id.eq.${locationId}`) : query.eq('scope_type', 'all')
+  query = locationId
+    ? query.or(`scope_type.eq.all,scope_location_id.eq.${locationId}`)
+    : query.eq('scope_type', 'all')
 
   const { data, error } = await query
 

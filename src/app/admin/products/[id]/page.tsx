@@ -14,8 +14,20 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { PriceInput } from '@/components/forms/price-input'
 import { ImageUpload, type UploadResult } from '@/components/forms/image-upload'
-import { AttributeEditor, attributesToObject, objectToAttributes, type AttributePair } from '@/components/forms/attribute-editor'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  AttributeEditor,
+  attributesToObject,
+  objectToAttributes,
+  type AttributePair,
+} from '@/components/forms/attribute-editor'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { Spinner } from '@/components/ui/spinner'
 import { formatSLSH } from '@/lib/utils'
@@ -86,7 +98,9 @@ export default function AdminProductsIdPage() {
     void loadProduct()
     void fetch('/api/categories')
       .then((res) => res.json())
-      .then((data: { categories: CategoryOption[] }) => setCategories(flattenCategories(data.categories)))
+      .then((data: { categories: CategoryOption[] }) =>
+        setCategories(flattenCategories(data.categories))
+      )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId])
 
@@ -138,13 +152,23 @@ export default function AdminProductsIdPage() {
       await fetch(`/api/admin/variants/${editingVariant.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sku: variantSku, priceSlsh: variantPrice, costPriceSlsh: variantCost, attributes }),
+        body: JSON.stringify({
+          sku: variantSku,
+          priceSlsh: variantPrice,
+          costPriceSlsh: variantCost,
+          attributes,
+        }),
       })
     } else {
       await fetch(`/api/admin/products/${productId}/variants`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sku: variantSku, priceSlsh: variantPrice, costPriceSlsh: variantCost, attributes }),
+        body: JSON.stringify({
+          sku: variantSku,
+          priceSlsh: variantPrice,
+          costPriceSlsh: variantCost,
+          attributes,
+        }),
       })
     }
 
@@ -167,7 +191,11 @@ export default function AdminProductsIdPage() {
     await fetch(`/api/admin/products/${productId}/images`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageUrl: result.imageUrl, thumbnailUrl: result.thumbnailUrl, sortOrder: product.product_images.length }),
+      body: JSON.stringify({
+        imageUrl: result.imageUrl,
+        thumbnailUrl: result.thumbnailUrl,
+        sortOrder: product.product_images.length,
+      }),
     })
     void loadProduct()
   }
@@ -182,7 +210,10 @@ export default function AdminProductsIdPage() {
     const reordered = [...product.product_images].sort((a, b) => a.sort_order - b.sort_order)
     const [moved] = reordered.splice(from, 1)
     reordered.splice(to, 0, moved)
-    setProduct({ ...product, product_images: reordered.map((img, i) => ({ ...img, sort_order: i })) })
+    setProduct({
+      ...product,
+      product_images: reordered.map((img, i) => ({ ...img, sort_order: i })),
+    })
 
     await fetch(`/api/admin/products/${productId}/images`, {
       method: 'PATCH',
@@ -210,7 +241,11 @@ export default function AdminProductsIdPage() {
         return
       }
       const data = (await res.json()) as { description_en: string; description_so: string }
-      setProduct({ ...product, description_en: data.description_en, description_so: data.description_so })
+      setProduct({
+        ...product,
+        description_en: data.description_en,
+        description_so: data.description_so,
+      })
       await updateField('descriptionEn', data.description_en)
       await updateField('descriptionSo', data.description_so)
       showSuccessToast('Description generated')
@@ -231,7 +266,10 @@ export default function AdminProductsIdPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={product.name_en} subtitle={`Base SKU category: ${product.category?.name_en ?? '—'}`} />
+      <PageHeader
+        title={product.name_en}
+        subtitle={`Base SKU category: ${product.category?.name_en ?? '—'}`}
+      />
 
       <Card>
         <CardHeader>
@@ -253,7 +291,12 @@ export default function AdminProductsIdPage() {
 
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-stone-700">Description</span>
-            <Button variant="ghost" size="sm" onClick={() => void regenerateDescription()} loading={isGenerating}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => void regenerateDescription()}
+              loading={isGenerating}
+            >
               <Sparkles className="size-3.5" /> Regenerate with AI
             </Button>
           </div>
@@ -285,8 +328,16 @@ export default function AdminProductsIdPage() {
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <Input label="Brand" defaultValue={product.brand ?? ''} onBlur={(e) => updateField('brand', e.target.value)} />
-            <Input label="Unit" defaultValue={product.unit} onBlur={(e) => updateField('unit', e.target.value)} />
+            <Input
+              label="Brand"
+              defaultValue={product.brand ?? ''}
+              onBlur={(e) => updateField('brand', e.target.value)}
+            />
+            <Input
+              label="Unit"
+              defaultValue={product.unit}
+              onBlur={(e) => updateField('unit', e.target.value)}
+            />
           </div>
 
           <div className="flex items-center gap-6">
@@ -343,7 +394,11 @@ export default function AdminProductsIdPage() {
                     <Button variant="ghost" size="sm" onClick={() => openEditVariant(variant)}>
                       <Pencil className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => void toggleVariantActive(variant)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => void toggleVariantActive(variant)}
+                    >
                       {variant.is_active ? 'Deactivate' : 'Activate'}
                     </Button>
                   </td>
@@ -399,16 +454,34 @@ export default function AdminProductsIdPage() {
             <DialogTitle>{editingVariant ? 'Edit Variant' : 'Add Variant'}</DialogTitle>
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
-            <Input label="SKU" required value={variantSku} onChange={(e) => setVariantSku(e.target.value)} />
-            <PriceInput label="Price (SLSH)" required value={variantPrice} onChange={setVariantPrice} />
-            <PriceInput label="Cost Price (SLSH)" required value={variantCost} onChange={setVariantCost} />
+            <Input
+              label="SKU"
+              required
+              value={variantSku}
+              onChange={(e) => setVariantSku(e.target.value)}
+            />
+            <PriceInput
+              label="Price (SLSH)"
+              required
+              value={variantPrice}
+              onChange={setVariantPrice}
+            />
+            <PriceInput
+              label="Cost Price (SLSH)"
+              required
+              value={variantCost}
+              onChange={setVariantCost}
+            />
             <AttributeEditor pairs={variantAttributes} onChange={setVariantAttributes} />
           </DialogBody>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setVariantDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => void saveVariant()} disabled={!variantSku || variantPrice === undefined || variantCost === undefined}>
+            <Button
+              onClick={() => void saveVariant()}
+              disabled={!variantSku || variantPrice === undefined || variantCost === undefined}
+            >
               Save
             </Button>
           </DialogFooter>

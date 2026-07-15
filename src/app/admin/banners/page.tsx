@@ -10,7 +10,14 @@ import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { ImageUpload, type UploadResult } from '@/components/forms/image-upload'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 
 interface BannerRow {
@@ -51,7 +58,9 @@ export default function AdminBannersPage() {
   }
 
   async function toggleActive(banner: BannerRow) {
-    setBanners((prev) => prev.map((b) => (b.id === banner.id ? { ...b, is_active: !b.is_active } : b)))
+    setBanners((prev) =>
+      prev.map((b) => (b.id === banner.id ? { ...b, is_active: !b.is_active } : b))
+    )
     await fetch(`/api/admin/banners/${banner.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -107,15 +116,24 @@ export default function AdminBannersPage() {
         {banners.map((banner) => (
           <Card key={banner.id}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={banner.image_url} alt="" className="aspect-video w-full rounded-t-md object-cover" />
+            <img
+              src={banner.image_url}
+              alt=""
+              className="aspect-video w-full rounded-t-md object-cover"
+            />
             <CardContent>
               <div className="flex items-center justify-between">
                 <span className="font-medium text-stone-900">{banner.title_en}</span>
-                <Badge variant={banner.is_active ? 'stockInStock' : 'orderCancelled'}>{banner.is_active ? 'Active' : 'Inactive'}</Badge>
+                <Badge variant={banner.is_active ? 'stockInStock' : 'orderCancelled'}>
+                  {banner.is_active ? 'Active' : 'Inactive'}
+                </Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-stone-500">Sort order {banner.sort_order}</span>
-                <Switch checked={banner.is_active} onCheckedChange={() => void toggleActive(banner)} />
+                <Switch
+                  checked={banner.is_active}
+                  onCheckedChange={() => void toggleActive(banner)}
+                />
               </div>
             </CardContent>
           </Card>
@@ -128,8 +146,18 @@ export default function AdminBannersPage() {
             <DialogTitle>New Banner</DialogTitle>
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
-            <Input label="Title (English)" required value={titleEn} onChange={(e) => setTitleEn(e.target.value)} />
-            <Input label="Title (Somali)" required value={titleSo} onChange={(e) => setTitleSo(e.target.value)} />
+            <Input
+              label="Title (English)"
+              required
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+            />
+            <Input
+              label="Title (Somali)"
+              required
+              value={titleSo}
+              onChange={(e) => setTitleSo(e.target.value)}
+            />
             <ImageUpload
               label="Banner Image"
               value={imageUrl}
@@ -139,15 +167,30 @@ export default function AdminBannersPage() {
             <Input label="CTA Text" value={ctaText} onChange={(e) => setCtaText(e.target.value)} />
             <Input label="CTA URL" value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} />
             <div className="grid grid-cols-2 gap-4">
-              <Input label="Active From" type="date" required value={activeFrom} onChange={(e) => setActiveFrom(e.target.value)} />
-              <Input label="Active Until" type="date" required value={activeUntil} onChange={(e) => setActiveUntil(e.target.value)} />
+              <Input
+                label="Active From"
+                type="date"
+                required
+                value={activeFrom}
+                onChange={(e) => setActiveFrom(e.target.value)}
+              />
+              <Input
+                label="Active Until"
+                type="date"
+                required
+                value={activeUntil}
+                onChange={(e) => setActiveUntil(e.target.value)}
+              />
             </div>
           </DialogBody>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => void createBanner()} disabled={!titleEn || !titleSo || !imageUrl || !activeFrom || !activeUntil}>
+            <Button
+              onClick={() => void createBanner()}
+              disabled={!titleEn || !titleSo || !imageUrl || !activeFrom || !activeUntil}
+            >
               Create
             </Button>
           </DialogFooter>

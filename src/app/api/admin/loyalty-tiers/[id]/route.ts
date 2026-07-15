@@ -19,12 +19,20 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
   const body = parsed.data
 
-  const updates: Record<string, unknown> = { updated_by: userId, updated_at: new Date().toISOString() }
+  const updates: Record<string, unknown> = {
+    updated_by: userId,
+    updated_at: new Date().toISOString(),
+  }
   if (body.minLifetimePoints !== undefined) updates.min_lifetime_points = body.minLifetimePoints
   if (body.discountPercentage !== undefined) updates.discount_percentage = body.discountPercentage
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('loyalty_tiers').update(updates).eq('id', params.id).select().single()
+  const { data, error } = await supabase
+    .from('loyalty_tiers')
+    .update(updates)
+    .eq('id', params.id)
+    .select()
+    .single()
 
   if (error || !data) {
     return NextResponse.json({ error: 'Could not update tier' }, { status: 500 })

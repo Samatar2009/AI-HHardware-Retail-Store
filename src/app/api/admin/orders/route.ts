@@ -16,7 +16,9 @@ export async function GET(request: Request) {
   const supabase = await createClient()
   let query = supabase
     .from('orders')
-    .select('*, customer:profiles!orders_customer_id_fkey(phone, full_name), location:locations(name_en)')
+    .select(
+      '*, customer:profiles!orders_customer_id_fkey(phone, full_name), location:locations(name_en)'
+    )
     .order('created_at', { ascending: false })
 
   if (status) query = query.eq('status', status)

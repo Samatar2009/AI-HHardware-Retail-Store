@@ -73,7 +73,13 @@ export default function SignInPage() {
             <p className="mt-1 text-sm text-stone-500">{t('phoneNumber')}</p>
           </div>
 
-          <PhoneInput value={phone} onChange={setPhone} label={t('phoneNumber')} error={error ?? undefined} required />
+          <PhoneInput
+            value={phone}
+            onChange={setPhone}
+            label={t('phoneNumber')}
+            error={error ?? undefined}
+            required
+          />
 
           {IS_DEV && (
             <Input
@@ -85,7 +91,13 @@ export default function SignInPage() {
             />
           )}
 
-          <Button type="submit" variant="primary" size="lg" disabled={!isValidPhone} loading={isSubmitting}>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={!isValidPhone}
+            loading={isSubmitting}
+          >
             {t('sendCode')}
           </Button>
         </form>

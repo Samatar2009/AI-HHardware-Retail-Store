@@ -40,7 +40,9 @@ function StaffHeader({ title }: StaffHeaderProps) {
         {profile && (
           <div className="flex items-center gap-2">
             <Avatar className="size-8">
-              <AvatarFallback className="text-xs">{getInitials(profile.full_name || profile.phone)}</AvatarFallback>
+              <AvatarFallback className="text-xs">
+                {getInitials(profile.full_name || profile.phone)}
+              </AvatarFallback>
             </Avatar>
             <span className="text-sm text-stone-700">{profile.full_name || profile.phone}</span>
           </div>

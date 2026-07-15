@@ -52,7 +52,11 @@ function CategoryTreeItem({
     <div>
       <div className="flex items-center gap-1">
         {node.children.length > 0 && (
-          <button type="button" onClick={() => setExpanded((e) => !e)} aria-label="Toggle subcategories">
+          <button
+            type="button"
+            onClick={() => setExpanded((e) => !e)}
+            aria-label="Toggle subcategories"
+          >
             {expanded ? (
               <ChevronDown className="size-3.5 text-stone-400" />
             ) : (
@@ -65,7 +69,9 @@ function CategoryTreeItem({
           onClick={() => onSelect(node.id)}
           className={cn(
             'flex-1 rounded-md px-2 py-1.5 text-left text-sm',
-            selectedId === node.id ? 'bg-orange-50 font-medium text-orange-700' : 'text-stone-700 hover:bg-stone-100'
+            selectedId === node.id
+              ? 'bg-orange-50 font-medium text-orange-700'
+              : 'text-stone-700 hover:bg-stone-100'
           )}
         >
           {name}
@@ -74,7 +80,12 @@ function CategoryTreeItem({
       {expanded && node.children.length > 0 && (
         <div className="ml-4 flex flex-col gap-0.5">
           {node.children.map((child) => (
-            <CategoryTreeItem key={child.id} node={child} selectedId={selectedId} onSelect={onSelect} />
+            <CategoryTreeItem
+              key={child.id}
+              node={child}
+              selectedId={selectedId}
+              onSelect={onSelect}
+            />
           ))}
         </div>
       )}
@@ -82,7 +93,14 @@ function CategoryTreeItem({
   )
 }
 
-function ProductFilters({ categories, availableBrands, priceBounds, filters, onChange, onClear }: ProductFiltersProps) {
+function ProductFilters({
+  categories,
+  availableBrands,
+  priceBounds,
+  filters,
+  onChange,
+  onClear,
+}: ProductFiltersProps) {
   const lowerBound = priceBounds.min
   const upperBound = priceBounds.max > priceBounds.min ? priceBounds.max : priceBounds.min + 1
   const sliderValue = [filters.minPrice ?? lowerBound, filters.maxPrice ?? upperBound]
@@ -97,7 +115,9 @@ function ProductFilters({ categories, availableBrands, priceBounds, filters, onC
               key={cat.id}
               node={cat}
               selectedId={filters.categoryId}
-              onSelect={(id) => onChange({ ...filters, categoryId: filters.categoryId === id ? null : id })}
+              onSelect={(id) =>
+                onChange({ ...filters, categoryId: filters.categoryId === id ? null : id })
+              }
             />
           ))}
         </div>
@@ -138,7 +158,9 @@ function ProductFilters({ categories, availableBrands, priceBounds, filters, onC
                 onCheckedChange={(checked) =>
                   onChange({
                     ...filters,
-                    brands: checked ? [...filters.brands, brand] : filters.brands.filter((b) => b !== brand),
+                    brands: checked
+                      ? [...filters.brands, brand]
+                      : filters.brands.filter((b) => b !== brand),
                   })
                 }
               />

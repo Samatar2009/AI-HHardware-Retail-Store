@@ -76,11 +76,15 @@ export default function PosOpenSessionPage() {
     <div className="flex h-screen items-center justify-center bg-black px-4">
       <div className="w-full max-w-sm rounded-lg border border-stone-700 bg-stone-900 p-8">
         <h1 className="mb-1 text-xl font-bold text-white">Open Register</h1>
-        <p className="mb-6 text-sm text-stone-400">Enter the starting cash float to begin your shift.</p>
+        <p className="mb-6 text-sm text-stone-400">
+          Enter the starting cash float to begin your shift.
+        </p>
 
         <div className="flex flex-col gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-stone-300">Starting Cash (SLSH)</label>
+            <label className="mb-1 block text-sm font-medium text-stone-300">
+              Starting Cash (SLSH)
+            </label>
             <Input
               type="number"
               value={startingCashSlsh}
@@ -89,7 +93,9 @@ export default function PosOpenSessionPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-stone-300">Starting Cash (USD)</label>
+            <label className="mb-1 block text-sm font-medium text-stone-300">
+              Starting Cash (USD)
+            </label>
             <Input
               type="number"
               value={startingCashUsd}
@@ -98,7 +104,12 @@ export default function PosOpenSessionPage() {
             />
           </div>
 
-          <Button onClick={() => void handleOpen()} loading={isSubmitting} disabled={!startingCashSlsh} className="mt-2">
+          <Button
+            onClick={() => void handleOpen()}
+            loading={isSubmitting}
+            disabled={!startingCashSlsh}
+            className="mt-2"
+          >
             Open Register
           </Button>
         </div>

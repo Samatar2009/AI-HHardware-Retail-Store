@@ -60,7 +60,11 @@ export default function InventoryStockPage() {
     }
   }
 
-  async function updateField(row: InventoryRow, field: 'threshold' | 'aisleShelf', value: number | string) {
+  async function updateField(
+    row: InventoryRow,
+    field: 'threshold' | 'aisleShelf',
+    value: number | string
+  ) {
     await fetch(`/api/inventory/${row.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -70,14 +74,23 @@ export default function InventoryStockPage() {
 
   const categories = useMemo(() => {
     const set = new Set<string>()
-    for (const row of rows) if (row.product?.category?.name_en) set.add(row.product.category.name_en)
-    return [{ value: 'all', label: 'All categories' }, ...[...set].map((c) => ({ value: c, label: c }))]
+    for (const row of rows)
+      if (row.product?.category?.name_en) set.add(row.product.category.name_en)
+    return [
+      { value: 'all', label: 'All categories' },
+      ...[...set].map((c) => ({ value: c, label: c })),
+    ]
   }, [rows])
 
   const filtered = useMemo(() => {
     return rows.filter((row) => {
-      if (categoryFilter !== 'all' && row.product?.category?.name_en !== categoryFilter) return false
-      if (alertFilter === 'low' && !(row.quantity_on_hand > 0 && row.quantity_on_hand <= row.threshold)) return false
+      if (categoryFilter !== 'all' && row.product?.category?.name_en !== categoryFilter)
+        return false
+      if (
+        alertFilter === 'low' &&
+        !(row.quantity_on_hand > 0 && row.quantity_on_hand <= row.threshold)
+      )
+        return false
       if (alertFilter === 'out' && row.quantity_on_hand !== 0) return false
       if (search) {
         const q = search.toLowerCase()
@@ -109,7 +122,9 @@ export default function InventoryStockPage() {
       complete: async (results) => {
         let updated = 0
         for (const record of results.data) {
-          const match = rows.find((r) => r.variant?.sku === record.sku || r.product?.sku_base === record.sku)
+          const match = rows.find(
+            (r) => r.variant?.sku === record.sku || r.product?.sku_base === record.sku
+          )
           const threshold = Number(record.threshold)
           if (match && !Number.isNaN(threshold)) {
             await updateField(match, 'threshold', threshold)
@@ -128,7 +143,9 @@ export default function InventoryStockPage() {
       key: 'image',
       header: '',
       render: (row) => {
-        const thumb = [...(row.product?.product_images ?? [])].sort((a, b) => a.sort_order - b.sort_order)[0]
+        const thumb = [...(row.product?.product_images ?? [])].sort(
+          (a, b) => a.sort_order - b.sort_order
+        )[0]
         return thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={thumb.thumbnail_url} alt="" className="size-10 rounded object-cover" />
@@ -158,7 +175,11 @@ export default function InventoryStockPage() {
       render: (row) => row.quantity_on_hand,
     },
     { key: 'reserved', header: 'Reserved', render: (row) => row.quantity_reserved },
-    { key: 'available', header: 'Available', render: (row) => row.quantity_on_hand - row.quantity_reserved },
+    {
+      key: 'available',
+      header: 'Available',
+      render: (row) => row.quantity_on_hand - row.quantity_reserved,
+    },
     {
       key: 'threshold',
       header: 'Threshold',
@@ -187,11 +208,16 @@ export default function InventoryStockPage() {
       header: 'Status',
       render: (row) => {
         if (row.quantity_on_hand === 0) return <Badge variant="stockOutOfStock">Out of Stock</Badge>
-        if (row.quantity_on_hand <= row.threshold) return <Badge variant="stockLowStock">Low Stock</Badge>
+        if (row.quantity_on_hand <= row.threshold)
+          return <Badge variant="stockLowStock">Low Stock</Badge>
         return <Badge variant="stockInStock">In Stock</Badge>
       },
     },
-    { key: 'restocked', header: 'Last Restocked', render: (row) => (row.last_restocked_at ? formatDate(row.last_restocked_at) : '—') },
+    {
+      key: 'restocked',
+      header: 'Last Restocked',
+      render: (row) => (row.last_restocked_at ? formatDate(row.last_restocked_at) : '—'),
+    },
   ]
 
   return (
@@ -223,8 +249,16 @@ export default function InventoryStockPage() {
       />
 
       <div className="mb-4 grid grid-cols-2 gap-4">
-        <SimpleSelect value={categoryFilter} onValueChange={setCategoryFilter} options={categories} />
-        <SimpleSelect value={alertFilter} onValueChange={setAlertFilter} options={ALERT_STATUS_OPTIONS} />
+        <SimpleSelect
+          value={categoryFilter}
+          onValueChange={setCategoryFilter}
+          options={categories}
+        />
+        <SimpleSelect
+          value={alertFilter}
+          onValueChange={setAlertFilter}
+          options={ALERT_STATUS_OPTIONS}
+        />
       </div>
 
       <DataTable

@@ -37,7 +37,11 @@ function BannerCarousel({ banners, autoPlayMs = 5000 }: BannerCarouselProps) {
         {banners.map((banner) => {
           const image = (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={banner.imageUrl} alt={banner.altText} className="h-full w-full shrink-0 object-cover" />
+            <img
+              src={banner.imageUrl}
+              alt={banner.altText}
+              className="h-full w-full shrink-0 object-cover"
+            />
           )
           return (
             <div key={banner.id} className="h-full w-full shrink-0">

@@ -13,7 +13,10 @@ import { formatSLSH, formatDate } from '@/lib/utils'
 import type { Row } from '@/types/database'
 
 type OrderItem = Row<'order_items'>
-type Order = Row<'orders'> & { customer: { phone: string; full_name: string | null } | null; order_items: OrderItem[] }
+type Order = Row<'orders'> & {
+  customer: { phone: string; full_name: string | null } | null
+  order_items: OrderItem[]
+}
 
 export default function StaffPickupPage() {
   const [awaitingPrep, setAwaitingPrep] = useState<Order[]>([])
@@ -120,11 +123,15 @@ export default function StaffPickupPage() {
       <div className="flex flex-col gap-3 rounded-md border border-stone-200 p-4">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-stone-900">{order.order_number}</p>
-          <Badge variant={ORDER_STATUS_BADGE[order.status as keyof typeof ORDER_STATUS_BADGE].variant}>
+          <Badge
+            variant={ORDER_STATUS_BADGE[order.status as keyof typeof ORDER_STATUS_BADGE].variant}
+          >
             {ORDER_STATUS_BADGE[order.status as keyof typeof ORDER_STATUS_BADGE].label}
           </Badge>
         </div>
-        <p className="text-sm text-stone-500">{order.customer?.full_name || order.customer?.phone}</p>
+        <p className="text-sm text-stone-500">
+          {order.customer?.full_name || order.customer?.phone}
+        </p>
         <div className="divide-y divide-stone-100">
           {order.order_items.map((item) => (
             <div key={item.id} className="flex justify-between py-1 text-sm">
@@ -178,7 +185,11 @@ export default function StaffPickupPage() {
             <CardTitle>Walk-in Pickup (lost code)</CardTitle>
           </CardHeader>
           <CardContent>
-            <Input placeholder="Order number or phone" value={walkInQuery} onChange={(e) => void runWalkInSearch(e.target.value)} />
+            <Input
+              placeholder="Order number or phone"
+              value={walkInQuery}
+              onChange={(e) => void runWalkInSearch(e.target.value)}
+            />
             <div className="mt-3 flex flex-col gap-3">
               {walkInResults.map((order) => (
                 <div key={order.id}>{renderOrderDetail(order)}</div>
@@ -200,14 +211,22 @@ export default function StaffPickupPage() {
           ) : (
             <div className="flex flex-col gap-2">
               {awaitingPrep.map((order) => (
-                <div key={order.id} className="flex items-center justify-between rounded-md border border-stone-200 p-3">
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between rounded-md border border-stone-200 p-3"
+                >
                   <div>
                     <p className="font-medium text-stone-900">{order.order_number}</p>
                     <p className="text-xs text-stone-500">
-                      {order.customer?.full_name || order.customer?.phone} · {formatDate(order.created_at)}
+                      {order.customer?.full_name || order.customer?.phone} ·{' '}
+                      {formatDate(order.created_at)}
                     </p>
                   </div>
-                  <Button size="sm" onClick={() => void markReady(order.id)} loading={actingId === order.id}>
+                  <Button
+                    size="sm"
+                    onClick={() => void markReady(order.id)}
+                    loading={actingId === order.id}
+                  >
                     Mark Ready
                   </Button>
                 </div>
@@ -227,14 +246,22 @@ export default function StaffPickupPage() {
           ) : (
             <div className="flex flex-col gap-2">
               {readyForPickup.map((order) => (
-                <div key={order.id} className="flex items-center justify-between rounded-md border border-stone-200 p-3">
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between rounded-md border border-stone-200 p-3"
+                >
                   <div>
                     <p className="font-medium text-stone-900">{order.order_number}</p>
                     <p className="text-xs text-stone-500">
-                      {order.customer?.full_name || order.customer?.phone} · Pickup code {order.pickup_code} · {formatDate(order.created_at)}
+                      {order.customer?.full_name || order.customer?.phone} · Pickup code{' '}
+                      {order.pickup_code} · {formatDate(order.created_at)}
                     </p>
                   </div>
-                  <Button size="sm" onClick={() => void confirmHandover(order)} loading={actingId === order.id}>
+                  <Button
+                    size="sm"
+                    onClick={() => void confirmHandover(order)}
+                    loading={actingId === order.id}
+                  >
                     Confirm Handover
                   </Button>
                 </div>

@@ -48,7 +48,10 @@ export function deriveStockStatus(
   return 'in_stock'
 }
 
-export function toProductCardProps(product: ProductForCard, locationId: string | null = null): ProductCardProps {
+export function toProductCardProps(
+  product: ProductForCard,
+  locationId: string | null = null
+): ProductCardProps {
   const activeVariants = product.product_variants.filter((v) => v.is_active)
   const prices = activeVariants.map((v) => v.price_slsh)
   const image = [...product.product_images].sort((a, b) => a.sort_order - b.sort_order)[0]

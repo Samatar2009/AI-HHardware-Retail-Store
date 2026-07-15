@@ -37,7 +37,12 @@ function ReturnPhotos({ paths }: { paths: string[] }) {
     <div className="mt-2 flex gap-2">
       {urls.map((url) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={url} src={url} alt="Return evidence" className="size-16 rounded-md object-cover" />
+        <img
+          key={url}
+          src={url}
+          alt="Return evidence"
+          className="size-16 rounded-md object-cover"
+        />
       ))}
     </div>
   )
@@ -66,7 +71,9 @@ export default function ReturnDetailPage({ params }: { params: { id: string } })
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 lg:px-8">
       <h1 className="mb-6 text-3xl font-bold leading-[38px] text-stone-900">Return Request</h1>
 
-      <div className={`mb-6 flex items-center gap-2 rounded-md border border-stone-200 bg-white p-4 ${status.className}`}>
+      <div
+        className={`mb-6 flex items-center gap-2 rounded-md border border-stone-200 bg-white p-4 ${status.className}`}
+      >
         <StatusIcon className="size-5" />
         <span className="font-semibold">{status.label}</span>
       </div>

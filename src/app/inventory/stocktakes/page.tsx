@@ -69,7 +69,10 @@ export default function InventoryStocktakesPage() {
       key: 'id',
       header: 'Stocktake',
       render: (row) => (
-        <Link href={`/inventory/stocktakes/${row.id}`} className="font-medium text-orange-600 hover:underline">
+        <Link
+          href={`/inventory/stocktakes/${row.id}`}
+          className="font-medium text-orange-600 hover:underline"
+        >
           {row.id.slice(0, 8)}
         </Link>
       ),
@@ -78,9 +81,14 @@ export default function InventoryStocktakesPage() {
     {
       key: 'initiated_by',
       header: 'Started By',
-      render: (row) => row.initiated_by_profile?.full_name || row.initiated_by_profile?.phone || '—',
+      render: (row) =>
+        row.initiated_by_profile?.full_name || row.initiated_by_profile?.phone || '—',
     },
-    { key: 'status', header: 'Status', render: (row) => <Badge variant={STATUS_BADGE[row.status]}>{row.status}</Badge> },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (row) => <Badge variant={STATUS_BADGE[row.status]}>{row.status}</Badge>,
+    },
     { key: 'date', header: 'Date', render: (row) => formatDate(row.created_at) },
   ]
 
@@ -96,7 +104,13 @@ export default function InventoryStocktakesPage() {
         }
       />
 
-      <DataTable columns={columns} data={stocktakes} getRowId={(row) => row.id} isLoading={isLoading} emptyTitle="No stocktakes yet" />
+      <DataTable
+        columns={columns}
+        data={stocktakes}
+        getRowId={(row) => row.id}
+        isLoading={isLoading}
+        emptyTitle="No stocktakes yet"
+      />
     </div>
   )
 }

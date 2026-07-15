@@ -34,9 +34,14 @@ export async function GET(request: Request) {
   if (search) {
     // PostgREST's .or() filter string treats , ( ) as syntax — strip them
     // so user input can't inject extra filter clauses.
-    const safeSearch = search.replace(/[,()%*\\]/g, ' ').trim().slice(0, 100)
+    const safeSearch = search
+      .replace(/[,()%*\\]/g, ' ')
+      .trim()
+      .slice(0, 100)
     if (safeSearch) {
-      query = query.or(`name_en.ilike.%${safeSearch}%,name_so.ilike.%${safeSearch}%,sku_base.ilike.%${safeSearch}%`)
+      query = query.or(
+        `name_en.ilike.%${safeSearch}%,name_so.ilike.%${safeSearch}%,sku_base.ilike.%${safeSearch}%`
+      )
     }
   }
   if (brands.length) query = query.in('brand', brands)
@@ -47,21 +52,32 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Could not load products' }, { status: 500 })
   }
 
-  let enriched = (data ?? []).map((p) => ({ ...toProductCardProps(p, locationId), createdAt: p.created_at }))
+  let enriched = (data ?? []).map((p) => ({
+    ...toProductCardProps(p, locationId),
+    createdAt: p.created_at,
+  }))
 
   // Facet metadata computed before price/in-stock/brand filters are applied,
   // so the filter UI's own options don't shrink to nothing once selected.
-  const availableBrands = [...new Set(enriched.map((p) => p.brand).filter((b): b is string => !!b))].sort()
+  const availableBrands = [
+    ...new Set(enriched.map((p) => p.brand).filter((b): b is string => !!b)),
+  ].sort()
   const priceBounds =
     enriched.length > 0
-      ? { min: Math.min(...enriched.map((p) => p.priceSlsh)), max: Math.max(...enriched.map((p) => p.priceSlsh)) }
+      ? {
+          min: Math.min(...enriched.map((p) => p.priceSlsh)),
+          max: Math.max(...enriched.map((p) => p.priceSlsh)),
+        }
       : { min: 0, max: 0 }
 
   if (minPrice !== null) enriched = enriched.filter((p) => p.priceSlsh >= minPrice)
   if (maxPrice !== null) enriched = enriched.filter((p) => p.priceSlsh <= maxPrice)
   if (inStockOnly) enriched = enriched.filter((p) => p.stockStatus !== 'out_of_stock')
 
-  const sorters: Record<SortOption, (a: (typeof enriched)[number], b: (typeof enriched)[number]) => number> = {
+  const sorters: Record<
+    SortOption,
+    (a: (typeof enriched)[number], b: (typeof enriched)[number]) => number
+  > = {
     relevance: () => 0,
     price_asc: (a, b) => a.priceSlsh - b.priceSlsh,
     price_desc: (a, b) => b.priceSlsh - a.priceSlsh,
@@ -72,7 +88,9 @@ export async function GET(request: Request) {
 
   const totalCount = enriched.length
   const start = (page - 1) * limit
-  const pageItems = enriched.slice(start, start + limit).map(({ createdAt: _createdAt, ...rest }) => rest)
+  const pageItems = enriched
+    .slice(start, start + limit)
+    .map(({ createdAt: _createdAt, ...rest }) => rest)
 
   return NextResponse.json({
     data: pageItems,

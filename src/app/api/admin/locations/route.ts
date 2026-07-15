@@ -9,7 +9,10 @@ export async function GET() {
   if (authError) return authError
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('locations').select('*, location_hours(*)').order('name_en')
+  const { data, error } = await supabase
+    .from('locations')
+    .select('*, location_hours(*)')
+    .order('name_en')
 
   if (error) {
     return NextResponse.json({ error: 'Could not load locations' }, { status: 500 })
@@ -38,7 +41,12 @@ export async function POST(request: Request) {
   const supabase = await createClient()
   const { data: location, error } = await supabase
     .from('locations')
-    .insert({ name_en: body.nameEn, name_so: body.nameSo, address: body.address, phone: body.phone ?? null })
+    .insert({
+      name_en: body.nameEn,
+      name_so: body.nameSo,
+      address: body.address,
+      phone: body.phone ?? null,
+    })
     .select()
     .single()
 

@@ -30,8 +30,15 @@ export default function LoyaltyPage() {
     enabled: !!user,
     queryFn: async () => {
       const supabase = createClient()
-      const { data: card } = await supabase.from('loyalty_cards').select('*').eq('customer_id', user!.id).maybeSingle()
-      const { data: tiers } = await supabase.from('loyalty_tiers').select('*').order('min_lifetime_points')
+      const { data: card } = await supabase
+        .from('loyalty_cards')
+        .select('*')
+        .eq('customer_id', user!.id)
+        .maybeSingle()
+      const { data: tiers } = await supabase
+        .from('loyalty_tiers')
+        .select('*')
+        .order('min_lifetime_points')
       return { card: card as LoyaltyCard | null, tiers: (tiers ?? []) as LoyaltyTier[] }
     },
   })
@@ -63,7 +70,9 @@ export default function LoyaltyPage() {
       <div className="mb-6 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-lg font-semibold">{profile?.full_name || getInitials(profile?.phone ?? '')}</p>
+            <p className="text-lg font-semibold">
+              {profile?.full_name || getInitials(profile?.phone ?? '')}
+            </p>
             <p className="mt-0.5 font-mono text-sm text-orange-100">{card.card_number}</p>
           </div>
           <LoyaltyBadge tier={card.current_tier as LoyaltyTierName} />
@@ -101,7 +110,10 @@ export default function LoyaltyPage() {
           </thead>
           <tbody className="divide-y divide-stone-100">
             {tiers.map((tier) => (
-              <tr key={tier.id} className={tier.tier_name === card.current_tier ? 'bg-orange-50' : ''}>
+              <tr
+                key={tier.id}
+                className={tier.tier_name === card.current_tier ? 'bg-orange-50' : ''}
+              >
                 <td className="py-2 capitalize">{tier.tier_name}</td>
                 <td className="py-2">{tier.min_lifetime_points}</td>
                 <td className="py-2">{tier.discount_percentage}%</td>
@@ -115,8 +127,8 @@ export default function LoyaltyPage() {
         <div className="mb-6 flex items-center gap-2 rounded-md bg-stone-50 p-4 text-sm text-stone-600">
           <Star className="size-4 text-orange-500" />
           Redeem 100+ points at checkout for {currentTier.discount_percentage}% off (
-          {formatSLSH(Math.round((card.current_points * currentTier.discount_percentage) / 100))} value on
-          your current balance).
+          {formatSLSH(Math.round((card.current_points * currentTier.discount_percentage) / 100))}{' '}
+          value on your current balance).
         </div>
       )}
 
@@ -132,7 +144,8 @@ export default function LoyaltyPage() {
             {
               key: 'type',
               header: 'Type',
-              render: (t: LoyaltyTransaction) => TRANSACTION_LABEL[t.transaction_type]?.label ?? t.transaction_type,
+              render: (t: LoyaltyTransaction) =>
+                TRANSACTION_LABEL[t.transaction_type]?.label ?? t.transaction_type,
             },
             {
               key: 'points',

@@ -151,7 +151,8 @@ function PickupPanel() {
                 <Badge variant="orderReadyForPickup">Ready for Pickup</Badge>
               </div>
               <p className="text-sm text-stone-500">
-                {order.customer?.full_name || order.customer?.phone} · {formatDate(order.created_at)}
+                {order.customer?.full_name || order.customer?.phone} ·{' '}
+                {formatDate(order.created_at)}
               </p>
               <div className="divide-y divide-stone-100">
                 {order.order_items.map((item) => (
@@ -181,9 +182,21 @@ function PickupPanel() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-3">
-            <Input label="Order ID" value={paymentOrderId} onChange={(e) => setPaymentOrderId(e.target.value)} />
-            <Input label="Transaction Reference" value={orderRef} onChange={(e) => setOrderRef(e.target.value)} />
-            <Button onClick={() => void confirmPayment()} loading={isConfirmingPayment} disabled={!paymentOrderId || !orderRef}>
+            <Input
+              label="Order ID"
+              value={paymentOrderId}
+              onChange={(e) => setPaymentOrderId(e.target.value)}
+            />
+            <Input
+              label="Transaction Reference"
+              value={orderRef}
+              onChange={(e) => setOrderRef(e.target.value)}
+            />
+            <Button
+              onClick={() => void confirmPayment()}
+              loading={isConfirmingPayment}
+              disabled={!paymentOrderId || !orderRef}
+            >
               Confirm Payment
             </Button>
           </div>

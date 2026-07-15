@@ -6,7 +6,14 @@ import { RefreshCw, Sparkles } from 'lucide-react'
 import { PageHeader } from '@/components/page-header'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 import { SearchInput } from '@/components/forms/search-input'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { formatDate } from '@/lib/utils'
@@ -104,7 +111,11 @@ export default function InventoryForecastsPage() {
       <Card className="mb-6">
         <CardContent>
           <p className="mb-2 text-sm font-medium text-stone-700">Generate a new forecast</p>
-          <SearchInput value={query} onSearch={runSearch} placeholder="Search product by name or SKU..." />
+          <SearchInput
+            value={query}
+            onSearch={runSearch}
+            placeholder="Search product by name or SKU..."
+          />
           {results.length > 0 && (
             <div className="mt-2 flex flex-col gap-1">
               {results.map((product) =>
@@ -152,7 +163,8 @@ export default function InventoryForecastsPage() {
                   return (
                     <TableRow key={f.id}>
                       <TableCell>
-                        {f.product?.name_en} <span className="text-xs text-stone-400">({f.variant?.sku})</span>
+                        {f.product?.name_en}{' '}
+                        <span className="text-xs text-stone-400">({f.variant?.sku})</span>
                       </TableCell>
                       <TableCell>{f.predicted_stockout_date}</TableCell>
                       <TableCell>{f.recommended_reorder_qty}</TableCell>

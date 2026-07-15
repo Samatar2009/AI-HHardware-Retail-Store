@@ -29,7 +29,10 @@ export async function PATCH(_request: Request, { params }: { params: { id: strin
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   }
   if (order.status !== 'payment_confirmed') {
-    return NextResponse.json({ error: 'Order must be payment_confirmed before it can be marked ready' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'Order must be payment_confirmed before it can be marked ready' },
+      { status: 409 }
+    )
   }
 
   const pickupCode = order.pickup_code ?? generatePickupCode()

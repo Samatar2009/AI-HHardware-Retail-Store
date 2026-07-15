@@ -23,7 +23,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const body = parsed.data
 
   const supabase = await createClient()
-  const { data: product } = await supabase.from('products').select('id').eq('id', params.id).single()
+  const { data: product } = await supabase
+    .from('products')
+    .select('id')
+    .eq('id', params.id)
+    .single()
   if (!product) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 })
   }
@@ -49,7 +53,9 @@ export async function POST(request: Request, { params }: { params: { id: string 
 }
 
 const reorderSchema = z.object({
-  images: z.array(z.object({ id: z.string().uuid(), sortOrder: z.number().int().nonnegative() })).min(1),
+  images: z
+    .array(z.object({ id: z.string().uuid(), sortOrder: z.number().int().nonnegative() }))
+    .min(1),
 })
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
@@ -64,7 +70,11 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const supabase = await createClient()
   const results = await Promise.all(
     parsed.data.images.map(({ id, sortOrder }) =>
-      supabase.from('product_images').update({ sort_order: sortOrder }).eq('id', id).eq('product_id', params.id)
+      supabase
+        .from('product_images')
+        .update({ sort_order: sortOrder })
+        .eq('id', id)
+        .eq('product_id', params.id)
     )
   )
 

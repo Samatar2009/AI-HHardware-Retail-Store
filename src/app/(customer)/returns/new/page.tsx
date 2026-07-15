@@ -99,7 +99,9 @@ export default function NewReturnPage() {
           for (let i = 0; i < state.photos.length; i++) {
             const file = state.photos[i]
             const path = `${user.id}/${crypto.randomUUID()}/${i}-${file.name}`
-            const { error: uploadError } = await supabase.storage.from('return-photos').upload(path, file)
+            const { error: uploadError } = await supabase.storage
+              .from('return-photos')
+              .upload(path, file)
             if (!uploadError) photoUrls.push(path)
           }
 
@@ -120,7 +122,8 @@ export default function NewReturnPage() {
         body: JSON.stringify({
           orderId: order.id,
           refundMethod,
-          mobileMoneyPhone: refundMethod === 'original_payment' ? mobileMoneyPhone || undefined : undefined,
+          mobileMoneyPhone:
+            refundMethod === 'original_payment' ? mobileMoneyPhone || undefined : undefined,
           items,
         }),
       })
@@ -139,7 +142,11 @@ export default function NewReturnPage() {
   }
 
   if (!orderId) {
-    return <div className="mx-auto max-w-2xl px-4 py-16 text-center text-stone-500">No order selected.</div>
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16 text-center text-stone-500">
+        No order selected.
+      </div>
+    )
   }
   if (!order) return null
 
@@ -164,14 +171,18 @@ export default function NewReturnPage() {
               {isSelected && state && (
                 <div className="mt-3 flex flex-col gap-3 pl-6">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-stone-700">Quantity to return</label>
+                    <label className="mb-1 block text-sm font-medium text-stone-700">
+                      Quantity to return
+                    </label>
                     <input
                       type="number"
                       min={1}
                       max={item.quantity}
                       value={state.quantity}
                       onChange={(e) =>
-                        updateItem(item.id, { quantity: Math.min(item.quantity, Math.max(1, Number(e.target.value))) })
+                        updateItem(item.id, {
+                          quantity: Math.min(item.quantity, Math.max(1, Number(e.target.value))),
+                        })
                       }
                       className="h-10 w-24 rounded-md border border-stone-300 px-3 text-sm"
                     />
@@ -190,13 +201,22 @@ export default function NewReturnPage() {
                     </label>
                     <div className="flex gap-2">
                       {state.photos.map((file, i) => (
-                        <div key={i} className="relative size-16 overflow-hidden rounded-md border border-stone-200">
+                        <div
+                          key={i}
+                          className="relative size-16 overflow-hidden rounded-md border border-stone-200"
+                        >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={URL.createObjectURL(file)} alt="" className="size-full object-cover" />
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt=""
+                            className="size-full object-cover"
+                          />
                           <button
                             type="button"
                             onClick={() =>
-                              updateItem(item.id, { photos: state.photos.filter((_, idx) => idx !== i) })
+                              updateItem(item.id, {
+                                photos: state.photos.filter((_, idx) => idx !== i),
+                              })
                             }
                             className="absolute right-0.5 top-0.5 rounded-full bg-black/60 p-0.5 text-white"
                           >
@@ -238,7 +258,9 @@ export default function NewReturnPage() {
         />
         {refundMethod === 'original_payment' && order.payment_method !== 'cash_on_pickup' && (
           <div className="mt-3">
-            <label className="mb-1 block text-sm font-medium text-stone-700">Mobile money number</label>
+            <label className="mb-1 block text-sm font-medium text-stone-700">
+              Mobile money number
+            </label>
             <input
               type="tel"
               value={mobileMoneyPhone}

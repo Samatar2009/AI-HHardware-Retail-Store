@@ -17,6 +17,8 @@ export function isValidAuthPhone(phone: string): boolean {
   return process.env.NODE_ENV === 'development' && DEV_TEST_E164_PATTERN.test(phone)
 }
 
-export const phoneE164Schema = z.string().refine(isValidAuthPhone, 'Enter a valid Somaliland phone number')
+export const phoneE164Schema = z
+  .string()
+  .refine(isValidAuthPhone, 'Enter a valid Somaliland phone number')
 
 export const otpTokenSchema = z.string().regex(/^\d{6}$/, 'Enter the 6-digit code')

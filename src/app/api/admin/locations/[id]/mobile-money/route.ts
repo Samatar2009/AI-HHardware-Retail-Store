@@ -9,7 +9,10 @@ export async function GET(_request: Request, { params }: { params: { id: string 
   if (authError) return authError
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('mobile_money_settings').select('*').eq('location_id', params.id)
+  const { data, error } = await supabase
+    .from('mobile_money_settings')
+    .select('*')
+    .eq('location_id', params.id)
 
   if (error) {
     return NextResponse.json({ error: 'Could not load mobile money settings' }, { status: 500 })

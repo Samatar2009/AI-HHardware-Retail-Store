@@ -13,7 +13,9 @@ function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
 }
 
 // Preset shapes from Guidelines Section 8.9.
-const SkeletonText = ({ className }: { className?: string }) => <Skeleton className={cn('h-4 w-full', className)} />
+const SkeletonText = ({ className }: { className?: string }) => (
+  <Skeleton className={cn('h-4 w-full', className)} />
+)
 const SkeletonTextPartial = ({ className }: { className?: string }) => (
   <Skeleton className={cn('h-4 w-3/4', className)} />
 )

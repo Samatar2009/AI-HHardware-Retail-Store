@@ -13,7 +13,11 @@ export interface FormFieldProps<TFieldValues extends FieldValues> {
 
 /** Wraps react-hook-form's Controller and surfaces fieldState.error as a plain
  * message string so it can be passed straight into ui/input's `error` prop. */
-function FormField<TFieldValues extends FieldValues>({ control, name, render }: FormFieldProps<TFieldValues>) {
+function FormField<TFieldValues extends FieldValues>({
+  control,
+  name,
+  render,
+}: FormFieldProps<TFieldValues>) {
   return (
     <Controller
       control={control}

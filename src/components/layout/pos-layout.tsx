@@ -27,7 +27,8 @@ function useOnlineStatus() {
       setIsOnline(true)
       const { synced, failed } = await syncOfflineQueue().catch(() => ({ synced: 0, failed: 0 }))
       if (synced > 0) showSuccessToast(`Synced ${synced} offline transaction(s)`)
-      if (failed > 0) showErrorToast(`${failed} offline transaction(s) failed to sync — review them`)
+      if (failed > 0)
+        showErrorToast(`${failed} offline transaction(s) failed to sync — review them`)
       void refreshQueuedCount()
     }
     function goOffline() {
@@ -59,7 +60,9 @@ function PosLayout({ children }: { children: React.ReactNode }) {
         <Badge variant={isOnline ? 'posOnline' : 'posOffline'} dot>
           {isOnline ? 'ONLINE' : `OFFLINE MODE — ${queuedCount} transaction(s) queued`}
         </Badge>
-        {isOnline && queuedCount > 0 && <span className="text-xs text-stone-400">Syncing {queuedCount} queued...</span>}
+        {isOnline && queuedCount > 0 && (
+          <span className="text-xs text-stone-400">Syncing {queuedCount} queued...</span>
+        )}
 
         {profile && (
           <span className="inline-flex items-center gap-1.5 text-sm text-stone-300">

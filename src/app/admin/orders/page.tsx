@@ -9,7 +9,14 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { SimpleSelect } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { Spinner } from '@/components/ui/spinner'
 import { ORDER_STATUS_BADGE } from '@/lib/order-status'
@@ -111,7 +118,10 @@ export default function AdminOrdersPage() {
     if (!selectedOrder) return
     setIsActing(true)
     try {
-      const body = action === 'confirm-payment' ? { transactionReference: selectedOrder.payment_reference ?? 'manual-verify' } : undefined
+      const body =
+        action === 'confirm-payment'
+          ? { transactionReference: selectedOrder.payment_reference ?? 'manual-verify' }
+          : undefined
       const res = await fetch(`/api/admin/orders/${selectedOrder.id}/${action}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -139,7 +149,10 @@ export default function AdminOrdersPage() {
   }
 
   const locationOptions = useMemo(
-    () => [{ value: 'all', label: 'All locations' }, ...locations.map((l) => ({ value: l.id, label: l.name_en }))],
+    () => [
+      { value: 'all', label: 'All locations' },
+      ...locations.map((l) => ({ value: l.id, label: l.name_en })),
+    ],
     [locations]
   )
 
@@ -150,7 +163,10 @@ export default function AdminOrdersPage() {
       sortable: true,
       sortValue: (row) => row.order_number,
       render: (row) => (
-        <button className="font-medium text-orange-600 hover:underline" onClick={() => void openDetail(row.id)}>
+        <button
+          className="font-medium text-orange-600 hover:underline"
+          onClick={() => void openDetail(row.id)}
+        >
           {row.order_number}
         </button>
       ),
@@ -166,7 +182,13 @@ export default function AdminOrdersPage() {
       },
     },
     { key: 'payment_method', header: 'Payment', render: (row) => row.payment_method },
-    { key: 'total', header: 'Total', sortable: true, sortValue: (row) => row.total_slsh, render: (row) => formatSLSH(row.total_slsh) },
+    {
+      key: 'total',
+      header: 'Total',
+      sortable: true,
+      sortValue: (row) => row.total_slsh,
+      render: (row) => formatSLSH(row.total_slsh),
+    },
     { key: 'date', header: 'Date', render: (row) => formatDate(row.created_at) },
   ]
 
@@ -183,13 +205,27 @@ export default function AdminOrdersPage() {
       />
 
       <div className="mb-4 grid grid-cols-4 gap-4">
-        <SimpleSelect value={statusFilter} onValueChange={setStatusFilter} options={STATUS_OPTIONS} />
-        <SimpleSelect value={locationFilter} onValueChange={setLocationFilter} options={locationOptions} />
+        <SimpleSelect
+          value={statusFilter}
+          onValueChange={setStatusFilter}
+          options={STATUS_OPTIONS}
+        />
+        <SimpleSelect
+          value={locationFilter}
+          onValueChange={setLocationFilter}
+          options={locationOptions}
+        />
         <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
         <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
       </div>
 
-      <DataTable columns={columns} data={orders} getRowId={(row) => row.id} isLoading={isLoading} emptyTitle="No orders found" />
+      <DataTable
+        columns={columns}
+        data={orders}
+        getRowId={(row) => row.id}
+        isLoading={isLoading}
+        emptyTitle="No orders found"
+      />
 
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
         <DialogContent size="lg">
@@ -204,11 +240,16 @@ export default function AdminOrdersPage() {
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <Badge variant={ORDER_STATUS_BADGE[selectedOrder.status].variant}>{ORDER_STATUS_BADGE[selectedOrder.status].label}</Badge>
-                  <span className="text-sm text-stone-500">{formatDate(selectedOrder.created_at)}</span>
+                  <Badge variant={ORDER_STATUS_BADGE[selectedOrder.status].variant}>
+                    {ORDER_STATUS_BADGE[selectedOrder.status].label}
+                  </Badge>
+                  <span className="text-sm text-stone-500">
+                    {formatDate(selectedOrder.created_at)}
+                  </span>
                 </div>
                 <p className="text-sm text-stone-700">
-                  Customer: {selectedOrder.customer?.full_name || selectedOrder.customer?.phone} · Location: {selectedOrder.location?.name_en}
+                  Customer: {selectedOrder.customer?.full_name || selectedOrder.customer?.phone} ·
+                  Location: {selectedOrder.location?.name_en}
                 </p>
                 {selectedOrder.pickup_code && (
                   <p className="text-sm text-stone-700">
@@ -237,12 +278,15 @@ export default function AdminOrdersPage() {
                     </tbody>
                   </table>
                 </div>
-                <p className="text-right text-sm font-semibold text-stone-900">Total: {formatSLSH(selectedOrder.total_slsh)}</p>
+                <p className="text-right text-sm font-semibold text-stone-900">
+                  Total: {formatSLSH(selectedOrder.total_slsh)}
+                </p>
               </>
             )}
           </DialogBody>
           <DialogFooter>
-            {selectedOrder?.status === 'payment_submitted' || selectedOrder?.status === 'pending_payment' ? (
+            {selectedOrder?.status === 'payment_submitted' ||
+            selectedOrder?.status === 'pending_payment' ? (
               <Button onClick={() => void performAction('confirm-payment')} loading={isActing}>
                 Confirm Payment
               </Button>

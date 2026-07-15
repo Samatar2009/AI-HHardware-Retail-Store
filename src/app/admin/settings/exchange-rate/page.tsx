@@ -6,7 +6,14 @@ import { PageHeader } from '@/components/page-header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { formatDate } from '@/lib/utils'
 
@@ -60,7 +67,10 @@ export default function AdminExchangeRatePage() {
 
   return (
     <div>
-      <PageHeader title="Exchange Rate" subtitle="Controls the SLSH/USD conversion shown across the storefront" />
+      <PageHeader
+        title="Exchange Rate"
+        subtitle="Controls the SLSH/USD conversion shown across the storefront"
+      />
 
       <div className="grid grid-cols-2 gap-6">
         <Card>
@@ -68,9 +78,16 @@ export default function AdminExchangeRatePage() {
             <CardTitle>Current Rate</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-stone-900">1 USD = {current?.usd_to_slsh_rate ?? '—'} SLSH</p>
+            <p className="text-3xl font-bold text-stone-900">
+              1 USD = {current?.usd_to_slsh_rate ?? '—'} SLSH
+            </p>
             <div className="flex items-end gap-3">
-              <Input label="New Rate (SLSH per USD)" type="number" value={newRate} onChange={(e) => setNewRate(e.target.value)} />
+              <Input
+                label="New Rate (SLSH per USD)"
+                type="number"
+                value={newRate}
+                onChange={(e) => setNewRate(e.target.value)}
+              />
               <Button onClick={() => void handleSave()} loading={isSaving} disabled={!newRate}>
                 Update Rate
               </Button>

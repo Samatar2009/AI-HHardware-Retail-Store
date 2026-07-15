@@ -24,13 +24,20 @@ export async function POST(request: Request) {
 
   try {
     const [fullImage, thumbnail] = await Promise.all([
-      sharp(inputBuffer).resize(1200, 1200, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 80 }).toBuffer(),
+      sharp(inputBuffer)
+        .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toBuffer(),
       sharp(inputBuffer).resize(300, 300, { fit: 'cover' }).webp({ quality: 75 }).toBuffer(),
     ])
 
     const [imageUpload, thumbnailUpload] = await Promise.all([
-      admin.storage.from('product-images').upload(baseName, fullImage, { contentType: 'image/webp' }),
-      admin.storage.from('product-thumbnails').upload(baseName, thumbnail, { contentType: 'image/webp' }),
+      admin.storage
+        .from('product-images')
+        .upload(baseName, fullImage, { contentType: 'image/webp' }),
+      admin.storage
+        .from('product-thumbnails')
+        .upload(baseName, thumbnail, { contentType: 'image/webp' }),
     ])
 
     if (imageUpload.error || thumbnailUpload.error) {

@@ -28,10 +28,17 @@ export async function POST(request: Request) {
 
   let customerId = user.id
   if (parsed.data.customerId && parsed.data.customerId !== user.id) {
-    const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', user.id).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single()
     const role = profile?.role
     if (role !== 'cashier' && role !== 'inventory_manager' && role !== 'admin') {
-      return NextResponse.json({ error: 'Not authorized to validate a code for another customer' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Not authorized to validate a code for another customer' },
+        { status: 403 }
+      )
     }
     customerId = parsed.data.customerId
   }
@@ -43,7 +50,11 @@ export async function POST(request: Request) {
   })
 
   if (error || !data || data.length === 0) {
-    return NextResponse.json({ isValid: false, discountAmountSlsh: 0, errorMessage: 'Invalid or expired code' })
+    return NextResponse.json({
+      isValid: false,
+      discountAmountSlsh: 0,
+      errorMessage: 'Invalid or expired code',
+    })
   }
 
   const result = data[0]

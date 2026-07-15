@@ -7,7 +7,14 @@ import { DataTable, type DataTableColumn } from '@/components/data-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showErrorToast, showSuccessToast } from '@/components/ui/toast'
 import { createClient } from '@/lib/supabase/client'
 import { formatSLSH, formatDate } from '@/lib/utils'
@@ -17,7 +24,8 @@ type Order = Row<'orders'> & { customer: { phone: string; full_name: string | nu
 
 function playNotificationBeep() {
   try {
-    const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
+    const ctx = new (window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
     const oscillator = ctx.createOscillator()
     const gain = ctx.createGain()
     oscillator.connect(gain)
@@ -165,7 +173,13 @@ export default function StaffPaymentsPage() {
     <div>
       <PageHeader title="Payment Confirmation" subtitle={`${orders.length} pending`} />
 
-      <DataTable columns={columns} data={orders} getRowId={(row) => row.id} isLoading={isLoading} emptyTitle="No pending payments" />
+      <DataTable
+        columns={columns}
+        data={orders}
+        getRowId={(row) => row.id}
+        isLoading={isLoading}
+        emptyTitle="No pending payments"
+      />
 
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
         <DialogContent size="sm">
@@ -176,10 +190,15 @@ export default function StaffPaymentsPage() {
             {selected && (
               <>
                 <p className="text-sm text-stone-600">
-                  {selected.customer?.full_name || selected.customer?.phone} · {selected.payment_method} · {formatSLSH(selected.total_slsh)}
+                  {selected.customer?.full_name || selected.customer?.phone} ·{' '}
+                  {selected.payment_method} · {formatSLSH(selected.total_slsh)}
                 </p>
-                <p className="text-sm text-stone-500">Customer-submitted reference: {selected.payment_reference || 'not provided'}</p>
-                <p className="text-xs text-stone-400">Verify this transaction in your mobile money app before confirming.</p>
+                <p className="text-sm text-stone-500">
+                  Customer-submitted reference: {selected.payment_reference || 'not provided'}
+                </p>
+                <p className="text-xs text-stone-400">
+                  Verify this transaction in your mobile money app before confirming.
+                </p>
 
                 {!showReportForm ? (
                   <Input
@@ -188,7 +207,12 @@ export default function StaffPaymentsPage() {
                     onChange={(e) => setConfirmRef(e.target.value)}
                   />
                 ) : (
-                  <Textarea label="Issue Note" required value={issueNote} onChange={(e) => setIssueNote(e.target.value)} />
+                  <Textarea
+                    label="Issue Note"
+                    required
+                    value={issueNote}
+                    onChange={(e) => setIssueNote(e.target.value)}
+                  />
                 )}
               </>
             )}
@@ -208,7 +232,12 @@ export default function StaffPaymentsPage() {
                 <Button variant="secondary" onClick={() => setShowReportForm(false)}>
                   Back
                 </Button>
-                <Button variant="destructive" onClick={() => void reportIssue()} loading={isActing} disabled={issueNote.trim().length < 3}>
+                <Button
+                  variant="destructive"
+                  onClick={() => void reportIssue()}
+                  loading={isActing}
+                  disabled={issueNote.trim().length < 3}
+                >
                   Submit Issue
                 </Button>
               </>

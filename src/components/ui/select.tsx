@@ -17,7 +17,7 @@ const SelectTrigger = forwardRef<
     className={cn(
       'flex h-10 w-full items-center justify-between rounded-md border border-stone-300 bg-white px-3 text-sm text-stone-900',
       'transition-all duration-150 motion-reduce:transition-none motion-reduce:duration-0',
-      'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500',
+      'focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500',
       'disabled:cursor-not-allowed disabled:bg-stone-100',
       'data-[placeholder]:text-stone-400',
       error && 'border-red-500',
@@ -109,7 +109,12 @@ function SimpleSelect({
           {label}
         </label>
       )}
-      <Select value={value} defaultValue={defaultValue} onValueChange={onValueChange} disabled={disabled}>
+      <Select
+        value={value}
+        defaultValue={defaultValue}
+        onValueChange={onValueChange}
+        disabled={disabled}
+      >
         <SelectTrigger id={id} error={!!error}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

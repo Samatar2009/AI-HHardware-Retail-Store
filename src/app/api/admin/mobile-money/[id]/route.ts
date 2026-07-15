@@ -32,7 +32,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('mobile_money_settings').update(updates).eq('id', params.id).select().single()
+  const { data, error } = await supabase
+    .from('mobile_money_settings')
+    .update(updates)
+    .eq('id', params.id)
+    .select()
+    .single()
 
   if (error || !data) {
     return NextResponse.json({ error: 'Could not update mobile money setting' }, { status: 500 })

@@ -16,7 +16,9 @@ export async function GET(request: Request) {
   const supabase = await createClient()
   let query = supabase
     .from('orders')
-    .select('order_number, status, payment_method, payment_status, total_slsh, created_at, customer:profiles!orders_customer_id_fkey(phone), location:locations(name_en)')
+    .select(
+      'order_number, status, payment_method, payment_status, total_slsh, created_at, customer:profiles!orders_customer_id_fkey(phone), location:locations(name_en)'
+    )
     .order('created_at', { ascending: false })
 
   if (from) query = query.gte('created_at', from)

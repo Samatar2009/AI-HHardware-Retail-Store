@@ -38,7 +38,9 @@ function InventoryHeader({ title, notificationCount = 0 }: InventoryHeaderProps)
         {profile && (
           <div className="flex items-center gap-2">
             <Avatar className="size-8">
-              <AvatarFallback className="text-xs">{getInitials(profile.full_name || profile.phone)}</AvatarFallback>
+              <AvatarFallback className="text-xs">
+                {getInitials(profile.full_name || profile.phone)}
+              </AvatarFallback>
             </Avatar>
             <Badge variant={profile.role === 'admin' ? 'roleAdmin' : 'roleInventoryManager'}>
               {profile.role === 'admin' ? 'Admin' : 'Inventory'}

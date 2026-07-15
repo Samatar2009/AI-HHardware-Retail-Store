@@ -16,7 +16,11 @@ interface TierRow {
   discount_percentage: number
 }
 
-const TIER_BADGE = { bronze: 'loyaltyBronze', silver: 'loyaltySilver', gold: 'loyaltyGold' } as const
+const TIER_BADGE = {
+  bronze: 'loyaltyBronze',
+  silver: 'loyaltySilver',
+  gold: 'loyaltyGold',
+} as const
 
 export default function AdminLoyaltySettingsPage() {
   const [tiers, setTiers] = useState<TierRow[]>([])
@@ -27,7 +31,11 @@ export default function AdminLoyaltySettingsPage() {
       .then((data: { tiers: TierRow[] }) => setTiers(data.tiers))
   }, [])
 
-  async function updateTier(tier: TierRow, field: 'min_lifetime_points' | 'discount_percentage', value: number) {
+  async function updateTier(
+    tier: TierRow,
+    field: 'min_lifetime_points' | 'discount_percentage',
+    value: number
+  ) {
     setTiers((prev) => prev.map((t) => (t.id === tier.id ? { ...t, [field]: value } : t)))
     const key = field === 'min_lifetime_points' ? 'minLifetimePoints' : 'discountPercentage'
     const res = await fetch(`/api/admin/loyalty-tiers/${tier.id}`, {
@@ -41,12 +49,17 @@ export default function AdminLoyaltySettingsPage() {
 
   return (
     <div>
-      <PageHeader title="Loyalty Configuration" subtitle="Tier thresholds and discount percentages" />
+      <PageHeader
+        title="Loyalty Configuration"
+        subtitle="Tier thresholds and discount percentages"
+      />
       <div className="flex flex-col gap-4">
         {tiers.map((tier) => (
           <Card key={tier.id}>
             <CardContent className="flex items-center gap-6">
-              <Badge variant={TIER_BADGE[tier.tier_name as keyof typeof TIER_BADGE]}>{tier.tier_name}</Badge>
+              <Badge variant={TIER_BADGE[tier.tier_name as keyof typeof TIER_BADGE]}>
+                {tier.tier_name}
+              </Badge>
               <Input
                 label="Minimum Lifetime Points"
                 type="number"

@@ -113,14 +113,22 @@ export default function VerifyPage() {
         <div className="flex w-full max-w-sm flex-col gap-4">
           <div>
             <h1 className="text-xl font-semibold text-stone-900">{t('enterCode')}</h1>
-            <p className="mt-1 text-sm text-stone-500">{t('codeSent', { phone: `•••• ${lastFourDigits}` })}</p>
+            <p className="mt-1 text-sm text-stone-500">
+              {t('codeSent', { phone: `•••• ${lastFourDigits}` })}
+            </p>
           </div>
 
-          <OtpInput value={otp} onChange={setOtp} error={error ?? undefined} disabled={lockSecondsLeft > 0} />
+          <OtpInput
+            value={otp}
+            onChange={setOtp}
+            error={error ?? undefined}
+            disabled={lockSecondsLeft > 0}
+          />
 
           {lockSecondsLeft > 0 && (
             <p className="text-xs text-red-600">
-              Try again in {Math.floor(lockSecondsLeft / 60)}:{String(lockSecondsLeft % 60).padStart(2, '0')}
+              Try again in {Math.floor(lockSecondsLeft / 60)}:
+              {String(lockSecondsLeft % 60).padStart(2, '0')}
             </p>
           )}
 

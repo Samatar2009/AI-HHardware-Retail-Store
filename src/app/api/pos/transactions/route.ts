@@ -9,7 +9,10 @@ export async function POST(request: Request) {
 
   const parsed = transactionSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid transaction data', details: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid transaction data', details: parsed.error.flatten() },
+      { status: 400 }
+    )
   }
 
   const result = await createPosTransaction(userId, parsed.data)

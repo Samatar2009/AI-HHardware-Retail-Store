@@ -31,7 +31,10 @@ export async function POST(request: Request) {
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return new Response(JSON.stringify({ error: 'Invalid request' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ error: 'Invalid request' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
   const { messages, language } = parsed.data
 
@@ -72,9 +75,12 @@ export async function POST(request: Request) {
       headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache' },
     })
   } catch {
-    return new Response(JSON.stringify({ error: 'The assistant is unavailable right now. Please try again.' }), {
-      status: 502,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return new Response(
+      JSON.stringify({ error: 'The assistant is unavailable right now. Please try again.' }),
+      {
+        status: 502,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
   }
 }

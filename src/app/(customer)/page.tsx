@@ -87,7 +87,9 @@ export default async function HomePage() {
         <Hammer className="size-8" aria-hidden="true" />
         <div>
           <p className="text-lg font-semibold">Planning a project?</p>
-          <p className="text-sm text-orange-50">Let our AI assistant estimate the materials you&apos;ll need</p>
+          <p className="text-sm text-orange-50">
+            Let our AI assistant estimate the materials you&apos;ll need
+          </p>
         </div>
       </Link>
 

@@ -149,14 +149,27 @@ export default function InventoryReceivePage() {
 
   return (
     <div>
-      <PageHeader title="Receive Stock" subtitle="Search or scan a product, then add it to this delivery" />
+      <PageHeader
+        title="Receive Stock"
+        subtitle="Search or scan a product, then add it to this delivery"
+      />
 
       <div className="grid grid-cols-2 gap-6">
         <Card>
           <CardContent>
             <div className="flex items-center gap-2">
-              <SearchInput value={query} onSearch={runSearch} placeholder="Search by product name or SKU..." className="flex-1" />
-              <Button variant="secondary" size="icon" onClick={() => setScannerOpen(true)} aria-label="Scan barcode">
+              <SearchInput
+                value={query}
+                onSearch={runSearch}
+                placeholder="Search by product name or SKU..."
+                className="flex-1"
+              />
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => setScannerOpen(true)}
+                aria-label="Scan barcode"
+              >
                 <Camera className="size-4" />
               </Button>
             </div>
@@ -189,7 +202,9 @@ export default function InventoryReceivePage() {
                         type="button"
                         onClick={() => setSelectedVariantId(v.id)}
                         className={`rounded-md border px-3 py-1.5 text-sm ${
-                          selectedVariantId === v.id ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-stone-300 text-stone-700'
+                          selectedVariantId === v.id
+                            ? 'border-orange-500 bg-orange-50 text-orange-700'
+                            : 'border-stone-300 text-stone-700'
                         }`}
                       >
                         {v.sku}
@@ -199,12 +214,30 @@ export default function InventoryReceivePage() {
                 )}
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Input label="Quantity Received" type="number" required value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                  <PriceInput label="Cost Price (SLSH)" required value={costPrice} onChange={setCostPrice} />
+                  <Input
+                    label="Quantity Received"
+                    type="number"
+                    required
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                  <PriceInput
+                    label="Cost Price (SLSH)"
+                    required
+                    value={costPrice}
+                    onChange={setCostPrice}
+                  />
                 </div>
-                <Textarea label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                <Textarea
+                  label="Notes (optional)"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                />
 
-                <Button onClick={addToBatch} disabled={!selectedVariantId || !quantity || costPrice === undefined}>
+                <Button
+                  onClick={addToBatch}
+                  disabled={!selectedVariantId || !quantity || costPrice === undefined}
+                >
                   Add to Delivery
                 </Button>
               </div>
@@ -214,18 +247,30 @@ export default function InventoryReceivePage() {
 
         <Card>
           <CardContent>
-            <p className="mb-2 font-medium text-stone-900">This Delivery ({batch.length} item{batch.length === 1 ? '' : 's'})</p>
+            <p className="mb-2 font-medium text-stone-900">
+              This Delivery ({batch.length} item{batch.length === 1 ? '' : 's'})
+            </p>
             {batch.length === 0 ? (
               <p className="text-sm text-stone-500">No items added yet.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {batch.map((item) => (
-                  <div key={item.key} className="flex items-center justify-between rounded-md border border-stone-200 p-3 text-sm">
+                  <div
+                    key={item.key}
+                    className="flex items-center justify-between rounded-md border border-stone-200 p-3 text-sm"
+                  >
                     <div>
                       <p className="font-medium text-stone-900">{item.productName}</p>
-                      <p className="text-xs text-stone-500">{item.variantSku} · Qty {item.quantity} · {item.costPriceSlsh} SLSH each</p>
+                      <p className="text-xs text-stone-500">
+                        {item.variantSku} · Qty {item.quantity} · {item.costPriceSlsh} SLSH each
+                      </p>
                     </div>
-                    <button type="button" onClick={() => removeFromBatch(item.key)} aria-label="Remove item" className="text-stone-400 hover:text-red-600">
+                    <button
+                      type="button"
+                      onClick={() => removeFromBatch(item.key)}
+                      aria-label="Remove item"
+                      className="text-stone-400 hover:text-red-600"
+                    >
                       <Trash2 className="size-4" />
                     </button>
                   </div>
@@ -239,7 +284,11 @@ export default function InventoryReceivePage() {
         </Card>
       </div>
 
-      <BarcodeScanner open={scannerOpen} onOpenChange={setScannerOpen} onScan={(sku) => void handleScan(sku)} />
+      <BarcodeScanner
+        open={scannerOpen}
+        onOpenChange={setScannerOpen}
+        onScan={(sku) => void handleScan(sku)}
+      />
     </div>
   )
 }

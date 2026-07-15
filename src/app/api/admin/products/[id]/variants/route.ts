@@ -23,7 +23,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
   const body = parsed.data
 
   const supabase = await createClient()
-  const { data: product } = await supabase.from('products').select('id').eq('id', params.id).single()
+  const { data: product } = await supabase
+    .from('products')
+    .select('id')
+    .eq('id', params.id)
+    .single()
   if (!product) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 })
   }

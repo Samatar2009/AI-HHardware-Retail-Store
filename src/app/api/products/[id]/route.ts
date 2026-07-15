@@ -23,7 +23,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
   const { data: related } = await supabase
     .from('products')
-    .select('id, name_en, name_so, brand, product_images(image_url, thumbnail_url, sort_order), product_variants(price_slsh, is_active)')
+    .select(
+      'id, name_en, name_so, brand, product_images(image_url, thumbnail_url, sort_order), product_variants(price_slsh, is_active)'
+    )
     .eq('category_id', product.category_id)
     .eq('is_active', true)
     .neq('id', params.id)

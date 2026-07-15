@@ -36,7 +36,9 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options))
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
         },
       },
     }
@@ -51,7 +53,8 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const roleGuard = ROLE_GUARDS.find((guard) => pathname.startsWith(guard.prefix))
-  const requiresAuth = roleGuard || AUTH_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+  const requiresAuth =
+    roleGuard || AUTH_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 
   if (requiresAuth) {
     if (!user) {

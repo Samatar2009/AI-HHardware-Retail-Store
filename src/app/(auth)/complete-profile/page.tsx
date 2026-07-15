@@ -111,7 +111,13 @@ export default function CompleteProfilePage() {
             ]}
           />
 
-          <Button type="submit" variant="primary" size="lg" disabled={!fullName.trim()} loading={isSubmitting}>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={!fullName.trim()}
+            loading={isSubmitting}
+          >
             {tCommon('save')}
           </Button>
         </form>

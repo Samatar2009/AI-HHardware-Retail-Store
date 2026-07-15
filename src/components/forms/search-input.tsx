@@ -64,7 +64,7 @@ function SearchInput({
           size === 'lg' ? 'h-12 py-2.5 pl-11 text-base' : 'h-10 py-2 pl-9 text-sm',
           value ? (size === 'lg' ? 'pr-11' : 'pr-9') : size === 'lg' ? 'pr-4' : 'pr-3',
           'transition-all duration-150 motion-reduce:transition-none motion-reduce:duration-0',
-          'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0 focus:border-orange-500'
+          'focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0'
         )}
       />
       {value && (

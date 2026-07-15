@@ -39,7 +39,11 @@ export async function POST(request: Request) {
   const supabase = await createClient()
 
   if (body.parentId) {
-    const { data: parent } = await supabase.from('categories').select('id').eq('id', body.parentId).single()
+    const { data: parent } = await supabase
+      .from('categories')
+      .select('id')
+      .eq('id', body.parentId)
+      .single()
     if (!parent) {
       return NextResponse.json({ error: 'Parent category does not exist' }, { status: 400 })
     }

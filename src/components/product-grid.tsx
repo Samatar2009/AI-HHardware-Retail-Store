@@ -12,7 +12,10 @@ function ProductGrid({ products, isLoading, skeletonCount = 8 }: ProductGridProp
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: skeletonCount }).map((_, i) => (
-          <div key={i} className="flex flex-col gap-2 overflow-hidden rounded-lg border border-stone-200 bg-white">
+          <div
+            key={i}
+            className="flex flex-col gap-2 overflow-hidden rounded-lg border border-stone-200 bg-white"
+          >
             <SkeletonProductImage className="rounded-none" />
             <div className="flex flex-col gap-2 p-3">
               <Skeleton className="h-4 w-1/2" />
@@ -27,9 +30,7 @@ function ProductGrid({ products, isLoading, skeletonCount = 8 }: ProductGridProp
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {products?.map((product) => (
-        <ProductCard key={product.id} {...product} />
-      ))}
+      {products?.map((product) => <ProductCard key={product.id} {...product} />)}
     </div>
   )
 }

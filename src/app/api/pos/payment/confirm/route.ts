@@ -22,7 +22,9 @@ export async function POST(request: Request) {
   const supabase = await createClient()
   const { data: order } = await supabase
     .from('orders')
-    .select('id, status, total_slsh, payment_method, customer:profiles!orders_customer_id_fkey(phone)')
+    .select(
+      'id, status, total_slsh, payment_method, customer:profiles!orders_customer_id_fkey(phone)'
+    )
     .eq('id', parsed.data.orderId)
     .single()
 
@@ -30,7 +32,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   }
   if (order.status !== 'payment_submitted' && order.status !== 'pending_payment') {
-    return NextResponse.json({ error: 'Order is not awaiting payment confirmation' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'Order is not awaiting payment confirmation' },
+      { status: 409 }
+    )
   }
 
   const { error: updateError } = await supabase
@@ -54,9 +59,11 @@ export async function POST(request: Request) {
 
   const customerPhone = (order.customer as unknown as { phone: string } | null)?.phone
   if (customerPhone) {
-    await sendSms(customerPhone, `Borama Hardware: Your payment has been confirmed. We're preparing your order for pickup.`, 'payment_confirmed').catch(
-      () => undefined
-    )
+    await sendSms(
+      customerPhone,
+      `Borama Hardware: Your payment has been confirmed. We're preparing your order for pickup.`,
+      'payment_confirmed'
+    ).catch(() => undefined)
   }
 
   return NextResponse.json({ success: true })

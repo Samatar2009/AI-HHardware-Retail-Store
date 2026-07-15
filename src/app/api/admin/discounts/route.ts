@@ -9,7 +9,10 @@ export async function GET() {
   if (authError) return authError
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('discount_codes').select('*').order('created_at', { ascending: false })
+  const { data, error } = await supabase
+    .from('discount_codes')
+    .select('*')
+    .order('created_at', { ascending: false })
 
   if (error) {
     return NextResponse.json({ error: 'Could not load discount codes' }, { status: 500 })
@@ -35,7 +38,10 @@ export async function POST(request: Request) {
 
   const parsed = createDiscountSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid discount data', details: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid discount data', details: parsed.error.flatten() },
+      { status: 400 }
+    )
   }
   const body = parsed.data
 
@@ -57,7 +63,10 @@ export async function POST(request: Request) {
     .single()
 
   if (error || !data) {
-    return NextResponse.json({ error: 'Could not create discount code (it may already exist)' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Could not create discount code (it may already exist)' },
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({ discount: data })

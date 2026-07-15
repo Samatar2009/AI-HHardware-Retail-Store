@@ -36,7 +36,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     let ancestor: string | null = body.parentId
     while (ancestor) {
       if (ancestor === params.id) {
-        return NextResponse.json({ error: 'Circular category reference not allowed' }, { status: 400 })
+        return NextResponse.json(
+          { error: 'Circular category reference not allowed' },
+          { status: 400 }
+        )
       }
       ancestor = byId.get(ancestor) ?? null
     }

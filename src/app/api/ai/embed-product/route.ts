@@ -27,7 +27,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 })
   }
 
-  const text = [product.name_en, product.name_so, product.description_en, product.description_so, product.brand, (product.tags ?? []).join(' ')]
+  const text = [
+    product.name_en,
+    product.name_so,
+    product.description_en,
+    product.description_so,
+    product.brand,
+    (product.tags ?? []).join(' '),
+  ]
     .filter(Boolean)
     .join('. ')
 

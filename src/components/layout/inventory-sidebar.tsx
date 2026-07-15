@@ -2,7 +2,15 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { AlertTriangle, ClipboardList, LayoutDashboard, LogOut, PackagePlus, Sparkles, Warehouse } from 'lucide-react'
+import {
+  AlertTriangle,
+  ClipboardList,
+  LayoutDashboard,
+  LogOut,
+  PackagePlus,
+  Sparkles,
+  Warehouse,
+} from 'lucide-react'
 
 import { cn, getInitials } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth.store'
@@ -23,7 +31,10 @@ interface NavGroup {
 }
 
 const GROUPS: NavGroup[] = [
-  { label: 'Overview', items: [{ href: '/inventory/dashboard', label: 'Dashboard', icon: LayoutDashboard }] },
+  {
+    label: 'Overview',
+    items: [{ href: '/inventory/dashboard', label: 'Dashboard', icon: LayoutDashboard }],
+  },
   {
     label: 'Operations',
     items: [
@@ -62,7 +73,9 @@ function InventorySidebar() {
                   className={cn(
                     'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium',
                     'transition-colors duration-100 motion-reduce:transition-none motion-reduce:duration-0',
-                    isActive ? 'bg-orange-500 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'
+                    isActive
+                      ? 'bg-orange-500 text-white'
+                      : 'text-stone-400 hover:bg-stone-800 hover:text-white'
                   )}
                 >
                   <item.icon className="size-5" aria-hidden="true" />
@@ -83,10 +96,14 @@ function InventorySidebar() {
         {profile && (
           <div className="mb-3 flex items-center gap-3">
             <Avatar className="size-8">
-              <AvatarFallback className="text-xs">{getInitials(profile.full_name || profile.phone)}</AvatarFallback>
+              <AvatarFallback className="text-xs">
+                {getInitials(profile.full_name || profile.phone)}
+              </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-white">{profile.full_name || profile.phone}</p>
+              <p className="truncate text-sm font-medium text-white">
+                {profile.full_name || profile.phone}
+              </p>
             </div>
             <Badge variant="roleInventoryManager">Inventory</Badge>
           </div>

@@ -76,7 +76,10 @@ export default function PosPage() {
   const [parkedCarts, setParkedCarts] = useState<ParkedCartRow[]>([])
   const [paymentModalOpen, setPaymentModalOpen] = useState(false)
   const [closeDialogOpen, setCloseDialogOpen] = useState(false)
-  const [lastTransaction, setLastTransaction] = useState<{ id: string; transactionNumber: string } | null>(null)
+  const [lastTransaction, setLastTransaction] = useState<{
+    id: string
+    transactionNumber: string
+  } | null>(null)
   const [voidDialogOpen, setVoidDialogOpen] = useState(false)
 
   useEffect(() => {
@@ -126,7 +129,9 @@ export default function PosPage() {
     setCart((prev) => {
       const existing = prev.find((c) => c.variantId === item.variantId)
       if (existing) {
-        return prev.map((c) => (c.variantId === item.variantId ? { ...c, quantity: c.quantity + 1 } : c))
+        return prev.map((c) =>
+          c.variantId === item.variantId ? { ...c, quantity: c.quantity + 1 } : c
+        )
       }
       return [
         ...prev,
@@ -186,7 +191,10 @@ export default function PosPage() {
     }
   }
 
-  const subtotal = useMemo(() => cart.reduce((sum, item) => sum + item.unitPriceSlsh * item.quantity, 0), [cart])
+  const subtotal = useMemo(
+    () => cart.reduce((sum, item) => sum + item.unitPriceSlsh * item.quantity, 0),
+    [cart]
+  )
   const total = Math.max(0, subtotal - discountAmount)
 
   async function applyDiscountCode() {
@@ -202,7 +210,11 @@ export default function PosPage() {
           customerId: linkToSale && customer ? customer.userId : undefined,
         }),
       })
-      const data = (await res.json()) as { isValid: boolean; discountAmountSlsh: number; errorMessage: string | null }
+      const data = (await res.json()) as {
+        isValid: boolean
+        discountAmountSlsh: number
+        errorMessage: string | null
+      }
       if (!data.isValid) {
         showErrorToast(data.errorMessage ?? 'Invalid discount code')
         setDiscountAmount(0)
@@ -233,7 +245,7 @@ export default function PosPage() {
         locationId: activeSession.location_id,
         cartData: {
           items: cart,
-          customerPhone: linkToSale ? customer?.phone ?? null : null,
+          customerPhone: linkToSale ? (customer?.phone ?? null) : null,
           discountCode: discountCode || null,
         },
       }),
@@ -263,7 +275,9 @@ export default function PosPage() {
     void loadParkedCarts()
   }
 
-  function handleTransactionComplete(transaction: { id: string; transactionNumber: string } | null) {
+  function handleTransactionComplete(
+    transaction: { id: string; transactionNumber: string } | null
+  ) {
     clearCart()
     setPaymentModalOpen(false)
     // A queued offline sale has no server-assigned id yet, so it can't be
@@ -308,7 +322,10 @@ export default function PosPage() {
           <TabsTrigger value="sale" className="text-stone-400 data-[state=active]:text-orange-500">
             Sale
           </TabsTrigger>
-          <TabsTrigger value="pickup" className="text-stone-400 data-[state=active]:text-orange-500">
+          <TabsTrigger
+            value="pickup"
+            className="text-stone-400 data-[state=active]:text-orange-500"
+          >
             Pickup
           </TabsTrigger>
         </TabsList>
@@ -342,7 +359,12 @@ export default function PosPage() {
                 </div>
               )}
             </div>
-            <Button variant="secondary" size="icon" onClick={() => setScannerOpen(true)} aria-label="Scan barcode">
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={() => setScannerOpen(true)}
+              aria-label="Scan barcode"
+            >
               <Camera className="size-4" />
             </Button>
           </div>
@@ -353,22 +375,36 @@ export default function PosPage() {
             ) : (
               <div className="flex flex-col gap-2">
                 {cart.map((item) => (
-                  <div key={item.variantId} className="flex items-center justify-between rounded-md border border-stone-800 bg-stone-900 p-3">
+                  <div
+                    key={item.variantId}
+                    className="flex items-center justify-between rounded-md border border-stone-800 bg-stone-900 p-3"
+                  >
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-white">{item.nameEn}</p>
                       <p className="text-xs text-stone-500">{item.sku}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => updateQty(item.variantId, item.quantity - 1)} className="rounded-full bg-stone-800 p-1 text-white">
+                      <button
+                        onClick={() => updateQty(item.variantId, item.quantity - 1)}
+                        className="rounded-full bg-stone-800 p-1 text-white"
+                      >
                         <Minus className="size-3.5" />
                       </button>
                       <span className="w-6 text-center text-white">{item.quantity}</span>
-                      <button onClick={() => updateQty(item.variantId, item.quantity + 1)} className="rounded-full bg-stone-800 p-1 text-white">
+                      <button
+                        onClick={() => updateQty(item.variantId, item.quantity + 1)}
+                        className="rounded-full bg-stone-800 p-1 text-white"
+                      >
                         <Plus className="size-3.5" />
                       </button>
                     </div>
-                    <p className="w-24 text-right text-sm text-white">{formatSLSH(item.unitPriceSlsh * item.quantity)}</p>
-                    <button onClick={() => removeItem(item.variantId)} className="ml-2 text-stone-500 hover:text-red-500">
+                    <p className="w-24 text-right text-sm text-white">
+                      {formatSLSH(item.unitPriceSlsh * item.quantity)}
+                    </p>
+                    <button
+                      onClick={() => removeItem(item.variantId)}
+                      className="ml-2 text-stone-500 hover:text-red-500"
+                    >
                       <Trash2 className="size-4" />
                     </button>
                   </div>
@@ -378,26 +414,40 @@ export default function PosPage() {
           </div>
 
           <div className="mt-4 flex gap-2 border-t border-stone-800 pt-4">
-            <Button variant="secondary" onClick={() => void parkCart()} disabled={cart.length === 0}>
+            <Button
+              variant="secondary"
+              onClick={() => void parkCart()}
+              disabled={cart.length === 0}
+            >
               Park Cart (F1)
             </Button>
             <Button variant="secondary" onClick={clearCart} disabled={cart.length === 0}>
               Clear Cart (F2)
             </Button>
-            <Button variant="secondary" onClick={() => setVoidDialogOpen(true)} disabled={!lastTransaction}>
+            <Button
+              variant="secondary"
+              onClick={() => setVoidDialogOpen(true)}
+              disabled={!lastTransaction}
+            >
               Void Last (F3)
             </Button>
             <Button variant="secondary" onClick={clearCart}>
               New Sale (F4)
             </Button>
-            <Button variant="secondary" onClick={() => setCloseDialogOpen(true)} className="ml-auto">
+            <Button
+              variant="secondary"
+              onClick={() => setCloseDialogOpen(true)}
+              className="ml-auto"
+            >
               Close Register
             </Button>
           </div>
 
           {parkedCarts.length > 0 && (
             <div className="mt-4 border-t border-stone-800 pt-4">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-500">Parked Carts ({parkedCarts.length})</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
+                Parked Carts ({parkedCarts.length})
+              </p>
               <div className="flex flex-wrap gap-2">
                 {parkedCarts.map((p) => (
                   <button
@@ -405,7 +455,8 @@ export default function PosPage() {
                     onClick={() => void recallCart(p)}
                     className="rounded-md border border-stone-700 bg-stone-900 px-3 py-2 text-left text-xs text-white hover:border-orange-500"
                   >
-                    {p.cart_data.items.length} item(s) · {new Date(p.parked_at).toLocaleTimeString()}
+                    {p.cart_data.items.length} item(s) ·{' '}
+                    {new Date(p.parked_at).toLocaleTimeString()}
                   </button>
                 ))}
               </div>
@@ -424,7 +475,8 @@ export default function PosPage() {
                   <p className="text-sm text-white">{customer.fullName || customer.phone}</p>
                   {customer.loyaltyCard && (
                     <p className="text-xs text-stone-400">
-                      {customer.loyaltyCard.current_points} pts · {customer.loyaltyCard.current_tier}
+                      {customer.loyaltyCard.current_points} pts ·{' '}
+                      {customer.loyaltyCard.current_tier}
                     </p>
                   )}
                 </div>
@@ -446,14 +498,22 @@ export default function PosPage() {
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   className="border-stone-700 bg-stone-800 text-white"
                 />
-                <Button variant="secondary" onClick={() => void lookupCustomer()} loading={isLookingUp}>
+                <Button
+                  variant="secondary"
+                  onClick={() => void lookupCustomer()}
+                  loading={isLookingUp}
+                >
                   Lookup
                 </Button>
               </div>
             )}
             {customer && (
               <label className="mt-2 flex items-center gap-2 text-xs text-stone-400">
-                <input type="checkbox" checked={linkToSale} onChange={(e) => setLinkToSale(e.target.checked)} />
+                <input
+                  type="checkbox"
+                  checked={linkToSale}
+                  onChange={(e) => setLinkToSale(e.target.checked)}
+                />
                 Link to sale (award loyalty points)
               </label>
             )}
@@ -467,7 +527,11 @@ export default function PosPage() {
                 onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
                 className="border-stone-700 bg-stone-800 text-white"
               />
-              <Button variant="secondary" onClick={() => void applyDiscountCode()} loading={isValidatingCode}>
+              <Button
+                variant="secondary"
+                onClick={() => void applyDiscountCode()}
+                loading={isValidatingCode}
+              >
                 Apply
               </Button>
             </div>
@@ -505,7 +569,11 @@ export default function PosPage() {
         <PickupPanel />
       </TabsContent>
 
-      <BarcodeScanner open={scannerOpen} onOpenChange={setScannerOpen} onScan={(sku) => void handleScan(sku)} />
+      <BarcodeScanner
+        open={scannerOpen}
+        onOpenChange={setScannerOpen}
+        onScan={(sku) => void handleScan(sku)}
+      />
 
       {activeSession && (
         <PaymentModal
@@ -522,7 +590,13 @@ export default function PosPage() {
         />
       )}
 
-      {activeSession && <CloseSessionDialog open={closeDialogOpen} onOpenChange={setCloseDialogOpen} session={activeSession} />}
+      {activeSession && (
+        <CloseSessionDialog
+          open={closeDialogOpen}
+          onOpenChange={setCloseDialogOpen}
+          session={activeSession}
+        />
+      )}
 
       <VoidDialog
         open={voidDialogOpen}

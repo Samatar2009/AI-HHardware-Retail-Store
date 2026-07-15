@@ -1,7 +1,13 @@
 import type { UserRole } from '@/types/auth'
 import type { OrderStatus, PaymentMethod } from '@/types/order'
 
-export const PAYMENT_METHODS: PaymentMethod[] = ['zaad', 'edahab', 'evc_plus', 'sahal', 'cash_on_pickup']
+export const PAYMENT_METHODS: PaymentMethod[] = [
+  'zaad',
+  'edahab',
+  'evc_plus',
+  'sahal',
+  'cash_on_pickup',
+]
 
 export const ORDER_STATUSES: OrderStatus[] = [
   'pending_payment',

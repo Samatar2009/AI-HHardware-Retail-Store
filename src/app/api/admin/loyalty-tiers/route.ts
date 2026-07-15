@@ -8,7 +8,10 @@ export async function GET() {
   if (authError) return authError
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('loyalty_tiers').select('*').order('min_lifetime_points')
+  const { data, error } = await supabase
+    .from('loyalty_tiers')
+    .select('*')
+    .order('min_lifetime_points')
 
   if (error) {
     return NextResponse.json({ error: 'Could not load loyalty tiers' }, { status: 500 })

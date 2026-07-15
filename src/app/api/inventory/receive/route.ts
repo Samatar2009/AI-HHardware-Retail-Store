@@ -28,7 +28,10 @@ export async function POST(request: Request) {
 
   const parsed = receiveSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid receive data', details: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid receive data', details: parsed.error.flatten() },
+      { status: 400 }
+    )
   }
   const body = parsed.data
 
@@ -36,7 +39,11 @@ export async function POST(request: Request) {
   let locationId = body.locationId ?? null
 
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     if (!profile?.location_id) {
       return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })
     }
@@ -87,7 +94,10 @@ export async function POST(request: Request) {
       }
     }
 
-    await admin.from('product_variants').update({ cost_price_slsh: item.costPriceSlsh }).eq('id', item.variantId)
+    await admin
+      .from('product_variants')
+      .update({ cost_price_slsh: item.costPriceSlsh })
+      .eq('id', item.variantId)
 
     await admin.from('stock_movements').insert({
       product_id: item.productId,

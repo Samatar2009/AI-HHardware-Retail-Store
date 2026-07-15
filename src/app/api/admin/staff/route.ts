@@ -39,11 +39,18 @@ export async function POST(request: Request) {
   const body = parsed.data
 
   const supabase = await createClient()
-  const { data: existing } = await supabase.from('profiles').select('user_id, role').eq('phone', body.phone).maybeSingle()
+  const { data: existing } = await supabase
+    .from('profiles')
+    .select('user_id, role')
+    .eq('phone', body.phone)
+    .maybeSingle()
 
   if (!existing) {
     return NextResponse.json(
-      { error: 'No account found for this phone number. The user must sign in at least once before being assigned a staff role.' },
+      {
+        error:
+          'No account found for this phone number. The user must sign in at least once before being assigned a staff role.',
+      },
       { status: 404 }
     )
   }

@@ -22,7 +22,9 @@ function PaymentMethodIcon({ method, showLabel = true, className }: PaymentMetho
   const Icon = isCash ? Banknote : Smartphone
 
   return (
-    <span className={className ? className : 'inline-flex items-center gap-1.5 text-sm text-stone-700'}>
+    <span
+      className={className ? className : 'inline-flex items-center gap-1.5 text-sm text-stone-700'}
+    >
       <Icon className="size-5 text-stone-500" aria-hidden="true" />
       {showLabel && LABELS[method]}
     </span>

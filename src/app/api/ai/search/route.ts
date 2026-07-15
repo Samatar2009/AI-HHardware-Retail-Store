@@ -16,7 +16,10 @@ export async function POST(request: Request) {
   const ip = getClientIp(request)
   const { success } = await rateLimiters.search.limit(ip)
   if (!success) {
-    return NextResponse.json({ error: 'Too many search requests. Please try again shortly.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many search requests. Please try again shortly.' },
+      { status: 429 }
+    )
   }
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null))
@@ -31,7 +34,10 @@ export async function POST(request: Request) {
   try {
     queryEmbedding = await embedText(query)
   } catch {
-    return NextResponse.json({ error: 'Search is temporarily unavailable. Please try again.' }, { status: 502 })
+    return NextResponse.json(
+      { error: 'Search is temporarily unavailable. Please try again.' },
+      { status: 502 }
+    )
   }
 
   const { data: matches, error: matchError } = await supabase.rpc('match_products_semantic', {
@@ -64,8 +70,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Could not load search results' }, { status: 500 })
   }
 
-  const byId = new Map((products ?? []).map((p) => [p.id, toProductCardProps(p, locationId ?? null)]))
-  const results = productIds.map((id) => byId.get(id)).filter((p): p is NonNullable<typeof p> => !!p)
+  const byId = new Map(
+    (products ?? []).map((p) => [p.id, toProductCardProps(p, locationId ?? null)])
+  )
+  const results = productIds
+    .map((id) => byId.get(id))
+    .filter((p): p is NonNullable<typeof p> => !!p)
 
   return NextResponse.json({ results })
 }

@@ -39,7 +39,9 @@ export const usePosStore = create<PosState>()((set) => ({
   setActiveCustomer: (customer) => set({ activeCustomer: customer }),
   addToCart: (item) =>
     set((state) => {
-      const existing = state.activeCart.find((line) => isSameLine(line, item.productId, item.variantId))
+      const existing = state.activeCart.find((line) =>
+        isSameLine(line, item.productId, item.variantId)
+      )
       if (existing) {
         return {
           activeCart: state.activeCart.map((line) =>

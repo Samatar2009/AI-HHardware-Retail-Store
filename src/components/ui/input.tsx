@@ -35,11 +35,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             aria-invalid={!!error}
-            aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
+            aria-describedby={
+              error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
+            }
             className={cn(
               'h-10 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400',
               'transition-all duration-150 motion-reduce:transition-none motion-reduce:duration-0',
-              'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0 focus:border-orange-500',
+              'focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0',
               'disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400',
               error && 'border-red-500 focus:ring-red-500',
               leftIcon && 'pl-9',

@@ -12,22 +12,24 @@ const Table = forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement
 )
 Table.displayName = 'Table'
 
-const TableHeader = forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement> & { sticky?: boolean }>(
-  ({ className, sticky, ...props }, ref) => (
-    <thead
-      ref={ref}
-      className={cn('bg-stone-900 text-white', sticky && 'sticky top-0 z-10', className)}
-      {...props}
-    />
-  )
-)
+const TableHeader = forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement> & { sticky?: boolean }
+>(({ className, sticky, ...props }, ref) => (
+  <thead
+    ref={ref}
+    className={cn('bg-stone-900 text-white', sticky && 'sticky top-0 z-10', className)}
+    {...props}
+  />
+))
 TableHeader.displayName = 'TableHeader'
 
-const TableBody = forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-  ({ className, ...props }, ref) => (
-    <tbody ref={ref} className={cn('divide-y divide-stone-200', className)} {...props} />
-  )
-)
+const TableBody = forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tbody ref={ref} className={cn('divide-y divide-stone-200', className)} {...props} />
+))
 TableBody.displayName = 'TableBody'
 
 const TableRow = forwardRef<
@@ -51,7 +53,10 @@ const TableHead = forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTa
   ({ className, ...props }, ref) => (
     <th
       ref={ref}
-      className={cn('px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em]', className)}
+      className={cn(
+        'px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em]',
+        className
+      )}
       {...props}
     />
   )
@@ -59,7 +64,9 @@ const TableHead = forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTa
 TableHead.displayName = 'TableHead'
 
 const TableCell = forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(
-  ({ className, ...props }, ref) => <td ref={ref} className={cn('px-4 py-3 text-stone-700', className)} {...props} />
+  ({ className, ...props }, ref) => (
+    <td ref={ref} className={cn('px-4 py-3 text-stone-700', className)} {...props} />
+  )
 )
 TableCell.displayName = 'TableCell'
 

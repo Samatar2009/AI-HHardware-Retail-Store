@@ -22,7 +22,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const { data: order } = await supabase
     .from('orders')
-    .select('id, status, total_slsh, payment_method, customer:profiles!orders_customer_id_fkey(phone)')
+    .select(
+      'id, status, total_slsh, payment_method, customer:profiles!orders_customer_id_fkey(phone)'
+    )
     .eq('id', params.id)
     .single()
 
@@ -30,7 +32,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   }
   if (order.status !== 'payment_submitted' && order.status !== 'pending_payment') {
-    return NextResponse.json({ error: 'Order is not awaiting payment confirmation' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'Order is not awaiting payment confirmation' },
+      { status: 409 }
+    )
   }
 
   const { error: updateError } = await supabase

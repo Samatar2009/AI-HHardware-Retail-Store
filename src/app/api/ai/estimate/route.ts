@@ -31,7 +31,10 @@ export async function POST(request: Request) {
   const ip = getClientIp(request)
   const { success } = await rateLimiters.aiEstimate.limit(ip)
   if (!success) {
-    return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again shortly.' },
+      { status: 429 }
+    )
   }
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null))
@@ -54,7 +57,10 @@ Write project_type and notes in ${languageName}. Keep the materials list realist
   try {
     const result = await geminiPro.generateContent(prompt)
     const text = result.response.text().trim()
-    const jsonText = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '')
+    const jsonText = text
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
     const parsedResult = estimateResponseSchema.safeParse(JSON.parse(jsonText))
     if (!parsedResult.success) {
       return NextResponse.json({ error: 'AI response was malformed' }, { status: 502 })
@@ -78,7 +84,9 @@ Write project_type and notes in ${languageName}. Keep the materials list realist
   const admin = createAdminClient()
   const materialsWithMatches = await Promise.all(
     aiResult.materials.map(async (material) => {
-      const { data: nameMatches } = await admin.rpc('match_product_by_name', { search_text: material.name })
+      const { data: nameMatches } = await admin.rpc('match_product_by_name', {
+        search_text: material.name,
+      })
       const nameMatch = nameMatches?.[0]
       if (!nameMatch) {
         return {
@@ -94,16 +102,20 @@ Write project_type and notes in ${languageName}. Keep the materials list realist
 
       const { data: match } = await admin
         .from('products')
-        .select('id, name_en, name_so, product_variants(id, sku, price_slsh, is_active), product_images(image_url, sort_order)')
+        .select(
+          'id, name_en, name_so, product_variants(id, sku, price_slsh, is_active), product_images(image_url, sort_order)'
+        )
         .eq('id', nameMatch.product_id)
         .single()
 
       const activeVariant = (
-        match?.product_variants as { id: string; sku: string; price_slsh: number; is_active: boolean }[] | undefined
+        match?.product_variants as
+          | { id: string; sku: string; price_slsh: number; is_active: boolean }[]
+          | undefined
       )?.find((v) => v.is_active)
-      const image = (match?.product_images as { image_url: string; sort_order: number }[] | undefined)?.sort(
-        (a, b) => a.sort_order - b.sort_order
-      )[0]
+      const image = (
+        match?.product_images as { image_url: string; sort_order: number }[] | undefined
+      )?.sort((a, b) => a.sort_order - b.sort_order)[0]
 
       if (match && activeVariant) {
         const totalSlsh = activeVariant.price_slsh * material.quantity

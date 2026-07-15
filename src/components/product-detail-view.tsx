@@ -62,7 +62,10 @@ const STOCK_BADGE = {
 }
 
 function variantAvailability(variant: VariantRow) {
-  const available = variant.inventory.reduce((sum, inv) => sum + (inv.quantity_on_hand - inv.quantity_reserved), 0)
+  const available = variant.inventory.reduce(
+    (sum, inv) => sum + (inv.quantity_on_hand - inv.quantity_reserved),
+    0
+  )
   const threshold = variant.inventory.reduce((sum, inv) => sum + inv.threshold, 0)
   const status = available <= 0 ? 'out_of_stock' : available <= threshold ? 'low_stock' : 'in_stock'
   return { available, status: status as keyof typeof STOCK_BADGE }
@@ -95,8 +98,9 @@ function ProductDetailView({ product }: { product: ProductDetailData }) {
   const [activeImageIndex, setActiveImageIndex] = useState(0)
 
   const selectedVariant =
-    activeVariants.find((v) => attributeKeys.every((key) => v.attributes[key] === selectedAttrs[key])) ??
-    activeVariants[0]
+    activeVariants.find((v) =>
+      attributeKeys.every((key) => v.attributes[key] === selectedAttrs[key])
+    ) ?? activeVariants[0]
 
   const { available, status } = selectedVariant
     ? variantAvailability(selectedVariant)
@@ -108,7 +112,9 @@ function ProductDetailView({ product }: { product: ProductDetailData }) {
   const images = [...product.product_images].sort((a, b) => a.sort_order - b.sort_order)
   const displayImageUrl = selectedVariant?.image_url ?? images[activeImageIndex]?.image_url
 
-  const pointsToEarn = selectedVariant ? Math.floor(selectedVariant.price_slsh * quantity * POINTS_PER_SLSH) : 0
+  const pointsToEarn = selectedVariant
+    ? Math.floor(selectedVariant.price_slsh * quantity * POINTS_PER_SLSH)
+    : 0
 
   function handleAddToCart() {
     if (!selectedVariant || status === 'out_of_stock') return
@@ -166,9 +172,13 @@ function ProductDetailView({ product }: { product: ProductDetailData }) {
         <h1 className="text-3xl font-bold leading-[38px] text-stone-900">{name}</h1>
 
         <div>
-          <p className="text-3xl font-bold text-stone-900">{formatSLSH(selectedVariant?.price_slsh ?? 0)}</p>
+          <p className="text-3xl font-bold text-stone-900">
+            {formatSLSH(selectedVariant?.price_slsh ?? 0)}
+          </p>
           {exchangeRate > 0 && (
-            <p className="text-sm text-stone-500">{slshToUsd(selectedVariant?.price_slsh ?? 0, exchangeRate)}</p>
+            <p className="text-sm text-stone-500">
+              {slshToUsd(selectedVariant?.price_slsh ?? 0, exchangeRate)}
+            </p>
           )}
           <p className="mt-1 flex items-center gap-1 text-xs text-orange-600">
             <Star className="size-3.5" aria-hidden="true" />
@@ -178,12 +188,16 @@ function ProductDetailView({ product }: { product: ProductDetailData }) {
 
         <div>
           <Badge variant={STOCK_BADGE[status].variant}>{STOCK_BADGE[status].label}</Badge>
-          {status === 'low_stock' && <span className="ml-2 text-xs text-stone-500">Only {available} left</span>}
+          {status === 'low_stock' && (
+            <span className="ml-2 text-xs text-stone-500">Only {available} left</span>
+          )}
         </div>
 
         {attributeKeys.map((key) => (
           <div key={key}>
-            <p className="mb-1.5 text-sm font-medium text-stone-700 capitalize">{key.replace('_', ' ')}</p>
+            <p className="mb-1.5 text-sm font-medium capitalize text-stone-700">
+              {key.replace('_', ' ')}
+            </p>
             <div className="flex flex-wrap gap-2">
               {[...new Set(activeVariants.map((v) => v.attributes[key]))].map((value) => (
                 <button

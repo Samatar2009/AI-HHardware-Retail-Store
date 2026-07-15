@@ -38,7 +38,10 @@ export async function POST(request: Request) {
 
   const parsed = createBannerSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid banner data', details: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid banner data', details: parsed.error.flatten() },
+      { status: 400 }
+    )
   }
   const body = parsed.data
 

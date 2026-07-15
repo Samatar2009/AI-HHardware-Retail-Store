@@ -15,8 +15,9 @@ export default function OfflinePage() {
       </div>
       <h1 className="text-xl font-semibold text-stone-900">You are offline</h1>
       <p className="max-w-xs text-sm text-stone-500">
-        This page hasn&apos;t been loaded before, so it isn&apos;t available offline. The POS terminal still works
-        offline — sales are queued and sync automatically once you&apos;re back online.
+        This page hasn&apos;t been loaded before, so it isn&apos;t available offline. The POS
+        terminal still works offline — sales are queued and sync automatically once you&apos;re back
+        online.
       </p>
       <Button variant="primary" onClick={() => window.location.reload()}>
         <RotateCw className="size-4" aria-hidden="true" />

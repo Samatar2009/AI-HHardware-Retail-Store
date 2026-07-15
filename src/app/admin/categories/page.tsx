@@ -11,7 +11,14 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { SimpleSelect } from '@/components/ui/select'
 import { ImageUpload } from '@/components/forms/image-upload'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
@@ -60,11 +67,18 @@ function CategoryTreeRow({
   return (
     <>
       <div
-        className={cn('flex items-center gap-2 border-b border-stone-100 py-2', !node.is_active && 'opacity-50')}
+        className={cn(
+          'flex items-center gap-2 border-b border-stone-100 py-2',
+          !node.is_active && 'opacity-50'
+        )}
         style={{ paddingLeft: `${depth * 24}px` }}
       >
         {hasChildren ? (
-          <button type="button" onClick={() => setExpanded((e) => !e)} className="text-stone-400 hover:text-stone-600">
+          <button
+            type="button"
+            onClick={() => setExpanded((e) => !e)}
+            className="text-stone-400 hover:text-stone-600"
+          >
             {expanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
           </button>
         ) : (
@@ -78,7 +92,9 @@ function CategoryTreeRow({
         )}
         <span className="flex-1 text-sm font-medium text-stone-900">{node.name_en}</span>
         <span className="text-xs text-stone-500">{node.name_so}</span>
-        <Badge variant={node.is_active ? 'stockInStock' : 'orderCancelled'}>{node.is_active ? 'Active' : 'Inactive'}</Badge>
+        <Badge variant={node.is_active ? 'stockInStock' : 'orderCancelled'}>
+          {node.is_active ? 'Active' : 'Inactive'}
+        </Badge>
         <Switch checked={node.is_active} onCheckedChange={() => onToggleActive(node)} />
         <Button variant="ghost" size="sm" onClick={() => onEdit(node)}>
           <Pencil className="size-3.5" />
@@ -87,7 +103,15 @@ function CategoryTreeRow({
       {expanded &&
         node.children
           .sort((a, b) => a.sort_order - b.sort_order)
-          .map((child) => <CategoryTreeRow key={child.id} node={child} depth={depth + 1} onEdit={onEdit} onToggleActive={onToggleActive} />)}
+          .map((child) => (
+            <CategoryTreeRow
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              onEdit={onEdit}
+              onToggleActive={onToggleActive}
+            />
+          ))}
     </>
   )
 }
@@ -121,12 +145,17 @@ export default function AdminCategoriesPage() {
     }
   }
 
-  const tree = useMemo(() => buildTree(categories).sort((a, b) => a.sort_order - b.sort_order), [categories])
+  const tree = useMemo(
+    () => buildTree(categories).sort((a, b) => a.sort_order - b.sort_order),
+    [categories]
+  )
 
   const parentOptions = useMemo(
     () => [
       { value: 'none', label: 'No parent (top-level)' },
-      ...categories.filter((c) => c.id !== editing?.id).map((c) => ({ value: c.id, label: c.name_en })),
+      ...categories
+        .filter((c) => c.id !== editing?.id)
+        .map((c) => ({ value: c.id, label: c.name_en })),
     ],
     [categories, editing]
   )
@@ -213,7 +242,15 @@ export default function AdminCategoriesPage() {
           ) : tree.length === 0 ? (
             <p className="py-10 text-center text-sm text-stone-500">No categories yet.</p>
           ) : (
-            tree.map((node) => <CategoryTreeRow key={node.id} node={node} depth={0} onEdit={openEdit} onToggleActive={(n) => void toggleActive(n)} />)
+            tree.map((node) => (
+              <CategoryTreeRow
+                key={node.id}
+                node={node}
+                depth={0}
+                onEdit={openEdit}
+                onToggleActive={(n) => void toggleActive(n)}
+              />
+            ))
           )}
         </CardContent>
       </Card>
@@ -224,10 +261,30 @@ export default function AdminCategoriesPage() {
             <DialogTitle>{editing ? 'Edit Category' : 'New Category'}</DialogTitle>
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
-            <Input label="Name (English)" required value={nameEn} onChange={(e) => setNameEn(e.target.value)} />
-            <Input label="Name (Somali)" required value={nameSo} onChange={(e) => setNameSo(e.target.value)} />
-            <SimpleSelect label="Parent Category" value={parentId} onValueChange={setParentId} options={parentOptions} />
-            <Input label="Sort Order" type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} />
+            <Input
+              label="Name (English)"
+              required
+              value={nameEn}
+              onChange={(e) => setNameEn(e.target.value)}
+            />
+            <Input
+              label="Name (Somali)"
+              required
+              value={nameSo}
+              onChange={(e) => setNameSo(e.target.value)}
+            />
+            <SimpleSelect
+              label="Parent Category"
+              value={parentId}
+              onValueChange={setParentId}
+              options={parentOptions}
+            />
+            <Input
+              label="Sort Order"
+              type="number"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            />
             <ImageUpload
               label="Icon"
               value={iconUrl}

@@ -65,7 +65,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
   // Refund any loyalty points that were redeemed on this order, mirroring
   // the inventory release above (create_order deducted them immediately).
   if (order.loyalty_points_redeemed && order.loyalty_points_redeemed > 0) {
-    const { data: card } = await admin.from('loyalty_cards').select('id, current_points').eq('customer_id', user.id).single()
+    const { data: card } = await admin
+      .from('loyalty_cards')
+      .select('id, current_points')
+      .eq('customer_id', user.id)
+      .single()
 
     if (card) {
       await admin

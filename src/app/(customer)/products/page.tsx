@@ -94,7 +94,10 @@ export default function ProductsPage() {
     },
   })
 
-  const productsQueryKey = ['products', { search, categoryId: filters.categoryId, sort, page, filters }]
+  const productsQueryKey = [
+    'products',
+    { search, categoryId: filters.categoryId, sort, page, filters },
+  ]
   const { data: productsData, isLoading } = useQuery({
     queryKey: productsQueryKey,
     queryFn: async () => {
@@ -137,7 +140,9 @@ export default function ProductsPage() {
 
         <div className="flex-1">
           <div className="mb-4 flex items-center justify-between gap-4">
-            <p className="text-sm text-stone-600">{isLoading ? 'Loading…' : `${totalCount} products found`}</p>
+            <p className="text-sm text-stone-600">
+              {isLoading ? 'Loading…' : `${totalCount} products found`}
+            </p>
 
             <div className="flex items-center gap-2">
               <MobileBottomSheet>
@@ -171,7 +176,11 @@ export default function ProductsPage() {
           )}
 
           <div className="mt-8">
-            <Pagination page={page} totalPages={totalPages} onPageChange={(p) => updateParams({ page: String(p) })} />
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={(p) => updateParams({ page: String(p) })}
+            />
           </div>
         </div>
       </div>

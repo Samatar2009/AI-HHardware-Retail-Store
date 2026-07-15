@@ -8,7 +8,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { SimpleSelect } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showErrorToast, showSuccessToast } from '@/components/ui/toast'
 import { createClient } from '@/lib/supabase/client'
 import { formatDate } from '@/lib/utils'
@@ -47,7 +54,12 @@ function ReturnPhotos({ paths }: { paths: string[] }) {
     <div className="mt-2 flex gap-2">
       {urls.map((url) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={url} src={url} alt="Return evidence" className="size-16 rounded-md object-cover" />
+        <img
+          key={url}
+          src={url}
+          alt="Return evidence"
+          className="size-16 rounded-md object-cover"
+        />
       ))}
     </div>
   )
@@ -145,7 +157,11 @@ export default function StaffReturnsPage() {
 
   const columns: DataTableColumn<ReturnRow>[] = [
     { key: 'order', header: 'Order', render: (row) => row.order?.order_number ?? '—' },
-    { key: 'customer', header: 'Customer', render: (row) => row.customer?.full_name || row.customer?.phone || '—' },
+    {
+      key: 'customer',
+      header: 'Customer',
+      render: (row) => row.customer?.full_name || row.customer?.phone || '—',
+    },
     { key: 'items', header: 'Items', render: (row) => row.return_items.length },
     { key: 'submitted', header: 'Submitted', render: (row) => formatDate(row.created_at) },
     {
@@ -163,7 +179,13 @@ export default function StaffReturnsPage() {
     <div>
       <PageHeader title="Returns" subtitle={`${returns.length} pending`} />
 
-      <DataTable columns={columns} data={returns} getRowId={(row) => row.id} isLoading={isLoading} emptyTitle="No pending returns" />
+      <DataTable
+        columns={columns}
+        data={returns}
+        getRowId={(row) => row.id}
+        isLoading={isLoading}
+        emptyTitle="No pending returns"
+      />
 
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
         <DialogContent size="md">
@@ -173,7 +195,9 @@ export default function StaffReturnsPage() {
           <DialogBody className="flex flex-col gap-4">
             {selected && (
               <>
-                <p className="text-sm text-stone-600">{selected.customer?.full_name || selected.customer?.phone}</p>
+                <p className="text-sm text-stone-600">
+                  {selected.customer?.full_name || selected.customer?.phone}
+                </p>
 
                 <div className="flex flex-col gap-3">
                   {selected.return_items.map((item) => (
@@ -187,10 +211,25 @@ export default function StaffReturnsPage() {
 
                 {!showRejectForm ? (
                   <div className="flex flex-col gap-3 border-t border-stone-200 pt-4">
-                    <SimpleSelect label="Refund Method" value={refundMethod} onValueChange={setRefundMethod} options={REFUND_OPTIONS} />
-                    <Input label="Refund Amount (SLSH)" type="number" required value={refundAmount} onChange={(e) => setRefundAmount(e.target.value)} />
+                    <SimpleSelect
+                      label="Refund Method"
+                      value={refundMethod}
+                      onValueChange={setRefundMethod}
+                      options={REFUND_OPTIONS}
+                    />
+                    <Input
+                      label="Refund Amount (SLSH)"
+                      type="number"
+                      required
+                      value={refundAmount}
+                      onChange={(e) => setRefundAmount(e.target.value)}
+                    />
                     {refundMethod === 'original_payment' && (
-                      <Input label="Mobile Money Phone" value={mobileMoneyPhone} onChange={(e) => setMobileMoneyPhone(e.target.value)} />
+                      <Input
+                        label="Mobile Money Phone"
+                        value={mobileMoneyPhone}
+                        onChange={(e) => setMobileMoneyPhone(e.target.value)}
+                      />
                     )}
                     <Input
                       label="Refund Reference (once sent)"
@@ -201,7 +240,12 @@ export default function StaffReturnsPage() {
                   </div>
                 ) : (
                   <div className="border-t border-stone-200 pt-4">
-                    <Textarea label="Rejection Reason" required value={rejectionReason} onChange={(e) => setRejectionReason(e.target.value)} />
+                    <Textarea
+                      label="Rejection Reason"
+                      required
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                    />
                   </div>
                 )}
               </>
@@ -222,7 +266,12 @@ export default function StaffReturnsPage() {
                 <Button variant="secondary" onClick={() => setShowRejectForm(false)}>
                   Back
                 </Button>
-                <Button variant="destructive" onClick={() => void reject()} loading={isActing} disabled={rejectionReason.trim().length < 3}>
+                <Button
+                  variant="destructive"
+                  onClick={() => void reject()}
+                  loading={isActing}
+                  disabled={rejectionReason.trim().length < 3}
+                >
                   Confirm Rejection
                 </Button>
               </>

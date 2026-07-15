@@ -4,7 +4,14 @@ import { useMemo, useState } from 'react'
 import { Inbox } from 'lucide-react'
 
 import { SearchInput } from '@/components/forms/search-input'
-import { Table, TableBody, TableCell, TableHeader, TableRow, SortableTableHead } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+  SortableTableHead,
+} from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Pagination } from '@/components/pagination'
@@ -70,7 +77,9 @@ function DataTable<T>({
 
   return (
     <div className="flex flex-col gap-4">
-      {onSearch && <SearchInput onSearch={onSearch} placeholder={searchPlaceholder} className="max-w-sm" />}
+      {onSearch && (
+        <SearchInput onSearch={onSearch} placeholder={searchPlaceholder} className="max-w-sm" />
+      )}
 
       {isLoading ? (
         <div className="flex flex-col gap-2">
@@ -95,7 +104,10 @@ function DataTable<T>({
                       {column.header}
                     </SortableTableHead>
                   ) : (
-                    <th key={column.key} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em]">
+                    <th
+                      key={column.key}
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.05em]"
+                    >
                       {column.header}
                     </th>
                   )

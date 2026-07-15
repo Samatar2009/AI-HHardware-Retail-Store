@@ -4,17 +4,31 @@ import { createClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/require-role'
 
 export async function GET() {
-  const { userId, role, error: authError } = await requireRole(['cashier', 'inventory_manager', 'admin'])
+  const {
+    userId,
+    role,
+    error: authError,
+  } = await requireRole(['cashier', 'inventory_manager', 'admin'])
   if (authError) return authError
 
   const supabase = await createClient()
 
   let locationId: string | null
   if (role === 'admin') {
-    const { data } = await supabase.from('locations').select('id').eq('is_active', true).order('name_en').limit(1).single()
+    const { data } = await supabase
+      .from('locations')
+      .select('id')
+      .eq('is_active', true)
+      .order('name_en')
+      .limit(1)
+      .single()
     locationId = data?.id ?? null
   } else {
-    const { data } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     locationId = data?.location_id ?? null
   }
 

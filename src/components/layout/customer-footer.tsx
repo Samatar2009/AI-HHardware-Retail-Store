@@ -31,7 +31,9 @@ function CustomerFooter() {
             +252 63 831 5010
           </a>
         </div>
-        <p className="text-xs text-stone-500">© {new Date().getFullYear()} Borama Hardware. Borama, Somaliland.</p>
+        <p className="text-xs text-stone-500">
+          © {new Date().getFullYear()} Borama Hardware. Borama, Somaliland.
+        </p>
       </div>
     </footer>
   )

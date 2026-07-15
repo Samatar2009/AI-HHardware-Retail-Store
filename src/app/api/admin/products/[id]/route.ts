@@ -63,7 +63,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const supabase = await createClient()
   // audit_products trigger (fixed in migration 0040) logs this automatically.
-  const { data, error } = await supabase.from('products').update(updates).eq('id', params.id).select().single()
+  const { data, error } = await supabase
+    .from('products')
+    .update(updates)
+    .eq('id', params.id)
+    .select()
+    .single()
 
   if (error || !data) {
     return NextResponse.json({ error: 'Could not update product' }, { status: 500 })

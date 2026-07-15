@@ -70,7 +70,10 @@ export default function CartPage() {
   const { data: loyaltyData } = useQuery({
     queryKey: ['loyalty-card'],
     enabled: !!user,
-    queryFn: async (): Promise<{ card: LoyaltyCard | null; currentTier: { discount_percentage: number } | null }> => {
+    queryFn: async (): Promise<{
+      card: LoyaltyCard | null
+      currentTier: { discount_percentage: number } | null
+    }> => {
       const res = await fetch('/api/loyalty/card')
       if (!res.ok) return { card: null, currentTier: null }
       return res.json()
@@ -95,16 +98,26 @@ export default function CartPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         locationId,
-        items: items.map((i) => ({ productId: i.productId, variantId: i.variantId, quantity: i.quantity })),
+        items: items.map((i) => ({
+          productId: i.productId,
+          variantId: i.variantId,
+          quantity: i.quantity,
+        })),
       }),
     })
       .then((res) => res.json())
-      .then((data: { items: { productId: string; variantId: string | null; isAvailable: boolean }[] }) => {
-        const badIds = new Set(
-          data.items.filter((i) => !i.isAvailable).map((i) => `${i.productId}:${i.variantId ?? ''}`)
-        )
-        setOutOfStockIds(badIds)
-      })
+      .then(
+        (data: {
+          items: { productId: string; variantId: string | null; isAvailable: boolean }[]
+        }) => {
+          const badIds = new Set(
+            data.items
+              .filter((i) => !i.isAvailable)
+              .map((i) => `${i.productId}:${i.variantId ?? ''}`)
+          )
+          setOutOfStockIds(badIds)
+        }
+      )
       .catch(() => {})
   }, [items, locationId])
 
@@ -161,7 +174,11 @@ export default function CartPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           locationId,
-          items: items.map((i) => ({ productId: i.productId, variantId: i.variantId, quantity: i.quantity })),
+          items: items.map((i) => ({
+            productId: i.productId,
+            variantId: i.variantId,
+            quantity: i.quantity,
+          })),
         }),
       })
       const data = await res.json()
@@ -183,7 +200,12 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-        <EmptyState icon={ShoppingCart} title={t('empty')} ctaLabel="Start Shopping" onCtaClick={() => router.push('/')} />
+        <EmptyState
+          icon={ShoppingCart}
+          title={t('empty')}
+          ctaLabel="Start Shopping"
+          onCtaClick={() => router.push('/')}
+        />
       </div>
     )
   }
@@ -213,18 +235,26 @@ export default function CartPage() {
                 <div className="flex flex-1 flex-col gap-1">
                   <p className="text-sm font-semibold text-stone-900">{item.nameEn}</p>
                   {item.variantAttributes && (
-                    <p className="text-xs text-stone-500">{Object.values(item.variantAttributes).join(', ')}</p>
+                    <p className="text-xs text-stone-500">
+                      {Object.values(item.variantAttributes).join(', ')}
+                    </p>
                   )}
-                  <p className="text-sm font-bold text-stone-900">{formatSLSH(item.unitPriceSlsh)}</p>
+                  <p className="text-sm font-bold text-stone-900">
+                    {formatSLSH(item.unitPriceSlsh)}
+                  </p>
                   {isOutOfStock && (
-                    <p className="text-xs font-medium text-red-600">Out of stock at this location. Remove to continue</p>
+                    <p className="text-xs font-medium text-red-600">
+                      Out of stock at this location. Remove to continue
+                    </p>
                   )}
                   <div className="mt-1 flex items-center gap-3">
                     <div className="flex items-center rounded-md border border-stone-300">
                       <button
                         type="button"
                         aria-label="Decrease quantity"
-                        onClick={() => updateQty(item.productId, item.variantId, Math.max(1, item.quantity - 1))}
+                        onClick={() =>
+                          updateQty(item.productId, item.variantId, Math.max(1, item.quantity - 1))
+                        }
                         className="p-1.5 text-stone-600 hover:bg-stone-100"
                       >
                         <Minus className="size-3.5" />
@@ -266,7 +296,9 @@ export default function CartPage() {
 
           {appliedCode ? (
             <div className="flex items-center justify-between rounded-md bg-green-50 p-3 text-sm text-green-700">
-              <span>{appliedCode} applied (-{formatSLSH(discountAmount)})</span>
+              <span>
+                {appliedCode} applied (-{formatSLSH(discountAmount)})
+              </span>
               <button type="button" onClick={handleRemoveCode} aria-label="Remove code">
                 <X className="size-4" />
               </button>
@@ -287,15 +319,18 @@ export default function CartPage() {
             </div>
           )}
 
-          {user && loyaltyCard && loyaltyCard.current_points >= MIN_POINTS_TO_REDEEM && !appliedCode && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-stone-700">
-                <Star className="size-4 text-orange-500" />
-                Redeem {loyaltyCard.current_points} points for {tierDiscountPct}% off
+          {user &&
+            loyaltyCard &&
+            loyaltyCard.current_points >= MIN_POINTS_TO_REDEEM &&
+            !appliedCode && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-stone-700">
+                  <Star className="size-4 text-orange-500" />
+                  Redeem {loyaltyCard.current_points} points for {tierDiscountPct}% off
+                </div>
+                <Switch checked={!!loyaltyRedemption} onCheckedChange={handleToggleLoyalty} />
               </div>
-              <Switch checked={!!loyaltyRedemption} onCheckedChange={handleToggleLoyalty} />
-            </div>
-          )}
+            )}
 
           <div className="flex flex-col gap-2 border-t border-stone-200 pt-4 text-sm">
             <div className="flex justify-between">
@@ -322,7 +357,11 @@ export default function CartPage() {
               <span>Total</span>
               <div className="text-right">
                 <p>{formatSLSH(total)}</p>
-                {exchangeRate > 0 && <p className="text-xs font-normal text-stone-500">{slshToUsd(total, exchangeRate)}</p>}
+                {exchangeRate > 0 && (
+                  <p className="text-xs font-normal text-stone-500">
+                    {slshToUsd(total, exchangeRate)}
+                  </p>
+                )}
               </div>
             </div>
           </div>

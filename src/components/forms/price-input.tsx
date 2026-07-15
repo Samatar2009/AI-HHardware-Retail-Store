@@ -54,7 +54,7 @@ const PriceInput = forwardRef<HTMLInputElement, PriceInputProps>(
             className={cn(
               'h-10 w-full rounded-md border border-stone-300 bg-white py-2 pl-14 pr-3 text-right text-sm text-stone-900',
               'transition-all duration-150 motion-reduce:transition-none motion-reduce:duration-0',
-              'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0 focus:border-orange-500',
+              'focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0',
               'disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400',
               error && 'border-red-500 focus:ring-red-500'
             )}

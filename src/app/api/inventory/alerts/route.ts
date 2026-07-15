@@ -18,7 +18,11 @@ export async function GET(request: Request) {
     .order('created_at', { ascending: false })
 
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     if (!profile?.location_id) {
       return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })
     }

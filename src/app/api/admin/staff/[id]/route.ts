@@ -30,7 +30,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('profiles').update(updates).eq('user_id', params.id).select().single()
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('user_id', params.id)
+    .select()
+    .single()
 
   if (error || !data) {
     return NextResponse.json({ error: 'Could not update staff member' }, { status: 500 })

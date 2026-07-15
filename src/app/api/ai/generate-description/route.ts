@@ -38,7 +38,10 @@ Keep each description 2-3 sentences. Focus on practical use cases for constructi
   try {
     const result = await geminiPro.generateContent(prompt)
     const text = result.response.text().trim()
-    const jsonText = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '')
+    const jsonText = text
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
     const parsedResponse = responseSchema.safeParse(JSON.parse(jsonText))
 
     if (!parsedResponse.success) {

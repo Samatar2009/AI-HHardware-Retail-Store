@@ -47,7 +47,10 @@ export async function GET(request: Request) {
   const orderIds = (orders ?? []).map((o) => (o as unknown as { id: string }).id)
 
   const { data: items } = orderIds.length
-    ? await supabase.from('order_items').select('product_name_en, quantity, total_price_slsh').in('order_id', orderIds)
+    ? await supabase
+        .from('order_items')
+        .select('product_name_en, quantity, total_price_slsh')
+        .in('order_id', orderIds)
     : { data: [] as OrderItemRow[] }
 
   const totalRevenue = orderRows.reduce((sum, o) => sum + o.total_slsh, 0)
@@ -57,7 +60,11 @@ export async function GET(request: Request) {
   const revenueByLocation = new Map<string, { name: string; revenue: number; orders: number }>()
   for (const order of orderRows) {
     const key = order.location_id
-    const entry = revenueByLocation.get(key) ?? { name: order.location?.name_en ?? 'Unknown', revenue: 0, orders: 0 }
+    const entry = revenueByLocation.get(key) ?? {
+      name: order.location?.name_en ?? 'Unknown',
+      revenue: 0,
+      orders: 0,
+    }
     entry.revenue += order.total_slsh
     entry.orders += 1
     revenueByLocation.set(key, entry)
@@ -91,6 +98,9 @@ export async function GET(request: Request) {
     topProduct: topProducts[0]?.name ?? null,
     topProducts,
     revenueByLocation: [...revenueByLocation.values()],
-    revenueByPaymentMethod: [...revenueByPaymentMethod.entries()].map(([method, v]) => ({ method, ...v })),
+    revenueByPaymentMethod: [...revenueByPaymentMethod.entries()].map(([method, v]) => ({
+      method,
+      ...v,
+    })),
   })
 }

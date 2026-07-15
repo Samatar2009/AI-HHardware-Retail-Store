@@ -30,11 +30,16 @@ export async function GET(request: Request) {
   }
 
   const supabase = await createClient()
-  const safeQuery = q.replace(/[,()%*\\]/g, ' ').trim().slice(0, 100)
+  const safeQuery = q
+    .replace(/[,()%*\\]/g, ' ')
+    .trim()
+    .slice(0, 100)
 
   const { data: products, error } = await supabase
     .from('products')
-    .select('id, name_en, sku_base, product_variants(id, sku, attributes, cost_price_slsh, is_active)')
+    .select(
+      'id, name_en, sku_base, product_variants(id, sku, attributes, cost_price_slsh, is_active)'
+    )
     .or(`name_en.ilike.%${safeQuery}%,sku_base.ilike.%${safeQuery}%`)
     .limit(20)
 
@@ -46,7 +51,9 @@ export async function GET(request: Request) {
   // product-level ilike above can't reach.
   const { data: variantMatches } = await supabase
     .from('product_variants')
-    .select('id, sku, attributes, cost_price_slsh, is_active, product:products(id, name_en, sku_base)')
+    .select(
+      'id, sku, attributes, cost_price_slsh, is_active, product:products(id, name_en, sku_base)'
+    )
     .ilike('sku', `%${safeQuery}%`)
     .limit(20)
 
@@ -66,9 +73,15 @@ export async function GET(request: Request) {
 
     const existing = byId.get(product.id)
     if (existing) {
-      if (!existing.product_variants.some((ev) => ev.id === v.id)) existing.product_variants.push(variant)
+      if (!existing.product_variants.some((ev) => ev.id === v.id))
+        existing.product_variants.push(variant)
     } else {
-      byId.set(product.id, { id: product.id, name_en: product.name_en, sku_base: product.sku_base, product_variants: [variant] })
+      byId.set(product.id, {
+        id: product.id,
+        name_en: product.name_en,
+        sku_base: product.sku_base,
+        product_variants: [variant],
+      })
     }
   }
 

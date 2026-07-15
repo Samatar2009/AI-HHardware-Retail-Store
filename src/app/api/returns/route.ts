@@ -36,7 +36,10 @@ export async function POST(request: Request) {
   const ip = getClientIp(request)
   const { success } = await rateLimiters.returnCreate.limit(ip)
   if (!success) {
-    return NextResponse.json({ error: 'Too many requests. Please try again shortly.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again shortly.' },
+      { status: 429 }
+    )
   }
 
   const supabase = await createClient()
@@ -67,19 +70,27 @@ export async function POST(request: Request) {
   // App Flow doc 3.8: returns are only accepted for completed orders, within
   // 7 days of completion.
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
-  const withinReturnWindow = order.updated_at && Date.now() - new Date(order.updated_at).getTime() < SEVEN_DAYS_MS
+  const withinReturnWindow =
+    order.updated_at && Date.now() - new Date(order.updated_at).getTime() < SEVEN_DAYS_MS
   if (order.status !== 'completed' || !withinReturnWindow) {
     return NextResponse.json({ error: 'This order is not eligible for a return' }, { status: 400 })
   }
 
-  const { data: orderItems } = await supabase.from('order_items').select('id, quantity').eq('order_id', orderId)
+  const { data: orderItems } = await supabase
+    .from('order_items')
+    .select('id, quantity')
+    .eq('order_id', orderId)
   const purchasedQtyById = new Map((orderItems ?? []).map((i) => [i.id, i.quantity]))
 
   // Sum quantity already requested against each order_item across every
   // non-rejected return already filed for this order, so a customer can't
   // submit the same item across multiple requests to be refunded more than
   // once for what they actually bought.
-  const { data: existingReturns } = await supabase.from('returns').select('id').eq('order_id', orderId).neq('status', 'rejected')
+  const { data: existingReturns } = await supabase
+    .from('returns')
+    .select('id')
+    .eq('order_id', orderId)
+    .neq('status', 'rejected')
   const existingReturnIds = (existingReturns ?? []).map((r) => r.id)
 
   const alreadyRequestedQtyById = new Map<string, number>()
@@ -90,19 +101,27 @@ export async function POST(request: Request) {
       .in('return_id', existingReturnIds)
     for (const item of existingItems ?? []) {
       if (!item.order_item_id) continue
-      alreadyRequestedQtyById.set(item.order_item_id, (alreadyRequestedQtyById.get(item.order_item_id) ?? 0) + item.quantity)
+      alreadyRequestedQtyById.set(
+        item.order_item_id,
+        (alreadyRequestedQtyById.get(item.order_item_id) ?? 0) + item.quantity
+      )
     }
   }
 
   for (const item of items) {
     const purchasedQty = purchasedQtyById.get(item.orderItemId)
     if (purchasedQty === undefined) {
-      return NextResponse.json({ error: 'One or more items do not belong to this order' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'One or more items do not belong to this order' },
+        { status: 400 }
+      )
     }
     const alreadyRequested = alreadyRequestedQtyById.get(item.orderItemId) ?? 0
     if (alreadyRequested + item.quantity > purchasedQty) {
       return NextResponse.json(
-        { error: 'Requested return quantity exceeds what was purchased (or was already requested)' },
+        {
+          error: 'Requested return quantity exceeds what was purchased (or was already requested)',
+        },
         { status: 400 }
       )
     }

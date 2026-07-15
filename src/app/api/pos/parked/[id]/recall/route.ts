@@ -4,7 +4,11 @@ import { createClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/require-role'
 
 export async function PATCH(_request: Request, { params }: { params: { id: string } }) {
-  const { userId, role, error: authError } = await requireRole(['cashier', 'inventory_manager', 'admin'])
+  const {
+    userId,
+    role,
+    error: authError,
+  } = await requireRole(['cashier', 'inventory_manager', 'admin'])
   if (authError) return authError
 
   const supabase = await createClient()
@@ -13,7 +17,11 @@ export async function PATCH(_request: Request, { params }: { params: { id: strin
   // owning cashier, but check explicitly first so a mismatch returns a
   // clear 403/404 instead of an opaque 500, and so the intent survives any
   // future refactor away from the RLS-scoped client.
-  const { data: parked } = await supabase.from('parked_transactions').select('cashier_id').eq('id', params.id).single()
+  const { data: parked } = await supabase
+    .from('parked_transactions')
+    .select('cashier_id')
+    .eq('id', params.id)
+    .single()
   if (!parked) {
     return NextResponse.json({ error: 'Parked cart not found' }, { status: 404 })
   }

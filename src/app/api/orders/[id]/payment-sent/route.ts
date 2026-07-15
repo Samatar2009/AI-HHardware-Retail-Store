@@ -33,10 +33,16 @@ export async function POST(request: Request, { params }: { params: { id: string 
   }
 
   if (order.payment_method === 'cash_on_pickup') {
-    return NextResponse.json({ error: 'This order does not require mobile money confirmation' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'This order does not require mobile money confirmation' },
+      { status: 400 }
+    )
   }
   if (order.status !== 'pending_payment') {
-    return NextResponse.json({ error: 'Payment has already been reported for this order' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'Payment has already been reported for this order' },
+      { status: 409 }
+    )
   }
 
   const admin = createAdminClient()

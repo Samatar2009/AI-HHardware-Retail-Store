@@ -25,7 +25,16 @@ const STOCK_BADGE = {
   out_of_stock: { variant: 'stockOutOfStock' as const, label: 'Out of Stock' },
 }
 
-function ProductCard({ id, nameEn, nameSo, brand, thumbnailUrl, priceSlsh, stockStatus, onAddToCart }: ProductCardProps) {
+function ProductCard({
+  id,
+  nameEn,
+  nameSo,
+  brand,
+  thumbnailUrl,
+  priceSlsh,
+  stockStatus,
+  onAddToCart,
+}: ProductCardProps) {
   const locale = useLocale()
   const t = useTranslations('products')
   const name = locale === 'so' ? nameSo : nameEn
@@ -46,7 +55,7 @@ function ProductCard({ id, nameEn, nameSo, brand, thumbnailUrl, priceSlsh, stock
             <img
               src={thumbnailUrl}
               alt={name}
-              className="h-full w-full object-cover transition-transform duration-300 motion-reduce:transition-none group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
             />
           )}
         </div>
@@ -58,7 +67,13 @@ function ProductCard({ id, nameEn, nameSo, brand, thumbnailUrl, priceSlsh, stock
         </Link>
         <Badge variant={stock.variant}>{stock.label}</Badge>
         <PriceDisplay amountSlsh={priceSlsh} />
-        <Button variant="primary" size="sm" className="w-full" onClick={onAddToCart} disabled={stockStatus === 'out_of_stock'}>
+        <Button
+          variant="primary"
+          size="sm"
+          className="w-full"
+          onClick={onAddToCart}
+          disabled={stockStatus === 'out_of_stock'}
+        >
           {t('addToCart')}
         </Button>
       </div>

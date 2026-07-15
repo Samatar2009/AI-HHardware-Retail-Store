@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from 'react'
 import { BrowserMultiFormatReader } from '@zxing/library'
 import { ScanLine } from 'lucide-react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 
 interface BarcodeScannerProps {
@@ -57,7 +63,12 @@ function BarcodeScanner({ open, onOpenChange, onScan }: BarcodeScannerProps) {
           {error ? (
             <p className="text-sm text-red-600">{error}</p>
           ) : (
-            <video ref={videoRef} className="aspect-video w-full rounded-md bg-black" muted playsInline />
+            <video
+              ref={videoRef}
+              className="aspect-video w-full rounded-md bg-black"
+              muted
+              playsInline
+            />
           )}
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             Cancel

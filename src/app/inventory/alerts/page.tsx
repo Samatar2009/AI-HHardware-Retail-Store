@@ -58,13 +58,24 @@ export default function InventoryAlertsPage() {
       {isLoading ? (
         <p className="text-sm text-stone-500">Loading...</p>
       ) : alerts.length === 0 ? (
-        <EmptyState icon={CheckCircle2} title="No unresolved alerts" description="All stock levels are healthy." />
+        <EmptyState
+          icon={CheckCircle2}
+          title="No unresolved alerts"
+          description="All stock levels are healthy."
+        />
       ) : (
         <div className="flex flex-col gap-2">
           {alerts.map((alert) => (
-            <div key={alert.id} className="flex items-center justify-between rounded-md border border-stone-200 bg-white p-4">
+            <div
+              key={alert.id}
+              className="flex items-center justify-between rounded-md border border-stone-200 bg-white p-4"
+            >
               <div className="flex items-center gap-4">
-                <Badge variant={alert.alert_type === 'out_of_stock' ? 'stockOutOfStock' : 'stockLowStock'}>
+                <Badge
+                  variant={
+                    alert.alert_type === 'out_of_stock' ? 'stockOutOfStock' : 'stockLowStock'
+                  }
+                >
                   {alert.alert_type === 'out_of_stock' ? 'Out of Stock' : 'Low Stock'}
                 </Badge>
                 <div>

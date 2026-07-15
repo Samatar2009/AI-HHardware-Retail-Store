@@ -10,7 +10,14 @@ import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
 import { SimpleSelect } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { formatDate } from '@/lib/utils'
 
@@ -58,7 +65,9 @@ export default function AdminDiscountsPage() {
   }
 
   async function toggleActive(row: DiscountRow) {
-    setDiscounts((prev) => prev.map((d) => (d.id === row.id ? { ...d, is_active: !d.is_active } : d)))
+    setDiscounts((prev) =>
+      prev.map((d) => (d.id === row.id ? { ...d, is_active: !d.is_active } : d))
+    )
     await fetch(`/api/admin/discounts/${row.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -97,10 +106,22 @@ export default function AdminDiscountsPage() {
   }
 
   const columns: DataTableColumn<DiscountRow>[] = [
-    { key: 'code', header: 'Code', render: (row) => <span className="font-mono font-semibold">{row.code}</span> },
-    { key: 'type', header: 'Type', render: (row) => (row.discount_type === 'percentage' ? `${row.value}%` : `${row.value} SLSH`) },
+    {
+      key: 'code',
+      header: 'Code',
+      render: (row) => <span className="font-mono font-semibold">{row.code}</span>,
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      render: (row) => (row.discount_type === 'percentage' ? `${row.value}%` : `${row.value} SLSH`),
+    },
     { key: 'min_order', header: 'Min Order', render: (row) => `${row.minimum_order_slsh} SLSH` },
-    { key: 'uses', header: 'Uses', render: (row) => `${row.uses_count}${row.max_total_uses ? ` / ${row.max_total_uses}` : ''}` },
+    {
+      key: 'uses',
+      header: 'Uses',
+      render: (row) => `${row.uses_count}${row.max_total_uses ? ` / ${row.max_total_uses}` : ''}`,
+    },
     { key: 'valid', header: 'Valid Until', render: (row) => formatDate(row.valid_until) },
     {
       key: 'status',
@@ -108,7 +129,9 @@ export default function AdminDiscountsPage() {
       render: (row) => (
         <div className="flex items-center gap-2">
           <Switch checked={row.is_active} onCheckedChange={() => void toggleActive(row)} />
-          <Badge variant={row.is_active ? 'stockInStock' : 'orderCancelled'}>{row.is_active ? 'Active' : 'Inactive'}</Badge>
+          <Badge variant={row.is_active ? 'stockInStock' : 'orderCancelled'}>
+            {row.is_active ? 'Active' : 'Inactive'}
+          </Badge>
         </div>
       ),
     },
@@ -126,7 +149,13 @@ export default function AdminDiscountsPage() {
         }
       />
 
-      <DataTable columns={columns} data={discounts} getRowId={(row) => row.id} isLoading={isLoading} emptyTitle="No discount codes yet" />
+      <DataTable
+        columns={columns}
+        data={discounts}
+        getRowId={(row) => row.id}
+        isLoading={isLoading}
+        emptyTitle="No discount codes yet"
+      />
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent size="sm">
@@ -134,7 +163,12 @@ export default function AdminDiscountsPage() {
             <DialogTitle>New Discount Code</DialogTitle>
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
-            <Input label="Code" required value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} />
+            <Input
+              label="Code"
+              required
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+            />
             <SimpleSelect
               label="Type"
               value={discountType}
@@ -144,8 +178,19 @@ export default function AdminDiscountsPage() {
                 { value: 'fixed', label: 'Fixed Amount (SLSH)' },
               ]}
             />
-            <Input label="Value" type="number" required value={value} onChange={(e) => setValue(e.target.value)} />
-            <Input label="Minimum Order (SLSH)" type="number" value={minimumOrder} onChange={(e) => setMinimumOrder(e.target.value)} />
+            <Input
+              label="Value"
+              type="number"
+              required
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+            <Input
+              label="Minimum Order (SLSH)"
+              type="number"
+              value={minimumOrder}
+              onChange={(e) => setMinimumOrder(e.target.value)}
+            />
             <Input
               label="Max Total Uses"
               type="number"
@@ -154,15 +199,30 @@ export default function AdminDiscountsPage() {
               helperText="Leave blank for unlimited"
             />
             <div className="grid grid-cols-2 gap-4">
-              <Input label="Valid From" type="date" required value={validFrom} onChange={(e) => setValidFrom(e.target.value)} />
-              <Input label="Valid Until" type="date" required value={validUntil} onChange={(e) => setValidUntil(e.target.value)} />
+              <Input
+                label="Valid From"
+                type="date"
+                required
+                value={validFrom}
+                onChange={(e) => setValidFrom(e.target.value)}
+              />
+              <Input
+                label="Valid Until"
+                type="date"
+                required
+                value={validUntil}
+                onChange={(e) => setValidUntil(e.target.value)}
+              />
             </div>
           </DialogBody>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => void createDiscount()} disabled={!code || !value || !validFrom || !validUntil}>
+            <Button
+              onClick={() => void createDiscount()}
+              disabled={!code || !value || !validFrom || !validUntil}
+            >
               Create
             </Button>
           </DialogFooter>

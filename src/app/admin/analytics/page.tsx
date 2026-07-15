@@ -7,7 +7,14 @@ import { PageHeader } from '@/components/page-header'
 import { KpiCard } from '@/components/admin/kpi-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SimpleSelect } from '@/components/ui/select'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 import { formatSLSH } from '@/lib/utils'
 
 interface LocationOption {
@@ -79,7 +86,10 @@ export default function AdminAnalyticsPage() {
   }
 
   const locationOptions = useMemo(
-    () => [{ value: 'all', label: 'All locations' }, ...locations.map((l) => ({ value: l.id, label: l.name_en }))],
+    () => [
+      { value: 'all', label: 'All locations' },
+      ...locations.map((l) => ({ value: l.id, label: l.name_en })),
+    ],
     [locations]
   )
 
@@ -92,7 +102,11 @@ export default function AdminAnalyticsPage() {
           <SimpleSelect value={range} onValueChange={setRange} options={RANGE_OPTIONS} />
         </div>
         <div className="w-56">
-          <SimpleSelect value={locationId} onValueChange={setLocationId} options={locationOptions} />
+          <SimpleSelect
+            value={locationId}
+            onValueChange={setLocationId}
+            options={locationOptions}
+          />
         </div>
       </div>
 
@@ -101,9 +115,17 @@ export default function AdminAnalyticsPage() {
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <KpiCard icon={DollarSign} label="Total Revenue" value={formatSLSH(data.totalRevenue)} />
+            <KpiCard
+              icon={DollarSign}
+              label="Total Revenue"
+              value={formatSLSH(data.totalRevenue)}
+            />
             <KpiCard icon={Package} label="Orders" value={String(data.orderCount)} />
-            <KpiCard icon={TrendingUp} label="Average Order Value" value={formatSLSH(data.averageOrderValue)} />
+            <KpiCard
+              icon={TrendingUp}
+              label="Average Order Value"
+              value={formatSLSH(data.averageOrderValue)}
+            />
             <KpiCard icon={Award} label="Top Product" value={data.topProduct ?? '—'} />
           </div>
 

@@ -31,12 +31,20 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Transaction not found' }, { status: 404 })
   }
   if (transaction.status !== 'completed') {
-    return NextResponse.json({ error: 'Only completed transactions can be voided' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'Only completed transactions can be voided' },
+      { status: 409 }
+    )
   }
 
   const { error: updateError } = await supabase
     .from('pos_transactions')
-    .update({ status: 'voided', void_reason: parsed.data.voidReason, voided_by: userId, voided_at: new Date().toISOString() })
+    .update({
+      status: 'voided',
+      void_reason: parsed.data.voidReason,
+      voided_by: userId,
+      voided_at: new Date().toISOString(),
+    })
     .eq('id', params.id)
 
   if (updateError) {
@@ -78,7 +86,11 @@ export async function POST(request: Request, { params }: { params: { id: string 
   }
 
   if (transaction.loyalty_points_earned > 0 && transaction.customer_id) {
-    const { data: card } = await admin.from('loyalty_cards').select('id, current_points, lifetime_points').eq('customer_id', transaction.customer_id).maybeSingle()
+    const { data: card } = await admin
+      .from('loyalty_cards')
+      .select('id, current_points, lifetime_points')
+      .eq('customer_id', transaction.customer_id)
+      .maybeSingle()
     if (card) {
       await admin
         .from('loyalty_cards')

@@ -12,7 +12,9 @@ export async function GET(_request: Request, { params }: { params: { id: string 
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('returns')
-    .select('*, customer:profiles!returns_customer_id_fkey(phone, full_name), order:orders(order_number), return_items(*)')
+    .select(
+      '*, customer:profiles!returns_customer_id_fkey(phone, full_name), order:orders(order_number), return_items(*)'
+    )
     .eq('id', params.id)
     .single()
 
@@ -69,7 +71,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
   if (body.approve) {
     if (!body.refundMethod || body.refundAmountSlsh === undefined) {
-      return NextResponse.json({ error: 'Refund method and amount are required to approve a return' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Refund method and amount are required to approve a return' },
+        { status: 400 }
+      )
     }
     updates.refund_method = body.refundMethod
     updates.refund_amount_slsh = body.refundAmountSlsh
@@ -79,7 +84,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     updates.rejection_reason = body.rejectionReason ?? null
   }
 
-  const { data: updated, error: updateError } = await supabase.from('returns').update(updates).eq('id', params.id).select().single()
+  const { data: updated, error: updateError } = await supabase
+    .from('returns')
+    .update(updates)
+    .eq('id', params.id)
+    .select()
+    .single()
 
   if (updateError || !updated) {
     return NextResponse.json({ error: 'Could not update return' }, { status: 500 })

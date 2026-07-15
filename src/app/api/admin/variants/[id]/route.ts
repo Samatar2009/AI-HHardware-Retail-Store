@@ -36,7 +36,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('product_variants').update(updates).eq('id', params.id).select().single()
+  const { data, error } = await supabase
+    .from('product_variants')
+    .update(updates)
+    .eq('id', params.id)
+    .select()
+    .single()
 
   if (error || !data) {
     return NextResponse.json({ error: 'Could not update variant' }, { status: 500 })

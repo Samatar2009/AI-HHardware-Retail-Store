@@ -21,7 +21,9 @@ const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
   ({ value, onChange, onBlur, label, error, required, disabled, id }, ref) => {
     const generatedId = useId()
     const inputId = id ?? generatedId
-    const localDigits = value.startsWith(COUNTRY_PREFIX) ? value.slice(COUNTRY_PREFIX.length) : value
+    const localDigits = value.startsWith(COUNTRY_PREFIX)
+      ? value.slice(COUNTRY_PREFIX.length)
+      : value
     const isValid = E164_SOMALILAND_PATTERN.test(value)
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -55,7 +57,7 @@ const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
             className={cn(
               'h-10 w-full rounded-md border border-stone-300 bg-white py-2 pl-12 pr-3 text-sm text-stone-900 placeholder:text-stone-400',
               'transition-all duration-150 motion-reduce:transition-none motion-reduce:duration-0',
-              'focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0 focus:border-orange-500',
+              'focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-0',
               'disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-stone-400',
               error && 'border-red-500 focus:ring-red-500'
             )}

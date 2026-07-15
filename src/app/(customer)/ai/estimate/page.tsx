@@ -11,7 +11,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { formatSLSH, slshToUsd } from '@/lib/utils'
 import { useCartStore } from '@/stores/cart.store'
@@ -67,7 +74,9 @@ export default function CustomerAiEstimatePage() {
         return
       }
       if (!res.ok) {
-        showErrorToast('Could not generate an estimate. Please try rephrasing your project description.')
+        showErrorToast(
+          'Could not generate an estimate. Please try rephrasing your project description.'
+        )
         return
       }
       setResult((await res.json()) as EstimateResult)
@@ -111,7 +120,13 @@ export default function CustomerAiEstimatePage() {
     autoTable(doc, {
       startY: 32,
       head: [['Material', 'Qty', 'Unit', 'Unit Price', 'Total']],
-      body: result.materials.map((m) => [m.name, String(m.quantity), m.unit, formatSLSH(m.unit_price_slsh), formatSLSH(m.total_slsh)]),
+      body: result.materials.map((m) => [
+        m.name,
+        String(m.quantity),
+        m.unit,
+        formatSLSH(m.unit_price_slsh),
+        formatSLSH(m.total_slsh),
+      ]),
     })
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -151,14 +166,18 @@ export default function CustomerAiEstimatePage() {
             value={areaSqm}
             onChange={(e) => setAreaSqm(e.target.value)}
           />
-          <Button onClick={() => void handleEstimate()} loading={isEstimating} disabled={description.trim().length < 10}>
+          <Button
+            onClick={() => void handleEstimate()}
+            loading={isEstimating}
+            disabled={description.trim().length < 10}
+          >
             Get Estimate
           </Button>
         </CardContent>
       </Card>
 
       {result && (
-        <Card className="mt-6 animate-content-show">
+        <Card className="animate-content-show mt-6">
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <div>
@@ -189,7 +208,11 @@ export default function CustomerAiEstimatePage() {
                   <TableRow key={i} striped={i % 2 === 1}>
                     <TableCell>
                       {m.matchedNameEn ?? m.name}
-                      {!m.matchedProductId && <span className="ml-2 text-xs text-stone-400">(estimated — not in catalog)</span>}
+                      {!m.matchedProductId && (
+                        <span className="ml-2 text-xs text-stone-400">
+                          (estimated — not in catalog)
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
                       {m.quantity} {m.unit}
@@ -204,11 +227,19 @@ export default function CustomerAiEstimatePage() {
             <div className="mt-4 flex justify-end">
               <div className="text-right">
                 <p className="text-2xl font-bold text-stone-900">{formatSLSH(result.totalSlsh)}</p>
-                {exchangeRate > 0 && <p className="text-sm text-stone-500">{slshToUsd(result.totalSlsh, exchangeRate)}</p>}
+                {exchangeRate > 0 && (
+                  <p className="text-sm text-stone-500">
+                    {slshToUsd(result.totalSlsh, exchangeRate)}
+                  </p>
+                )}
               </div>
             </div>
 
-            {result.notes && <p className="mt-4 rounded-md bg-stone-50 p-3 text-sm text-stone-600">{result.notes}</p>}
+            {result.notes && (
+              <p className="mt-4 rounded-md bg-stone-50 p-3 text-sm text-stone-600">
+                {result.notes}
+              </p>
+            )}
           </CardContent>
         </Card>
       )}

@@ -11,7 +11,14 @@ import { Switch } from '@/components/ui/switch'
 import { SimpleSelect } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { getInitials } from '@/lib/utils'
 import type { UserRole } from '@/types/auth'
@@ -75,7 +82,9 @@ export default function AdminStaffPage() {
   }
 
   async function toggleActive(row: StaffRow) {
-    setStaff((prev) => prev.map((s) => (s.user_id === row.user_id ? { ...s, is_active: !s.is_active } : s)))
+    setStaff((prev) =>
+      prev.map((s) => (s.user_id === row.user_id ? { ...s, is_active: !s.is_active } : s))
+    )
     await fetch(`/api/admin/staff/${row.user_id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -84,7 +93,9 @@ export default function AdminStaffPage() {
   }
 
   async function updateRole(row: StaffRow, newRole: string) {
-    setStaff((prev) => prev.map((s) => (s.user_id === row.user_id ? { ...s, role: newRole as UserRole } : s)))
+    setStaff((prev) =>
+      prev.map((s) => (s.user_id === row.user_id ? { ...s, role: newRole as UserRole } : s))
+    )
     await fetch(`/api/admin/staff/${row.user_id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -116,7 +127,10 @@ export default function AdminStaffPage() {
     }
   }
 
-  const locationOptions = useMemo(() => locations.map((l) => ({ value: l.id, label: l.name_en })), [locations])
+  const locationOptions = useMemo(
+    () => locations.map((l) => ({ value: l.id, label: l.name_en })),
+    [locations]
+  )
 
   const columns: DataTableColumn<StaffRow>[] = [
     {
@@ -125,7 +139,9 @@ export default function AdminStaffPage() {
       render: (row) => (
         <div className="flex items-center gap-3">
           <Avatar className="size-8">
-            <AvatarFallback className="text-xs">{getInitials(row.full_name || row.phone)}</AvatarFallback>
+            <AvatarFallback className="text-xs">
+              {getInitials(row.full_name || row.phone)}
+            </AvatarFallback>
           </Avatar>
           <span className="font-medium text-stone-900">{row.full_name || '—'}</span>
         </div>
@@ -138,7 +154,11 @@ export default function AdminStaffPage() {
       render: (row) => (
         <div className="flex items-center gap-2">
           <Badge variant={ROLE_BADGE[row.role]}>{row.role.replace('_', ' ')}</Badge>
-          <SimpleSelect value={row.role} onValueChange={(v) => void updateRole(row, v)} options={ROLE_OPTIONS} />
+          <SimpleSelect
+            value={row.role}
+            onValueChange={(v) => void updateRole(row, v)}
+            options={ROLE_OPTIONS}
+          />
         </div>
       ),
     },
@@ -146,7 +166,9 @@ export default function AdminStaffPage() {
     {
       key: 'active',
       header: 'Active',
-      render: (row) => <Switch checked={row.is_active} onCheckedChange={() => void toggleActive(row)} />,
+      render: (row) => (
+        <Switch checked={row.is_active} onCheckedChange={() => void toggleActive(row)} />
+      ),
     },
   ]
 
@@ -162,7 +184,13 @@ export default function AdminStaffPage() {
         }
       />
 
-      <DataTable columns={columns} data={staff} getRowId={(row) => row.user_id} isLoading={isLoading} emptyTitle="No staff yet" />
+      <DataTable
+        columns={columns}
+        data={staff}
+        getRowId={(row) => row.user_id}
+        isLoading={isLoading}
+        emptyTitle="No staff yet"
+      />
 
       <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
         <DialogContent size="sm">
@@ -178,8 +206,19 @@ export default function AdminStaffPage() {
               onChange={(e) => setPhone(e.target.value)}
               helperText="The user must have already signed in at least once. Admin never creates accounts directly."
             />
-            <SimpleSelect label="Role" value={role} onValueChange={setRole} options={ROLE_OPTIONS} />
-            <SimpleSelect label="Location" value={locationId} onValueChange={setLocationId} options={locationOptions} placeholder="Select a location" />
+            <SimpleSelect
+              label="Role"
+              value={role}
+              onValueChange={setRole}
+              options={ROLE_OPTIONS}
+            />
+            <SimpleSelect
+              label="Location"
+              value={locationId}
+              onValueChange={setLocationId}
+              options={locationOptions}
+              placeholder="Select a location"
+            />
           </DialogBody>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setAddDialogOpen(false)}>

@@ -44,7 +44,10 @@ export function PwaInstallPrompt() {
   }
 
   function handleDismiss() {
-    localStorage.setItem(DISMISSED_UNTIL_KEY, String(Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000))
+    localStorage.setItem(
+      DISMISSED_UNTIL_KEY,
+      String(Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000)
+    )
     setVisible(false)
   }
 

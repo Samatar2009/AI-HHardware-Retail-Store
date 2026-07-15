@@ -16,14 +16,24 @@ export async function GET(request: Request) {
 
   let locationId = searchParams.get('location_id')
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     if (!profile?.location_id) {
       return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })
     }
     locationId = profile.location_id
   }
   if (!locationId) {
-    const { data: firstLocation } = await supabase.from('locations').select('id').eq('is_active', true).order('name_en').limit(1).single()
+    const { data: firstLocation } = await supabase
+      .from('locations')
+      .select('id')
+      .eq('is_active', true)
+      .order('name_en')
+      .limit(1)
+      .single()
     locationId = firstLocation?.id ?? null
   }
   if (!locationId) {

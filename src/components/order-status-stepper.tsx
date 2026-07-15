@@ -31,7 +31,10 @@ function OrderStatusStepper({ status }: { status: OrderStatus }) {
         const isUpcoming = i > currentIndex
 
         return (
-          <div key={step.status} className={cn('flex items-center', i < STEPS.length - 1 && 'flex-1')}>
+          <div
+            key={step.status}
+            className={cn('flex items-center', i < STEPS.length - 1 && 'flex-1')}
+          >
             <div className="flex flex-col items-center gap-1.5">
               <div
                 className={cn(

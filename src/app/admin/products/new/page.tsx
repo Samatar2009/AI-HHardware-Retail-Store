@@ -12,7 +12,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { SimpleSelect } from '@/components/ui/select'
 import { PriceInput } from '@/components/forms/price-input'
 import { ImageUpload, type UploadResult } from '@/components/forms/image-upload'
-import { AttributeEditor, attributesToObject, type AttributePair } from '@/components/forms/attribute-editor'
+import {
+  AttributeEditor,
+  attributesToObject,
+  type AttributePair,
+} from '@/components/forms/attribute-editor'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 
 interface CategoryOption {
@@ -61,7 +65,9 @@ export default function AdminProductsNewPage() {
   useEffect(() => {
     void fetch('/api/categories')
       .then((res) => res.json())
-      .then((data: { categories: CategoryOption[] }) => setCategories(flattenCategories(data.categories)))
+      .then((data: { categories: CategoryOption[] }) =>
+        setCategories(flattenCategories(data.categories))
+      )
   }, [])
 
   function canAdvance(): boolean {
@@ -142,11 +148,17 @@ export default function AdminProductsNewPage() {
 
   return (
     <div>
-      <PageHeader title="New Product" subtitle={`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`} />
+      <PageHeader
+        title="New Product"
+        subtitle={`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`}
+      />
 
       <div className="mb-6 flex gap-2">
         {STEPS.map((label, i) => (
-          <div key={label} className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-orange-500' : 'bg-stone-200'}`} />
+          <div
+            key={label}
+            className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-orange-500' : 'bg-stone-200'}`}
+          />
         ))}
       </div>
 
@@ -155,12 +167,30 @@ export default function AdminProductsNewPage() {
           {step === 0 && (
             <>
               <div className="grid grid-cols-2 gap-4">
-                <Input label="Name (English)" required value={nameEn} onChange={(e) => setNameEn(e.target.value)} />
-                <Input label="Name (Somali)" required value={nameSo} onChange={(e) => setNameSo(e.target.value)} />
+                <Input
+                  label="Name (English)"
+                  required
+                  value={nameEn}
+                  onChange={(e) => setNameEn(e.target.value)}
+                />
+                <Input
+                  label="Name (Somali)"
+                  required
+                  value={nameSo}
+                  onChange={(e) => setNameSo(e.target.value)}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Textarea label="Description (English)" value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} />
-                <Textarea label="Description (Somali)" value={descriptionSo} onChange={(e) => setDescriptionSo(e.target.value)} />
+                <Textarea
+                  label="Description (English)"
+                  value={descriptionEn}
+                  onChange={(e) => setDescriptionEn(e.target.value)}
+                />
+                <Textarea
+                  label="Description (Somali)"
+                  value={descriptionSo}
+                  onChange={(e) => setDescriptionSo(e.target.value)}
+                />
               </div>
               <SimpleSelect
                 label="Category"
@@ -171,19 +201,49 @@ export default function AdminProductsNewPage() {
               />
               <div className="grid grid-cols-3 gap-4">
                 <Input label="Brand" value={brand} onChange={(e) => setBrand(e.target.value)} />
-                <Input label="Unit" value={unit} onChange={(e) => setUnit(e.target.value)} helperText="e.g. each, bag, meter" />
-                <Input label="Base SKU" required value={skuBase} onChange={(e) => setSkuBase(e.target.value)} />
+                <Input
+                  label="Unit"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                  helperText="e.g. each, bag, meter"
+                />
+                <Input
+                  label="Base SKU"
+                  required
+                  value={skuBase}
+                  onChange={(e) => setSkuBase(e.target.value)}
+                />
               </div>
-              <Input label="Tags" value={tagsInput} onChange={(e) => setTagsInput(e.target.value)} helperText="Comma-separated" />
+              <Input
+                label="Tags"
+                value={tagsInput}
+                onChange={(e) => setTagsInput(e.target.value)}
+                helperText="Comma-separated"
+              />
             </>
           )}
 
           {step === 1 && (
             <>
-              <Input label="Variant SKU" required value={variantSku} onChange={(e) => setVariantSku(e.target.value)} />
+              <Input
+                label="Variant SKU"
+                required
+                value={variantSku}
+                onChange={(e) => setVariantSku(e.target.value)}
+              />
               <div className="grid grid-cols-2 gap-4">
-                <PriceInput label="Price (SLSH)" required value={priceSlsh} onChange={setPriceSlsh} />
-                <PriceInput label="Cost Price (SLSH)" required value={costPriceSlsh} onChange={setCostPriceSlsh} />
+                <PriceInput
+                  label="Price (SLSH)"
+                  required
+                  value={priceSlsh}
+                  onChange={setPriceSlsh}
+                />
+                <PriceInput
+                  label="Cost Price (SLSH)"
+                  required
+                  value={costPriceSlsh}
+                  onChange={setCostPriceSlsh}
+                />
               </div>
               <AttributeEditor pairs={variantAttributes} onChange={setVariantAttributes} />
             </>
@@ -191,7 +251,9 @@ export default function AdminProductsNewPage() {
 
           {step === 2 && (
             <div>
-              <p className="mb-3 text-sm text-stone-500">Upload product images. Drag to reorder — the first image is the primary image.</p>
+              <p className="mb-3 text-sm text-stone-500">
+                Upload product images. Drag to reorder — the first image is the primary image.
+              </p>
               <div className="flex flex-wrap gap-4">
                 {images.map((img, i) => (
                   <div
@@ -222,7 +284,9 @@ export default function AdminProductsNewPage() {
                   </div>
                 ))}
                 <ImageUpload
-                  onUploadedDetailed={(result) => setImages((prev) => [...prev, { ...result, tempId: crypto.randomUUID() }])}
+                  onUploadedDetailed={(result) =>
+                    setImages((prev) => [...prev, { ...result, tempId: crypto.randomUUID() }])
+                  }
                 />
               </div>
             </div>
@@ -230,11 +294,17 @@ export default function AdminProductsNewPage() {
 
           {step === 3 && (
             <div className="flex flex-col gap-3 text-sm">
-              <p><strong>{nameEn}</strong> ({nameSo})</p>
+              <p>
+                <strong>{nameEn}</strong> ({nameSo})
+              </p>
               <p className="text-stone-500">{descriptionEn || 'No description'}</p>
               <p>Category: {categories.find((c) => c.value === categoryId)?.label ?? '—'}</p>
-              <p>Brand: {brand || '—'} · Unit: {unit} · SKU: {skuBase}</p>
-              <p>First variant: {variantSku} — {priceSlsh} SLSH (cost {costPriceSlsh} SLSH)</p>
+              <p>
+                Brand: {brand || '—'} · Unit: {unit} · SKU: {skuBase}
+              </p>
+              <p>
+                First variant: {variantSku} — {priceSlsh} SLSH (cost {costPriceSlsh} SLSH)
+              </p>
               <p>{images.length} image(s) attached</p>
             </div>
           )}
@@ -242,7 +312,11 @@ export default function AdminProductsNewPage() {
       </Card>
 
       <div className="mt-6 flex justify-between">
-        <Button variant="secondary" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>
+        <Button
+          variant="secondary"
+          onClick={() => setStep((s) => Math.max(0, s - 1))}
+          disabled={step === 0}
+        >
           Back
         </Button>
         {step < STEPS.length - 1 ? (

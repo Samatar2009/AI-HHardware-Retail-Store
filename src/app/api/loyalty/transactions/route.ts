@@ -16,7 +16,11 @@ export async function GET(request: Request) {
   const page = Math.max(1, Number(searchParams.get('page') ?? '1'))
   const limit = Math.min(50, Math.max(1, Number(searchParams.get('limit') ?? '20')))
 
-  const { data: card } = await supabase.from('loyalty_cards').select('id').eq('customer_id', user.id).maybeSingle()
+  const { data: card } = await supabase
+    .from('loyalty_cards')
+    .select('id')
+    .eq('customer_id', user.id)
+    .maybeSingle()
 
   if (!card) {
     return NextResponse.json({ transactions: [], totalCount: 0 })
@@ -30,5 +34,10 @@ export async function GET(request: Request) {
     .order('created_at', { ascending: false })
     .range(from, from + limit - 1)
 
-  return NextResponse.json({ transactions: transactions ?? [], totalCount: count ?? 0, page, pageSize: limit })
+  return NextResponse.json({
+    transactions: transactions ?? [],
+    totalCount: count ?? 0,
+    page,
+    pageSize: limit,
+  })
 }

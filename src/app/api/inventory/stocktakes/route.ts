@@ -13,11 +13,17 @@ export async function GET(request: Request) {
 
   let query = supabase
     .from('stocktakes')
-    .select('*, location:locations(name_en), initiated_by_profile:profiles!stocktakes_initiated_by_fkey(full_name, phone)')
+    .select(
+      '*, location:locations(name_en), initiated_by_profile:profiles!stocktakes_initiated_by_fkey(full_name, phone)'
+    )
     .order('created_at', { ascending: false })
 
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     if (!profile?.location_id) {
       return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })
     }
@@ -42,7 +48,11 @@ export async function POST(request: Request) {
   let locationId: string | null = null
 
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     locationId = profile?.location_id ?? null
   } else {
     const body = (await request.json().catch(() => ({}))) as { locationId?: string }
@@ -61,7 +71,10 @@ export async function POST(request: Request) {
     .maybeSingle()
 
   if (existingDraft) {
-    return NextResponse.json({ error: 'A draft stocktake already exists for this location' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'A draft stocktake already exists for this location' },
+      { status: 409 }
+    )
   }
 
   const { data: stocktake, error: createError } = await supabase

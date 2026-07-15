@@ -96,7 +96,9 @@ function ImageUpload({
           className={cn(
             'flex aspect-square w-full max-w-[200px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 text-center',
             'transition-colors duration-150 motion-reduce:transition-none motion-reduce:duration-0',
-            isDragging ? 'border-orange-500 bg-orange-50' : 'border-stone-300 bg-stone-50 hover:border-stone-400'
+            isDragging
+              ? 'border-orange-500 bg-orange-50'
+              : 'border-stone-300 bg-stone-50 hover:border-stone-400'
           )}
         >
           {isUploading ? (

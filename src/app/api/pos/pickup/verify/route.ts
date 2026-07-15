@@ -12,7 +12,11 @@ const bodySchema = z.object({ pickupCode: z.string().min(1).max(20) })
 // must be ready_for_pickup, awards loyalty via the existing DB trigger),
 // so there's no reason to duplicate that logic here.
 export async function POST(request: Request) {
-  const { userId, role, error: authError } = await requireRole(['cashier', 'inventory_manager', 'admin'])
+  const {
+    userId,
+    role,
+    error: authError,
+  } = await requireRole(['cashier', 'inventory_manager', 'admin'])
   if (authError) return authError
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null))
@@ -24,7 +28,11 @@ export async function POST(request: Request) {
 
   let locationId: string | null = null
   if (role !== 'admin') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     locationId = profile?.location_id ?? null
     if (!locationId) {
       return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })
@@ -42,7 +50,10 @@ export async function POST(request: Request) {
   const { data: order, error } = await query.maybeSingle()
 
   if (error || !order) {
-    return NextResponse.json({ error: 'No order ready for pickup with that code at this location' }, { status: 404 })
+    return NextResponse.json(
+      { error: 'No order ready for pickup with that code at this location' },
+      { status: 404 }
+    )
   }
 
   return NextResponse.json({ order })

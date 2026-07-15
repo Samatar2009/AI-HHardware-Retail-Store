@@ -107,7 +107,12 @@ function ChatWidget() {
         <div className="fixed bottom-36 right-6 z-40 flex h-[500px] w-[360px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-lg border border-stone-200 bg-white shadow-2xl md:bottom-24">
           <div className="flex items-center justify-between border-b border-stone-200 bg-orange-500 px-4 py-3">
             <p className="font-semibold text-white">Borama Hardware Assistant</p>
-            <button type="button" onClick={() => setIsOpen(false)} aria-label="Close chat" className="text-white/80 hover:text-white">
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close chat"
+              className="text-white/80 hover:text-white"
+            >
               <X className="size-5" />
             </button>
           </div>
@@ -124,10 +129,16 @@ function ChatWidget() {
                   key={i}
                   className={cn(
                     'max-w-[85%] rounded-lg px-3 py-2 text-sm',
-                    m.role === 'user' ? 'ml-auto bg-orange-500 text-white' : 'mr-auto border border-stone-200 bg-white text-stone-800'
+                    m.role === 'user'
+                      ? 'ml-auto bg-orange-500 text-white'
+                      : 'mr-auto border border-stone-200 bg-white text-stone-800'
                   )}
                 >
-                  {m.content ? <MarkdownLite text={m.content} /> : isStreaming && i === messages.length - 1 ? <TypingIndicator /> : null}
+                  {m.content ? (
+                    <MarkdownLite text={m.content} />
+                  ) : isStreaming && i === messages.length - 1 ? (
+                    <TypingIndicator />
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -136,7 +147,9 @@ function ChatWidget() {
           <div className="border-t border-stone-200 p-3">
             {atLimit ? (
               <p className="text-center text-xs text-stone-500">
-                {locale === 'so' ? 'Fadlan bilow wadahadal cusub.' : 'Please start a new conversation.'}
+                {locale === 'so'
+                  ? 'Fadlan bilow wadahadal cusub.'
+                  : 'Please start a new conversation.'}
                 <button
                   type="button"
                   onClick={() => setMessages([])}
@@ -159,7 +172,12 @@ function ChatWidget() {
                   placeholder={locale === 'so' ? 'Qor fariintaada...' : 'Type your message...'}
                   className="h-10 flex-1 rounded-md border border-stone-300 px-3 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
-                <Button size="icon" onClick={() => void sendMessage()} disabled={!input.trim() || isStreaming} aria-label="Send message">
+                <Button
+                  size="icon"
+                  onClick={() => void sendMessage()}
+                  disabled={!input.trim() || isStreaming}
+                  aria-label="Send message"
+                >
                   <Send className="size-4" />
                 </Button>
               </div>

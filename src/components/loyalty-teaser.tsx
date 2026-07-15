@@ -40,7 +40,9 @@ function LoyaltyTeaser() {
           <Star className="size-6 text-orange-500" aria-hidden="true" />
           <div>
             <p className="text-sm font-semibold text-stone-900">Join our loyalty program</p>
-            <p className="text-xs text-stone-500">Sign in to start earning points on every purchase</p>
+            <p className="text-xs text-stone-500">
+              Sign in to start earning points on every purchase
+            </p>
           </div>
         </div>
       </Link>

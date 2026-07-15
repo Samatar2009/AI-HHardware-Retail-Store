@@ -19,7 +19,9 @@ export default function PosLockPage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-6 bg-black">
       <Avatar className="size-20">
-        <AvatarFallback className="text-2xl">{getInitials(profile?.full_name || profile?.phone || '?')}</AvatarFallback>
+        <AvatarFallback className="text-2xl">
+          {getInitials(profile?.full_name || profile?.phone || '?')}
+        </AvatarFallback>
       </Avatar>
       <div className="text-center">
         <p className="flex items-center justify-center gap-2 text-lg font-semibold text-white">

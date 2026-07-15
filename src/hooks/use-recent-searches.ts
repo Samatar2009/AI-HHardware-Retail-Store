@@ -26,7 +26,10 @@ function useRecentSearches() {
     const trimmed = query.trim()
     if (!trimmed) return
     setRecent((prev) => {
-      const next = [trimmed, ...prev.filter((q) => q.toLowerCase() !== trimmed.toLowerCase())].slice(0, MAX_RECENT)
+      const next = [
+        trimmed,
+        ...prev.filter((q) => q.toLowerCase() !== trimmed.toLowerCase()),
+      ].slice(0, MAX_RECENT)
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
       return next
     })

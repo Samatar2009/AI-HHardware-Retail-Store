@@ -26,7 +26,10 @@ export async function POST(request: Request) {
   const ip = getClientIp(request)
   const { success } = await rateLimiters.auth.limit(ip)
   if (!success) {
-    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    )
   }
 
   const supabase = await createClient()
@@ -56,7 +59,10 @@ export async function POST(request: Request) {
     .single()
 
   if (profileError || !profile) {
-    return NextResponse.json({ error: 'Signed in, but profile could not be loaded' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Signed in, but profile could not be loaded' },
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({ session: data.session, profile })

@@ -39,7 +39,11 @@ export async function POST(request: Request) {
   const body = parsed.data
 
   const supabase = await createClient()
-  const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('location_id')
+    .eq('user_id', userId)
+    .single()
 
   if (!profile?.location_id) {
     return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })

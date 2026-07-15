@@ -32,7 +32,9 @@ function getDb() {
   return dbPromise
 }
 
-export async function queueOfflineTransaction(transactionData: Record<string, unknown>): Promise<number> {
+export async function queueOfflineTransaction(
+  transactionData: Record<string, unknown>
+): Promise<number> {
   const db = await getDb()
   const id = await db.add('pos-offline-queue', {
     transactionData,
@@ -66,7 +68,10 @@ export async function getPendingTransactions(): Promise<QueuedPosTransaction[]> 
   return all.filter((t) => t.status === 'pending')
 }
 
-export async function markTransactionStatus(id: number, status: 'synced' | 'failed'): Promise<void> {
+export async function markTransactionStatus(
+  id: number,
+  status: 'synced' | 'failed'
+): Promise<void> {
   const db = await getDb()
   const existing = await db.get('pos-offline-queue', id)
   if (existing) {
@@ -81,7 +86,9 @@ export async function syncOfflineQueue(): Promise<{ synced: number; failed: numb
   const res = await fetch('/api/pos/sync', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ transactions: pending.map((t) => ({ localId: t.id, ...t.transactionData })) }),
+    body: JSON.stringify({
+      transactions: pending.map((t) => ({ localId: t.id, ...t.transactionData })),
+    }),
   })
 
   if (!res.ok) {

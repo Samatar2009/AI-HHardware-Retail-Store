@@ -16,12 +16,19 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 
   const supabase = await createClient()
-  const { data: order } = await supabase.from('orders').select('id, status, notes').eq('id', params.id).single()
+  const { data: order } = await supabase
+    .from('orders')
+    .select('id, status, notes')
+    .eq('id', params.id)
+    .single()
   if (!order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   }
   if (order.status !== 'payment_submitted' && order.status !== 'pending_payment') {
-    return NextResponse.json({ error: 'Order is not awaiting payment confirmation' }, { status: 409 })
+    return NextResponse.json(
+      { error: 'Order is not awaiting payment confirmation' },
+      { status: 409 }
+    )
   }
 
   const { error } = await supabase

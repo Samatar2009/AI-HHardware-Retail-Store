@@ -29,4 +29,9 @@ const MobileBottomSheetContent = forwardRef<
 ))
 MobileBottomSheetContent.displayName = 'MobileBottomSheetContent'
 
-export { MobileBottomSheet, MobileBottomSheetTrigger, MobileBottomSheetClose, MobileBottomSheetContent }
+export {
+  MobileBottomSheet,
+  MobileBottomSheetTrigger,
+  MobileBottomSheetClose,
+  MobileBottomSheetContent,
+}

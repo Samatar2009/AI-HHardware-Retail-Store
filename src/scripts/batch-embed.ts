@@ -43,7 +43,10 @@ async function main() {
 
   if (error) throw error
 
-  const { data: embedded } = await supabase.from('product_embeddings').select('product_id').eq('language', 'combined')
+  const { data: embedded } = await supabase
+    .from('product_embeddings')
+    .select('product_id')
+    .eq('language', 'combined')
   const embeddedIds = new Set((embedded ?? []).map((e) => e.product_id))
 
   const toEmbed = (products ?? []).filter((p) => !embeddedIds.has(p.id))
@@ -53,11 +56,20 @@ async function main() {
     return
   }
 
-  console.log(`Embedding ${toEmbed.length} of ${products!.length} active products (${embeddedIds.size} already embedded)...`)
+  console.log(
+    `Embedding ${toEmbed.length} of ${products!.length} active products (${embeddedIds.size} already embedded)...`
+  )
 
   let done = 0
   for (const p of toEmbed) {
-    const text = [p.name_en, p.name_so, p.description_en, p.description_so, p.brand, (p.tags ?? []).join(' ')]
+    const text = [
+      p.name_en,
+      p.name_so,
+      p.description_en,
+      p.description_so,
+      p.brand,
+      (p.tags ?? []).join(' '),
+    ]
       .filter(Boolean)
       .join('. ')
 

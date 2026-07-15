@@ -33,7 +33,9 @@ export const useCartStore = create<CartState>()(
       locationId: null,
       addItem: (item) =>
         set((state) => {
-          const existing = state.items.find((line) => isSameLine(line, item.productId, item.variantId))
+          const existing = state.items.find((line) =>
+            isSameLine(line, item.productId, item.variantId)
+          )
           if (existing) {
             return {
               items: state.items.map((line) =>

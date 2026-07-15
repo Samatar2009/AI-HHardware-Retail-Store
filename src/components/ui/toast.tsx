@@ -71,14 +71,22 @@ function BrandedToast({ t, type, title, description }: BrandedToastProps) {
 }
 
 function showToast(type: ToastType, title: string, description?: string) {
-  return toast.custom((t) => <BrandedToast t={t} type={type} title={title} description={description} />, {
-    duration: type === 'loading' ? Infinity : 4000,
-  })
+  return toast.custom(
+    (t) => <BrandedToast t={t} type={type} title={title} description={description} />,
+    {
+      duration: type === 'loading' ? Infinity : 4000,
+    }
+  )
 }
 
-export const showSuccessToast = (title: string, description?: string) => showToast('success', title, description)
-export const showErrorToast = (title: string, description?: string) => showToast('error', title, description)
-export const showWarningToast = (title: string, description?: string) => showToast('warning', title, description)
-export const showInfoToast = (title: string, description?: string) => showToast('info', title, description)
-export const showLoadingToast = (title: string, description?: string) => showToast('loading', title, description)
+export const showSuccessToast = (title: string, description?: string) =>
+  showToast('success', title, description)
+export const showErrorToast = (title: string, description?: string) =>
+  showToast('error', title, description)
+export const showWarningToast = (title: string, description?: string) =>
+  showToast('warning', title, description)
+export const showInfoToast = (title: string, description?: string) =>
+  showToast('info', title, description)
+export const showLoadingToast = (title: string, description?: string) =>
+  showToast('loading', title, description)
 export const dismissToast = (id: string) => toast.dismiss(id)

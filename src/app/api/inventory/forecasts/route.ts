@@ -22,7 +22,11 @@ export async function GET(request: Request) {
     .order('generated_at', { ascending: false })
 
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     if (!profile?.location_id) {
       return NextResponse.json({ error: 'No location assigned to this account' }, { status: 400 })
     }
@@ -66,7 +70,11 @@ export async function POST(request: Request) {
   let locationId = body.locationId ?? null
 
   if (role === 'inventory_manager') {
-    const { data: profile } = await supabase.from('profiles').select('location_id').eq('user_id', userId).single()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('location_id')
+      .eq('user_id', userId)
+      .single()
     locationId = profile?.location_id ?? null
   }
   if (!locationId) {
@@ -93,7 +101,10 @@ export async function POST(request: Request) {
   ])
 
   if (!inventoryRow) {
-    return NextResponse.json({ error: 'No inventory record for this product at this location' }, { status: 404 })
+    return NextResponse.json(
+      { error: 'No inventory record for this product at this location' },
+      { status: 404 }
+    )
   }
 
   const totalUnitsSold = (movements ?? []).reduce((sum, m) => sum + Math.abs(m.quantity_change), 0)
@@ -114,7 +125,10 @@ If there is little or no sales history, say so in reasoning_text and lower the c
   try {
     const result = await geminiPro.generateContent(prompt)
     const text = result.response.text().trim()
-    const jsonText = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '')
+    const jsonText = text
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
     const forecastParsed = forecastResponseSchema.safeParse(JSON.parse(jsonText))
 
     if (!forecastParsed.success) {

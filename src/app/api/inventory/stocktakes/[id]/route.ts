@@ -25,7 +25,9 @@ export async function GET(_request: Request, { params }: { params: { id: string 
 }
 
 const patchSchema = z.object({
-  items: z.array(z.object({ itemId: z.string().uuid(), countedQuantity: z.number().int().nonnegative() })).optional(),
+  items: z
+    .array(z.object({ itemId: z.string().uuid(), countedQuantity: z.number().int().nonnegative() }))
+    .optional(),
   submit: z.boolean().optional(),
   approve: z.boolean().optional(),
   reject: z.boolean().optional(),
@@ -44,7 +46,11 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const supabase = await createClient()
 
-  const { data: stocktake } = await supabase.from('stocktakes').select('id, status').eq('id', params.id).single()
+  const { data: stocktake } = await supabase
+    .from('stocktakes')
+    .select('id, status')
+    .eq('id', params.id)
+    .single()
   if (!stocktake) {
     return NextResponse.json({ error: 'Stocktake not found' }, { status: 404 })
   }
@@ -84,10 +90,16 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   if (body.approve || body.reject) {
     if (role !== 'admin') {
-      return NextResponse.json({ error: 'Only an admin can approve or reject a stocktake' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Only an admin can approve or reject a stocktake' },
+        { status: 403 }
+      )
     }
     if (stocktake.status !== 'submitted') {
-      return NextResponse.json({ error: 'Only submitted stocktakes can be approved or rejected' }, { status: 409 })
+      return NextResponse.json(
+        { error: 'Only submitted stocktakes can be approved or rejected' },
+        { status: 409 }
+      )
     }
 
     const {
@@ -113,7 +125,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
   const { data: updated } = await supabase
     .from('stocktakes')
-    .select('*, stocktake_items(*, product:products(name_en, sku_base), variant:product_variants(sku))')
+    .select(
+      '*, stocktake_items(*, product:products(name_en, sku_base), variant:product_variants(sku))'
+    )
     .eq('id', params.id)
     .single()
 

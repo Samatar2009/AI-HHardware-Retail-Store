@@ -47,7 +47,11 @@ export async function generateReceiptPdf(data: ReceiptData): Promise<jsPDF> {
     theme: 'plain',
     styles: { fontSize: 7, cellPadding: 1 },
     head: [['Item', 'Qty', 'Total']],
-    body: data.items.map((item) => [`${item.productNameEn}\n${item.sku}`, String(item.quantity), formatSLSH(item.totalPriceSlsh)]),
+    body: data.items.map((item) => [
+      `${item.productNameEn}\n${item.sku}`,
+      String(item.quantity),
+      formatSLSH(item.totalPriceSlsh),
+    ]),
   })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

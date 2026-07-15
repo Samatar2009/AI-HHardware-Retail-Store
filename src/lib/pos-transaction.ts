@@ -41,10 +41,17 @@ export interface CreatePosTransactionResult {
 /** Shared by POST /api/pos/transactions (online) and POST /api/pos/sync
  * (replaying transactions queued while offline) — same validation and
  * side effects either way. */
-export async function createPosTransaction(userId: string, body: CreatePosTransactionInput): Promise<CreatePosTransactionResult> {
+export async function createPosTransaction(
+  userId: string,
+  body: CreatePosTransactionInput
+): Promise<CreatePosTransactionResult> {
   const supabase = await createClient()
 
-  const { data: session } = await supabase.from('pos_sessions').select('id, status, cashier_id').eq('id', body.posSessionId).single()
+  const { data: session } = await supabase
+    .from('pos_sessions')
+    .select('id, status, cashier_id')
+    .eq('id', body.posSessionId)
+    .single()
   if (!session || session.status !== 'open' || session.cashier_id !== userId) {
     return { status: 409, error: 'No matching open session' }
   }
@@ -118,7 +125,11 @@ export async function createPosTransaction(userId: string, body: CreatePosTransa
       return { status: 400, error: result?.error_message ?? 'Invalid discount code' }
     }
     discountAmount = result.discount_amount_slsh
-    const { data: code } = await supabase.from('discount_codes').select('id').ilike('code', body.discountCode).single()
+    const { data: code } = await supabase
+      .from('discount_codes')
+      .select('id')
+      .ilike('code', body.discountCode)
+      .single()
     discountCodeId = code?.id ?? null
   }
 
@@ -218,9 +229,16 @@ export async function createPosTransaction(userId: string, body: CreatePosTransa
   }
 
   if (discountCodeId && body.customerId) {
-    const { data: currentCode } = await admin.from('discount_codes').select('uses_count').eq('id', discountCodeId).single()
+    const { data: currentCode } = await admin
+      .from('discount_codes')
+      .select('uses_count')
+      .eq('id', discountCodeId)
+      .single()
     if (currentCode) {
-      await admin.from('discount_codes').update({ uses_count: currentCode.uses_count + 1 }).eq('id', discountCodeId)
+      await admin
+        .from('discount_codes')
+        .update({ uses_count: currentCode.uses_count + 1 })
+        .eq('id', discountCodeId)
     }
     await admin.from('discount_code_uses').insert({
       discount_code_id: discountCodeId,

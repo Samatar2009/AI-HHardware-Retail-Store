@@ -3,7 +3,14 @@
 import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { SimpleSelect } from '@/components/ui/select'
@@ -55,21 +62,32 @@ function PaymentModal({
   total,
   onComplete,
 }: PaymentModalProps) {
-  const [payments, setPayments] = useState<PaymentLine[]>([{ key: crypto.randomUUID(), method: 'cash', amountSlsh: total, reference: '' }])
+  const [payments, setPayments] = useState<PaymentLine[]>([
+    { key: crypto.randomUUID(), method: 'cash', amountSlsh: total, reference: '' },
+  ])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const cashierProfile = useAuthStore((s) => s.profile)
 
   const paidSoFar = payments.reduce((sum, p) => sum + p.amountSlsh, 0)
   const remaining = total - paidSoFar
   const tenderedCash = payments.find((p) => p.method === 'cash')?.amountSlsh ?? 0
-  const changeDue = payments.length === 1 && payments[0].method === 'cash' ? Math.max(0, tenderedCash - total) : 0
+  const changeDue =
+    payments.length === 1 && payments[0].method === 'cash' ? Math.max(0, tenderedCash - total) : 0
 
   function updatePayment(key: string, updates: Partial<PaymentLine>) {
     setPayments((prev) => prev.map((p) => (p.key === key ? { ...p, ...updates } : p)))
   }
 
   function addSplit() {
-    setPayments((prev) => [...prev, { key: crypto.randomUUID(), method: 'cash', amountSlsh: Math.max(0, remaining), reference: '' }])
+    setPayments((prev) => [
+      ...prev,
+      {
+        key: crypto.randomUUID(),
+        method: 'cash',
+        amountSlsh: Math.max(0, remaining),
+        reference: '',
+      },
+    ])
   }
 
   function removeSplit(key: string) {
@@ -77,7 +95,8 @@ function PaymentModal({
   }
 
   async function handleCharge() {
-    const effectiveTendered = payments.length === 1 ? Math.max(payments[0].amountSlsh, total) : paidSoFar
+    const effectiveTendered =
+      payments.length === 1 ? Math.max(payments[0].amountSlsh, total) : paidSoFar
     if (effectiveTendered < total) {
       showErrorToast('Payment does not cover the total')
       return
@@ -88,11 +107,18 @@ function PaymentModal({
       locationId: session.location_id,
       customerId: customer?.userId,
       customerPhone: customer?.phone,
-      items: cart.map((item) => ({ productId: item.productId, variantId: item.variantId, quantity: item.quantity })),
+      items: cart.map((item) => ({
+        productId: item.productId,
+        variantId: item.variantId,
+        quantity: item.quantity,
+      })),
       discountCode: discountCode || undefined,
       payments: payments.map((p, i) => ({
         method: p.method,
-        amountSlsh: p.method === 'cash' && payments.length === 1 ? Math.max(p.amountSlsh, total) : p.amountSlsh,
+        amountSlsh:
+          p.method === 'cash' && payments.length === 1
+            ? Math.max(p.amountSlsh, total)
+            : p.amountSlsh,
         changeSlsh: p.method === 'cash' && payments.length === 1 && i === 0 ? changeDue : 0,
         transactionReference: p.reference || undefined,
       })),
@@ -103,7 +129,9 @@ function PaymentModal({
       try {
         await queueOfflineTransaction(transactionPayload)
         showSuccessToast('OFFLINE — sale queued and will sync automatically once back online')
-        setPayments([{ key: crypto.randomUUID(), method: 'cash', amountSlsh: total, reference: '' }])
+        setPayments([
+          { key: crypto.randomUUID(), method: 'cash', amountSlsh: total, reference: '' },
+        ])
         onOpenChange(false)
         onComplete(null)
       } finally {
@@ -132,7 +160,13 @@ function PaymentModal({
           transaction_number: string
           created_at: string
           loyalty_points_earned: number
-          pos_transaction_items: { product_name_en: string; sku: string; quantity: number; unit_price_slsh: number; total_price_slsh: number }[]
+          pos_transaction_items: {
+            product_name_en: string
+            sku: string
+            quantity: number
+            unit_price_slsh: number
+            total_price_slsh: number
+          }[]
           pos_payment_splits: { payment_method: string; amount_slsh: number; change_slsh: number }[]
         }
       }
@@ -163,7 +197,10 @@ function PaymentModal({
 
       showSuccessToast('Sale complete')
       setPayments([{ key: crypto.randomUUID(), method: 'cash', amountSlsh: total, reference: '' }])
-      onComplete({ id: data.transaction.id, transactionNumber: data.transaction.transaction_number })
+      onComplete({
+        id: data.transaction.id,
+        transactionNumber: data.transaction.transaction_number,
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -200,7 +237,12 @@ function PaymentModal({
                 />
               )}
               {payments.length > 1 && (
-                <Button variant="ghost" size="icon" onClick={() => removeSplit(p.key)} aria-label="Remove payment">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeSplit(p.key)}
+                  aria-label="Remove payment"
+                >
                   <Trash2 className="size-4" />
                 </Button>
               )}

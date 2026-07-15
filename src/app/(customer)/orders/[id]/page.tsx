@@ -55,7 +55,9 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
         .select('*, location:locations(name_en), items:order_items(*)')
         .eq('id', params.id)
         .single()
-      return orderData as (Order & { location: { name_en: string } | null; items: OrderItem[] }) | null
+      return orderData as
+        | (Order & { location: { name_en: string } | null; items: OrderItem[] })
+        | null
     },
   })
 
@@ -63,7 +65,9 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
     if (data) setOrder(data)
   }, [data])
 
-  useOrderRealtime(params.id, (updated) => setOrder((prev) => (prev ? { ...prev, ...updated } : (updated as Order))))
+  useOrderRealtime(params.id, (updated) =>
+    setOrder((prev) => (prev ? { ...prev, ...updated } : (updated as Order)))
+  )
 
   async function handleCancel() {
     setIsCancelling(true)
@@ -106,7 +110,9 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
   const showPickupCode = order.status === 'payment_confirmed' || order.status === 'ready_for_pickup'
   const canCancel = order.status === 'pending_payment'
   const canReturn =
-    order.status === 'completed' && order.updated_at && Date.now() - new Date(order.updated_at).getTime() < SEVEN_DAYS_MS
+    order.status === 'completed' &&
+    order.updated_at &&
+    Date.now() - new Date(order.updated_at).getTime() < SEVEN_DAYS_MS
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 lg:px-8">
@@ -137,7 +143,9 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
               <span className="text-stone-700">
                 {item.product_name_en} × {item.quantity}
               </span>
-              <span className="font-medium text-stone-900">{formatSLSH(item.total_price_slsh)}</span>
+              <span className="font-medium text-stone-900">
+                {formatSLSH(item.total_price_slsh)}
+              </span>
             </div>
           ))}
         </div>
@@ -171,10 +179,18 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
           </DialogHeader>
           <DialogBody>
             <p className="mb-3 text-sm text-stone-600">Are you sure? Select a reason:</p>
-            <SimpleSelect value={cancelReason} onValueChange={setCancelReason} options={CANCEL_REASONS} />
+            <SimpleSelect
+              value={cancelReason}
+              onValueChange={setCancelReason}
+              options={CANCEL_REASONS}
+            />
           </DialogBody>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setCancelOpen(false)} disabled={isCancelling}>
+            <Button
+              variant="secondary"
+              onClick={() => setCancelOpen(false)}
+              disabled={isCancelling}
+            >
               Keep Order
             </Button>
             <Button variant="destructive" onClick={handleCancel} loading={isCancelling}>

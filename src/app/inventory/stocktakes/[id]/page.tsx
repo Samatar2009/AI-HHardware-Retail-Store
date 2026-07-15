@@ -10,8 +10,22 @@ import { Badge, type BadgeProps } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 import { Spinner } from '@/components/ui/spinner'
 import { useAuthStore } from '@/stores/auth.store'
@@ -181,7 +195,15 @@ export default function InventoryStocktakesIdPage() {
                   item.counted_quantity
                 )}
               </TableCell>
-              <TableCell className={item.discrepancy === 0 ? '' : item.discrepancy > 0 ? 'text-green-600' : 'text-red-600'}>
+              <TableCell
+                className={
+                  item.discrepancy === 0
+                    ? ''
+                    : item.discrepancy > 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                }
+              >
                 {item.discrepancy > 0 ? '+' : ''}
                 {item.discrepancy}
               </TableCell>
@@ -229,10 +251,15 @@ export default function InventoryStocktakesIdPage() {
 
       <Card>
         <CardContent>
-          <Tabs value={showDiscrepanciesOnly ? 'discrepancies' : 'all'} onValueChange={(v) => setShowDiscrepanciesOnly(v === 'discrepancies')}>
+          <Tabs
+            value={showDiscrepanciesOnly ? 'discrepancies' : 'all'}
+            onValueChange={(v) => setShowDiscrepanciesOnly(v === 'discrepancies')}
+          >
             <TabsList>
               <TabsTrigger value="all">All ({stocktake.stocktake_items.length})</TabsTrigger>
-              <TabsTrigger value="discrepancies">Discrepancies Only ({discrepancyItems.length})</TabsTrigger>
+              <TabsTrigger value="discrepancies">
+                Discrepancies Only ({discrepancyItems.length})
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="all">{renderTable(stocktake.stocktake_items)}</TabsContent>
             <TabsContent value="discrepancies">{renderTable(discrepancyItems)}</TabsContent>
@@ -257,7 +284,12 @@ export default function InventoryStocktakesIdPage() {
             <Button variant="secondary" onClick={() => setRejectDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={() => void reject()} disabled={!rejectionReason} loading={isSaving}>
+            <Button
+              variant="destructive"
+              onClick={() => void reject()}
+              disabled={!rejectionReason}
+              loading={isSaving}
+            >
               Reject
             </Button>
           </DialogFooter>

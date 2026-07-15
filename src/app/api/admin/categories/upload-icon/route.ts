@@ -23,11 +23,16 @@ export async function POST(request: Request) {
   const fileName = `${crypto.randomUUID()}.webp`
 
   try {
-    const icon = await sharp(inputBuffer).resize(128, 128, { fit: 'cover' }).webp({ quality: 85 }).toBuffer()
+    const icon = await sharp(inputBuffer)
+      .resize(128, 128, { fit: 'cover' })
+      .webp({ quality: 85 })
+      .toBuffer()
 
-    const { error: uploadError } = await admin.storage.from('category-icons').upload(fileName, icon, {
-      contentType: 'image/webp',
-    })
+    const { error: uploadError } = await admin.storage
+      .from('category-icons')
+      .upload(fileName, icon, {
+        contentType: 'image/webp',
+      })
 
     if (uploadError) {
       return NextResponse.json({ error: 'Upload failed' }, { status: 500 })

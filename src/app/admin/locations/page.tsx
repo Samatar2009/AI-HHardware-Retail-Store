@@ -9,7 +9,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 
 interface HourRow {
@@ -78,7 +85,9 @@ export default function AdminLocationsPage() {
   }
 
   async function toggleActive(loc: LocationRow) {
-    setLocations((prev) => prev.map((l) => (l.id === loc.id ? { ...l, is_active: !l.is_active } : l)))
+    setLocations((prev) =>
+      prev.map((l) => (l.id === loc.id ? { ...l, is_active: !l.is_active } : l))
+    )
     await fetch(`/api/admin/locations/${loc.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -107,7 +116,11 @@ export default function AdminLocationsPage() {
 
   function openHours(loc: LocationRow) {
     setHoursLocationId(loc.id)
-    setHours(loc.location_hours.length === 7 ? [...loc.location_hours].sort((a, b) => a.day_of_week - b.day_of_week) : defaultHours())
+    setHours(
+      loc.location_hours.length === 7
+        ? [...loc.location_hours].sort((a, b) => a.day_of_week - b.day_of_week)
+        : defaultHours()
+    )
     setHoursDialogOpen(true)
   }
 
@@ -162,7 +175,9 @@ export default function AdminLocationsPage() {
               <CardHeader className="flex-row items-center justify-between">
                 <CardTitle className="text-base">{loc.name_en}</CardTitle>
                 <div className="flex items-center gap-2">
-                  <Badge variant={loc.is_active ? 'stockInStock' : 'orderCancelled'}>{loc.is_active ? 'Active' : 'Inactive'}</Badge>
+                  <Badge variant={loc.is_active ? 'stockInStock' : 'orderCancelled'}>
+                    {loc.is_active ? 'Active' : 'Inactive'}
+                  </Badge>
                   <Switch checked={loc.is_active} onCheckedChange={() => void toggleActive(loc)} />
                 </div>
               </CardHeader>
@@ -184,9 +199,24 @@ export default function AdminLocationsPage() {
             <DialogTitle>New Location</DialogTitle>
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
-            <Input label="Name (English)" required value={nameEn} onChange={(e) => setNameEn(e.target.value)} />
-            <Input label="Name (Somali)" required value={nameSo} onChange={(e) => setNameSo(e.target.value)} />
-            <Input label="Address" required value={address} onChange={(e) => setAddress(e.target.value)} />
+            <Input
+              label="Name (English)"
+              required
+              value={nameEn}
+              onChange={(e) => setNameEn(e.target.value)}
+            />
+            <Input
+              label="Name (Somali)"
+              required
+              value={nameSo}
+              onChange={(e) => setNameSo(e.target.value)}
+            />
+            <Input
+              label="Address"
+              required
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
             <Input label="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
           </DialogBody>
           <DialogFooter>
@@ -207,12 +237,33 @@ export default function AdminLocationsPage() {
           </DialogHeader>
           <DialogBody className="flex flex-col gap-3">
             {hours.map((h, i) => (
-              <div key={h.day_of_week} className="grid grid-cols-6 items-center gap-3 border-b border-stone-100 pb-3">
+              <div
+                key={h.day_of_week}
+                className="grid grid-cols-6 items-center gap-3 border-b border-stone-100 pb-3"
+              >
                 <span className="text-sm font-medium">{DAYS[h.day_of_week]}</span>
-                <Switch label="Closed" checked={h.is_closed} onCheckedChange={(v) => updateHour(i, 'is_closed', v)} />
-                <Input type="time" value={h.open_time} onChange={(e) => updateHour(i, 'open_time', e.target.value)} disabled={h.is_closed} />
-                <Input type="time" value={h.close_time} onChange={(e) => updateHour(i, 'close_time', e.target.value)} disabled={h.is_closed} />
-                <Switch label="Prayer break" checked={h.has_prayer_break} onCheckedChange={(v) => updateHour(i, 'has_prayer_break', v)} />
+                <Switch
+                  label="Closed"
+                  checked={h.is_closed}
+                  onCheckedChange={(v) => updateHour(i, 'is_closed', v)}
+                />
+                <Input
+                  type="time"
+                  value={h.open_time}
+                  onChange={(e) => updateHour(i, 'open_time', e.target.value)}
+                  disabled={h.is_closed}
+                />
+                <Input
+                  type="time"
+                  value={h.close_time}
+                  onChange={(e) => updateHour(i, 'close_time', e.target.value)}
+                  disabled={h.is_closed}
+                />
+                <Switch
+                  label="Prayer break"
+                  checked={h.has_prayer_break}
+                  onCheckedChange={(v) => updateHour(i, 'has_prayer_break', v)}
+                />
                 <div className="flex gap-2">
                   <Input
                     type="time"

@@ -24,7 +24,11 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
     queryKey: ['order', params.id],
     queryFn: async () => {
       const supabase = createClient()
-      const { data: orderData } = await supabase.from('orders').select('*').eq('id', params.id).single()
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', params.id)
+        .single()
       let mobileMoneySettings = null
       if (orderData && orderData.payment_method !== 'cash_on_pickup') {
         const { data: mm } = await supabase
@@ -89,7 +93,8 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
           <p className="mb-2 font-semibold">Payment Instructions</p>
           <p>
             Send <strong>{formatSLSH(order.total_slsh)}</strong> to {order.payment_method} number{' '}
-            <strong>{data.mobileMoneySettings.merchant_number}</strong>. Use your order number as reference.
+            <strong>{data.mobileMoneySettings.merchant_number}</strong>. Use your order number as
+            reference.
           </p>
           <p className="mt-2 text-xs text-stone-500">{data.mobileMoneySettings.instructions_en}</p>
         </div>
@@ -115,7 +120,12 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
                 value={transactionReference}
                 onChange={(e) => setTransactionReference(e.target.value)}
               />
-              <Button variant="primary" size="lg" onClick={handlePaymentSent} loading={isSendingPayment}>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handlePaymentSent}
+                loading={isSendingPayment}
+              >
                 I Have Sent Payment
               </Button>
             </div>

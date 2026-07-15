@@ -20,7 +20,12 @@ function KpiCard({ icon: Icon, label, value, trendPct }: KpiCardProps) {
       </div>
       <p className="text-2xl font-bold text-stone-900">{value}</p>
       {trendPct !== undefined && (
-        <p className={cn('flex items-center gap-1 text-xs font-medium', isUp ? 'text-green-600' : 'text-red-600')}>
+        <p
+          className={cn(
+            'flex items-center gap-1 text-xs font-medium',
+            isUp ? 'text-green-600' : 'text-red-600'
+          )}
+        >
           {isUp ? <ArrowUp className="size-3.5" /> : <ArrowDown className="size-3.5" />}
           {Math.abs(trendPct).toFixed(1)}% vs yesterday
         </p>

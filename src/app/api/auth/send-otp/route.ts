@@ -32,14 +32,20 @@ export async function POST(request: Request) {
     rateLimiters.otpPerPhone.limit(phone),
   ])
   if (!ipLimit.success || !phoneLimit.success) {
-    return NextResponse.json({ error: 'Too many requests. Try again in a few minutes.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many requests. Try again in a few minutes.' },
+      { status: 429 }
+    )
   }
 
   const supabase = await createClient()
   const { error } = await supabase.auth.signInWithOtp({ phone })
 
   if (error) {
-    return NextResponse.json({ error: 'Could not send code. Check connection and try again.' }, { status: 502 })
+    return NextResponse.json(
+      { error: 'Could not send code. Check connection and try again.' },
+      { status: 502 }
+    )
   }
 
   return NextResponse.json({ success: true })

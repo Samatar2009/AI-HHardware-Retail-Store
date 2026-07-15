@@ -10,7 +10,14 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { SimpleSelect } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { showSuccessToast, showErrorToast } from '@/components/ui/toast'
 
 interface LocationOption {
@@ -70,7 +77,9 @@ export default function AdminPaymentSettingsPage() {
   }
 
   async function toggleActive(setting: MobileMoneySetting) {
-    setSettings((prev) => prev.map((s) => (s.id === setting.id ? { ...s, is_active: !s.is_active } : s)))
+    setSettings((prev) =>
+      prev.map((s) => (s.id === setting.id ? { ...s, is_active: !s.is_active } : s))
+    )
     await fetch(`/api/admin/mobile-money/${setting.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -121,8 +130,13 @@ export default function AdminPaymentSettingsPage() {
         {settings.map((setting) => (
           <Card key={setting.id}>
             <CardHeader className="flex-row items-center justify-between">
-              <CardTitle className="text-base capitalize">{setting.provider.replace('_', ' ')}</CardTitle>
-              <Switch checked={setting.is_active} onCheckedChange={() => void toggleActive(setting)} />
+              <CardTitle className="text-base capitalize">
+                {setting.provider.replace('_', ' ')}
+              </CardTitle>
+              <Switch
+                checked={setting.is_active}
+                onCheckedChange={() => void toggleActive(setting)}
+              />
             </CardHeader>
             <CardContent>
               <p className="text-sm text-stone-700">Merchant number: {setting.merchant_number}</p>
@@ -130,7 +144,11 @@ export default function AdminPaymentSettingsPage() {
             </CardContent>
           </Card>
         ))}
-        {settings.length === 0 && <p className="text-sm text-stone-500">No mobile money providers configured for this location.</p>}
+        {settings.length === 0 && (
+          <p className="text-sm text-stone-500">
+            No mobile money providers configured for this location.
+          </p>
+        )}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -139,16 +157,39 @@ export default function AdminPaymentSettingsPage() {
             <DialogTitle>Add Mobile Money Provider</DialogTitle>
           </DialogHeader>
           <DialogBody className="flex flex-col gap-4">
-            <SimpleSelect label="Provider" value={provider} onValueChange={setProvider} options={PROVIDER_OPTIONS} />
-            <Input label="Merchant Number" required value={merchantNumber} onChange={(e) => setMerchantNumber(e.target.value)} />
-            <Textarea label="Instructions (English)" required value={instructionsEn} onChange={(e) => setInstructionsEn(e.target.value)} />
-            <Textarea label="Instructions (Somali)" required value={instructionsSo} onChange={(e) => setInstructionsSo(e.target.value)} />
+            <SimpleSelect
+              label="Provider"
+              value={provider}
+              onValueChange={setProvider}
+              options={PROVIDER_OPTIONS}
+            />
+            <Input
+              label="Merchant Number"
+              required
+              value={merchantNumber}
+              onChange={(e) => setMerchantNumber(e.target.value)}
+            />
+            <Textarea
+              label="Instructions (English)"
+              required
+              value={instructionsEn}
+              onChange={(e) => setInstructionsEn(e.target.value)}
+            />
+            <Textarea
+              label="Instructions (Somali)"
+              required
+              value={instructionsSo}
+              onChange={(e) => setInstructionsSo(e.target.value)}
+            />
           </DialogBody>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => void createSetting()} disabled={!merchantNumber || !instructionsEn || !instructionsSo}>
+            <Button
+              onClick={() => void createSetting()}
+              disabled={!merchantNumber || !instructionsEn || !instructionsSo}
+            >
               Add
             </Button>
           </DialogFooter>

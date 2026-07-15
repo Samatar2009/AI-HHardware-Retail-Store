@@ -15,7 +15,10 @@ export async function PATCH(request: Request) {
   const ip = getClientIp(request)
   const { success } = await rateLimiters.profileUpdate.limit(ip)
   if (!success) {
-    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    )
   }
 
   const supabase = await createClient()

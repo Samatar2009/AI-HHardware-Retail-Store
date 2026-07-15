@@ -59,7 +59,10 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-6 sm:px-6 lg:px-8">
-      <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-1.5 text-sm text-stone-500">
+      <nav
+        aria-label="Breadcrumb"
+        className="mb-6 flex items-center gap-1.5 text-sm text-stone-500"
+      >
         <Link href="/" className="hover:text-stone-700">
           Home
         </Link>

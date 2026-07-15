@@ -30,7 +30,8 @@ function StaffSidebar() {
 
       <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
         {ITEMS.map((item) => {
-          const isActive = 'exact' in item && item.exact ? pathname === item.href : pathname.startsWith(item.href)
+          const isActive =
+            'exact' in item && item.exact ? pathname === item.href : pathname.startsWith(item.href)
           return (
             <Link
               key={item.href}
@@ -38,7 +39,9 @@ function StaffSidebar() {
               className={cn(
                 'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium',
                 'transition-colors duration-100 motion-reduce:transition-none motion-reduce:duration-0',
-                isActive ? 'bg-orange-500 text-white' : 'text-stone-400 hover:bg-stone-800 hover:text-white'
+                isActive
+                  ? 'bg-orange-500 text-white'
+                  : 'text-stone-400 hover:bg-stone-800 hover:text-white'
               )}
             >
               <item.icon className="size-5" aria-hidden="true" />
@@ -52,10 +55,14 @@ function StaffSidebar() {
         {profile && (
           <div className="mb-3 flex items-center gap-3">
             <Avatar className="size-8">
-              <AvatarFallback className="text-xs">{getInitials(profile.full_name || profile.phone)}</AvatarFallback>
+              <AvatarFallback className="text-xs">
+                {getInitials(profile.full_name || profile.phone)}
+              </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-white">{profile.full_name || profile.phone}</p>
+              <p className="truncate text-sm font-medium text-white">
+                {profile.full_name || profile.phone}
+              </p>
             </div>
             <Badge variant="roleCashier">Staff</Badge>
           </div>

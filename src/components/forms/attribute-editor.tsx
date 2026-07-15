@@ -31,14 +31,33 @@ function AttributeEditor({ label = 'Attributes', pairs, onChange }: AttributeEdi
       <div className="flex flex-col gap-2">
         {pairs.map((pair, i) => (
           <div key={i} className="flex items-center gap-2">
-            <Input placeholder="e.g. size" value={pair.key} onChange={(e) => updatePair(i, 'key', e.target.value)} />
-            <Input placeholder="e.g. 10mm" value={pair.value} onChange={(e) => updatePair(i, 'value', e.target.value)} />
-            <Button type="button" variant="ghost" size="icon" onClick={() => removePair(i)} aria-label="Remove attribute">
+            <Input
+              placeholder="e.g. size"
+              value={pair.key}
+              onChange={(e) => updatePair(i, 'key', e.target.value)}
+            />
+            <Input
+              placeholder="e.g. 10mm"
+              value={pair.value}
+              onChange={(e) => updatePair(i, 'value', e.target.value)}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => removePair(i)}
+              aria-label="Remove attribute"
+            >
               <X className="size-4" />
             </Button>
           </div>
         ))}
-        <Button type="button" variant="secondary" size="sm" onClick={() => onChange([...pairs, { key: '', value: '' }])}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={() => onChange([...pairs, { key: '', value: '' }])}
+        >
           <Plus className="size-3.5" /> Add attribute
         </Button>
       </div>
@@ -47,10 +66,14 @@ function AttributeEditor({ label = 'Attributes', pairs, onChange }: AttributeEdi
 }
 
 export function attributesToObject(pairs: AttributePair[]): Record<string, string> {
-  return Object.fromEntries(pairs.filter((p) => p.key.trim()).map((p) => [p.key.trim(), p.value.trim()]))
+  return Object.fromEntries(
+    pairs.filter((p) => p.key.trim()).map((p) => [p.key.trim(), p.value.trim()])
+  )
 }
 
-export function objectToAttributes(obj: Record<string, string> | null | undefined): AttributePair[] {
+export function objectToAttributes(
+  obj: Record<string, string> | null | undefined
+): AttributePair[] {
   return Object.entries(obj ?? {}).map(([key, value]) => ({ key, value }))
 }
 

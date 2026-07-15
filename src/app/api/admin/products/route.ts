@@ -11,7 +11,9 @@ export async function GET() {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('products')
-    .select('*, category:categories(name_en), product_variants(id), product_images(thumbnail_url, sort_order)')
+    .select(
+      '*, category:categories(name_en), product_variants(id), product_images(thumbnail_url, sort_order)'
+    )
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -47,13 +49,20 @@ export async function POST(request: Request) {
 
   const parsed = createProductSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Invalid product data', details: parsed.error.flatten() }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid product data', details: parsed.error.flatten() },
+      { status: 400 }
+    )
   }
   const body = parsed.data
 
   const supabase = await createClient()
 
-  const { data: category } = await supabase.from('categories').select('id').eq('id', body.categoryId).single()
+  const { data: category } = await supabase
+    .from('categories')
+    .select('id')
+    .eq('id', body.categoryId)
+    .single()
   if (!category) {
     return NextResponse.json({ error: 'Category does not exist' }, { status: 400 })
   }
@@ -94,7 +103,10 @@ export async function POST(request: Request) {
     .single()
 
   if (variantError || !variant) {
-    return NextResponse.json({ error: 'Product created, but could not create initial variant' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Product created, but could not create initial variant' },
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({ product, variant })

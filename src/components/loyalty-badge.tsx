@@ -3,7 +3,10 @@ import { Award } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { LoyaltyTierName } from '@/types/loyalty'
 
-const TIER_CONFIG: Record<LoyaltyTierName, { variant: 'loyaltyBronze' | 'loyaltySilver' | 'loyaltyGold'; label: string }> = {
+const TIER_CONFIG: Record<
+  LoyaltyTierName,
+  { variant: 'loyaltyBronze' | 'loyaltySilver' | 'loyaltyGold'; label: string }
+> = {
   bronze: { variant: 'loyaltyBronze', label: 'Bronze' },
   silver: { variant: 'loyaltySilver', label: 'Silver' },
   gold: { variant: 'loyaltyGold', label: 'Gold' },

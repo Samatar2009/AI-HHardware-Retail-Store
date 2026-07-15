@@ -50,7 +50,12 @@ export default function SearchPage() {
     }
   }
 
-  const noResults = query.trim() !== '' && keywordResults.length === 0 && hasSemanticSearched && semanticResults.length === 0 && !isSemanticLoading
+  const noResults =
+    query.trim() !== '' &&
+    keywordResults.length === 0 &&
+    hasSemanticSearched &&
+    semanticResults.length === 0 &&
+    !isSemanticLoading
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-6 sm:px-6 lg:px-8">
@@ -76,7 +81,10 @@ export default function SearchPage() {
               Recent searches
             </p>
             {recent.map((item) => (
-              <div key={item} className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-stone-50">
+              <div
+                key={item}
+                className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-stone-50"
+              >
                 <button
                   type="button"
                   className="flex-1 text-left text-sm text-stone-700"
@@ -130,7 +138,10 @@ export default function SearchPage() {
         )}
         {noResults && (
           <div className="-mt-6 flex justify-center">
-            <Link href="/ai/estimate" className="text-sm font-medium text-orange-600 hover:text-orange-700">
+            <Link
+              href="/ai/estimate"
+              className="text-sm font-medium text-orange-600 hover:text-orange-700"
+            >
               Chat with our AI assistant →
             </Link>
           </div>

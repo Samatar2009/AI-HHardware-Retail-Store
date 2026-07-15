@@ -59,7 +59,11 @@ export default function AdminProductsPage() {
     return products.filter((p) => {
       if (statusFilter === 'active' && !p.is_active) return false
       if (statusFilter === 'inactive' && p.is_active) return false
-      if (search && !p.name_en.toLowerCase().includes(search.toLowerCase()) && !p.sku_base.toLowerCase().includes(search.toLowerCase())) {
+      if (
+        search &&
+        !p.name_en.toLowerCase().includes(search.toLowerCase()) &&
+        !p.sku_base.toLowerCase().includes(search.toLowerCase())
+      ) {
         return false
       }
       return true
@@ -93,15 +97,25 @@ export default function AdminProductsPage() {
     {
       key: 'featured',
       header: 'Featured',
-      render: (row) => <Switch checked={row.is_featured} onCheckedChange={(v) => void toggleField(row.id, 'is_featured', v)} />,
+      render: (row) => (
+        <Switch
+          checked={row.is_featured}
+          onCheckedChange={(v) => void toggleField(row.id, 'is_featured', v)}
+        />
+      ),
     },
     {
       key: 'active',
       header: 'Status',
       render: (row) => (
         <div className="flex items-center gap-2">
-          <Switch checked={row.is_active} onCheckedChange={(v) => void toggleField(row.id, 'is_active', v)} />
-          <Badge variant={row.is_active ? 'stockInStock' : 'orderCancelled'}>{row.is_active ? 'Active' : 'Inactive'}</Badge>
+          <Switch
+            checked={row.is_active}
+            onCheckedChange={(v) => void toggleField(row.id, 'is_active', v)}
+          />
+          <Badge variant={row.is_active ? 'stockInStock' : 'orderCancelled'}>
+            {row.is_active ? 'Active' : 'Inactive'}
+          </Badge>
         </div>
       ),
     },

@@ -48,7 +48,9 @@ export default function OrdersPage() {
       const supabase = createClient()
       let query = supabase
         .from('orders')
-        .select('id, order_number, created_at, status, total_slsh, location:locations(name_en), order_items(product_name_en)')
+        .select(
+          'id, order_number, created_at, status, total_slsh, location:locations(name_en), order_items(product_name_en)'
+        )
         .order('created_at', { ascending: false })
         .limit(visibleCount)
 
@@ -64,7 +66,12 @@ export default function OrdersPage() {
   if (!isLoading && orders.length === 0) {
     return (
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-        <EmptyState icon={Package} title="No orders yet" ctaLabel="Start Shopping" onCtaClick={() => (window.location.href = '/')} />
+        <EmptyState
+          icon={Package}
+          title="No orders yet"
+          ctaLabel="Start Shopping"
+          onCtaClick={() => (window.location.href = '/')}
+        />
       </div>
     )
   }
@@ -73,7 +80,11 @@ export default function OrdersPage() {
     <div className="mx-auto max-w-screen-xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold leading-[38px] text-stone-900">Orders</h1>
-        <SimpleSelect value={statusFilter} onValueChange={setStatusFilter} options={STATUS_FILTER_OPTIONS} />
+        <SimpleSelect
+          value={statusFilter}
+          onValueChange={setStatusFilter}
+          options={STATUS_FILTER_OPTIONS}
+        />
       </div>
 
       <div className="flex flex-col gap-4">
@@ -101,7 +112,9 @@ export default function OrdersPage() {
               </div>
               <div className="text-right">
                 <p className="text-base font-bold text-stone-900">{formatSLSH(order.total_slsh)}</p>
-                {order.location && <p className="text-xs text-stone-500">{order.location.name_en}</p>}
+                {order.location && (
+                  <p className="text-xs text-stone-500">{order.location.name_en}</p>
+                )}
               </div>
             </Link>
           )

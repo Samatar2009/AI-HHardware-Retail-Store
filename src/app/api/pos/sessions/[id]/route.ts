@@ -10,7 +10,11 @@ const closeSessionSchema = z.object({
 })
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
-  const { userId, role, error: authError } = await requireRole(['cashier', 'inventory_manager', 'admin'])
+  const {
+    userId,
+    role,
+    error: authError,
+  } = await requireRole(['cashier', 'inventory_manager', 'admin'])
   if (authError) return authError
 
   const parsed = closeSessionSchema.safeParse(await request.json().catch(() => null))
@@ -20,7 +24,11 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const body = parsed.data
 
   const supabase = await createClient()
-  const { data: session } = await supabase.from('pos_sessions').select('*').eq('id', params.id).single()
+  const { data: session } = await supabase
+    .from('pos_sessions')
+    .select('*')
+    .eq('id', params.id)
+    .single()
 
   if (!session) {
     return NextResponse.json({ error: 'Session not found' }, { status: 404 })
